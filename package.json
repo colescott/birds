@@ -1,0 +1,26 @@
+{
+  "name": "cardinal-birds",
+  "version": "1.0.0",
+  "description": "CardinalBotics Basic and Intermediate Role Development System",
+  "engines": {
+    "node": "5.10.1"
+  },
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ejs": "2.4.1",
+    "express": "4.13.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Team4159/BIRDS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Team4159/BIRDS/issues"
+  },
+  "homepage": "https://github.com/Team4159/BIRDS#readme"
+}
