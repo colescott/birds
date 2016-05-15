@@ -1,7 +1,7 @@
 {
   "name": "cardinal-birds",
   "version": "1.0.0",
-  "description": "CardinalBotics Basic and Intermediate Role Development System",
+  "description": "Cardinal Basic and Intermediate Role Development System",
   "engines": {
     "node": "5.10.1"
   },
@@ -17,8 +17,8 @@
     "type": "git",
     "url": "git+https://github.com/Team4159/BIRDS.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "FIRST Robotics Competition Team 4159 CardinalBotics",
+  "license": "BSD",
   "bugs": {
     "url": "https://github.com/Team4159/BIRDS/issues"
   },
