@@ -1,0 +1,15 @@
+hr {
+    height: 2px;
+    background-color:grey;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+#headerTitle {
+  cursor: pointer
+}
+
+#headerTitle:hover {
+  color: #8b0000
+}
