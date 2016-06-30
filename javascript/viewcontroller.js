@@ -8,90 +8,45 @@ $('img').bind('contextmenu', function(e) {
     return false;
 });
 
-function registerPage() {
+function loadView(path) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
       document.getElementById("content").innerHTML = xhttp.responseText;
     }
   };
-  xhttp.open("GET", "views/register.html", true);
+  xhttp.open("GET", path, true);
   xhttp.send();
+}
+
+function registerPage() {
+  loadView("views/register.html");
 }
 
 function forgotPasswordPage() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/forgotpassword.html", true);
-  xhttp.send();
+  loadView("views/forgotpassword.html");
 }
 
 function changeEmailPage() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/changeemail.html", true);
-  xhttp.send();
+  loadView("views/changeemail.html");
 }
 
 function changePasswordPage() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/changepassword.html", true);
-  xhttp.send();
+  loadView("views/changepassword.html");
 }
 
 function deleteUserPage() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/deleteuser.html", true);
-  xhttp.send();
+  loadView("views/deleteuser.html");
 }
 
 function spoof1Page() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/spoof1.html", true);
-  xhttp.send();
+  loadView("views/spoof1.html");
 }
 
 function spoof2Page() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/spoof2.html", true);
-  xhttp.send();
+  loadView("views/spoof2.html");
 }
 
 function spoof3Page() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-      document.getElementById("content").innerHTML = xhttp.responseText;
-    }
-  };
-  xhttp.open("GET", "views/spoof3.html", true);
-  xhttp.send();
+  loadView("views/spoof3.html");
 }
