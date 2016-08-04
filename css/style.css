@@ -1,3 +1,14 @@
 html {
 
 }
+
+/* Just an example before user status is loaded */
+.kmap\/programming\/hardware {
+    /* escape characters needed for now... maybe will change in future but manual css will not be used. */
+    fill: #569e26;
+}
+
+/* another example showing how it fills double ellipse shapes */
+.kmap\/programming {
+    fill: #fdfc28;
+}

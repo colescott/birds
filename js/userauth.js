@@ -1,8 +1,8 @@
 var config = {
-  apiKey: "AIzaSyBgOayoEYFyJtSkrQDMw1Pz64PccVYx81c",
-  authDomain: "birds-e48b7.firebaseapp.com",
-  databaseURL: "https://birds-e48b7.firebaseio.com",
-  storageBucket: "birds-e48b7.appspot.com",
+    apiKey: "AIzaSyB_QM9xJqQONmX8ca4aCWCw0x8e_czLWDQ",
+    authDomain: "cardinalbirds.firebaseapp.com",
+    databaseURL: "https://cardinalbirds.firebaseio.com",
+    storageBucket: "project-7535783528222319330.appspot.com",
 };
 
 firebase.initializeApp(config);
@@ -18,9 +18,9 @@ firebase.auth().onAuthStateChanged(function(user) {
     email = user.email;
     photoUrl = user.photoURL;
     uid = user.uid;
-    loadView('views/dashboard.html','content');
+    loadDashboard();
   } else {
-    loadView('views/home.html','content');
+    loadView('views/home.html');
   }
 });
 
@@ -36,7 +36,7 @@ function loginUser() {
 
 function logoutUser() {
   firebase.auth().signOut().then(function() {
-    // Logged out
+    loadView('view/home.html');
   }, function(error) {
     alert(error);
   });
