@@ -1,0 +1,17 @@
+<h3>Login</h3>
+<form name="form">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="loginEmail" placeholder="Email">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="loginPassword" placeholder="Password">
+    </div>
+    <button type="button" class="btn btn-primary" onclick="loginUser()">Login</button>
+</form>
+<br />
+<div id="loginError" style="color:red"></div>
+<br />
+<p><a onclick="loadView('views/passwordreset.html','sidebar')">Forgot Your Password?</a></p>
+<p><a href="javascript:void(0);" onclick="loadView('views/register.html','sidebar')">Register Here</a></p>
