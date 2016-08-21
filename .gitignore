@@ -2,11 +2,9 @@
 node_modules
 npm-debug.log
 
-# Local development
-*.env
-*.dev
+# Useless Stuff
 .DS_Store
 
-# Docker
-Dockerfile
-docker-compose.yml
+# Webpack build artifacts
+
+birds/static
