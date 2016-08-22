@@ -10,7 +10,8 @@
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "npm run build:prod"
+    "postinstall": "npm run build:prod",
+    "clean": "rm -rf node_modules & rm -rf birds/public & rm -rf birds/static"
   },
   "repository": {
     "type": "git",

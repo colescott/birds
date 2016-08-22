@@ -2,6 +2,7 @@ const validator = require("webpack-validator")
 const merge = require("webpack-merge");
 const webpackUglifyJsPlugin = require('webpack-uglify-js-plugin');
 const webpack = require("webpack");
+const path = require("path");
 
 const baseConfig = require("./webpack-base.config.js");
 
