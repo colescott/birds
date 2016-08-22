@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "CardinalBotics Beginning and Intermediate Role Development System.",
   "main": "app.js",
+  "readme": "README.md",
   "scripts": {
     "start": "node start.js",
     "start:dev": "nodemon start.js",
