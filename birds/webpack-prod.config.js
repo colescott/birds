@@ -9,6 +9,7 @@ const config = merge.smart(baseConfig, {
     devtool: "cheap-module-source-map",
     plugins: [
         new webpackUglifyJsPlugin({
+            cacheFolder: path.resolve(__dirname, 'public/cached_uglify/'),
             debug: true,
             minimize: true,
             sourceMap: false,
