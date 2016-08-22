@@ -4,7 +4,7 @@
   "description": "CardinalBotics Beginning and Intermediate Role Development System.",
   "main": "app.js",
   "scripts": {
-    "start": "forever --minUptime 1000 --spinSleepTime 1000 start.js",
+    "start": "node start.js",
     "start:dev": "nodemon start.js",
     "serve": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
