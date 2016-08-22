@@ -8,7 +8,7 @@
     "start:dev": "nodemon start.js",
     "serve": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
-    "build:prod": "webpack --progress --config birds/webpack-dev.config.js",
+    "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "npm run build:prod"
   },
