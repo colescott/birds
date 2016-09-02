@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 
-import counter from "./counter";
+import kvs from "./kvs.js";
 
 export default combineReducers({
-  counter
+  registerForm: kvs("REGISTER_FORM")
 });
