@@ -4,7 +4,7 @@ const validator = require('webpack-validator');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
-    entry: [path.join(__dirname, "./src/index.js")],
+    entry: ['babel-polyfill', path.join(__dirname, "./src/index.js")],
     output: {
         path: path.join(__dirname, "./static"),
         filename: "bundle.js"
