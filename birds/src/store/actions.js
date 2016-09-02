@@ -8,3 +8,8 @@ export const addUser = createAction(c.ADD_USER, (email, password) => ({
 }));
 
 export const setFirebase = createAction(c.FIREBASE_SET);
+
+export const setRegisterForm = createAction(c.REGISTER_FORM_SET, (key, value) => ({
+  key,
+  value
+}));
