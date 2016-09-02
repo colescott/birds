@@ -1,18 +1,22 @@
 import { takeEvery } from "redux-saga";
-import { take, fork } from "redux-saga/effects";
+import { take, fork, put } from "redux-saga/effects";
 
 import api from "../../api/index.js";
 
 import * as c from "../constants.js";
+import * as a from "../actions.js";
 
 function* addUser(firebase, action) {
   const { payload } = action;
   const { email, password } = payload;
   try {
-    const res = api.firebase.addUser(firebase, {email, password});
+    const res = yield api.firebase.addUser(firebase, {email, password});
+    alert("You have been registired.");
+    yield put(a.setRegisterForm("email", ""));
+    yield put(a.setRegisterForm("password", ""));
   }
   catch (e) {
-    console.error(e);
+    alert(e);
   }
 }
 

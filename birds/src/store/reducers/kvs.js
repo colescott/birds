@@ -7,7 +7,7 @@ const kvs = (prefix) => (state = {}, action) => {
     case `${prefix}_SET`:
       return {
         ...state,
-        [action.key]: action.value
+        [action.payload.key]: action.payload.value
       }
     default:
       return state;
