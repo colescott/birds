@@ -5,6 +5,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const firebase = require("firebase");
 
+const bodyParser = require('body-parser')
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+
 var config = {
     apiKey: "AIzaSyB_QM9xJqQONmX8ca4aCWCw0x8e_czLWDQ",
     authDomain: "cardinalbirds.firebaseapp.com",
@@ -24,10 +27,11 @@ app.get("/ping", (req, res) => {
     res.send("Pong!");
 });
 
+app.use("/api", api);
+
+// This should be the last app.get() in this file. Elias learned this the hard way
 app.get("*", (req, res) => {
      res.status(404).send("Error 404");
 });
-
-app.use("/api", api);
 
 module.exports = app;
