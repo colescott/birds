@@ -24,10 +24,11 @@ app.get("/ping", (req, res) => {
     res.send("Pong!");
 });
 
+app.use("/api", api);
+
+// This should be the last app.get() in this file. Elias learned this the hard way
 app.get("*", (req, res) => {
      res.status(404).send("Error 404");
 });
-
-app.use("/api", api);
 
 module.exports = app;
