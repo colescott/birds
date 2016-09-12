@@ -6,23 +6,35 @@ const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
 const url  = require('url');
+const Regex = require("regex");
 const router = express.Router();
 
 const User = require('./models/user');
 
 const jwtSecret = process.env.JWT_SECRET;
 
+// Paths not requiring auth. Path is string or regex
 const unprotectedPaths = [
     {path: '/auth/login', method: 'POST'},
     {path: '/users', method: 'POST'},
     {path: '/users', method: 'GET'},
+    {path: /\/users\/\w+/igm, method: 'GET'}
 ]
 
 const filter = (req) => {
     var found = false;
     unprotectedPaths.forEach( (obj) => {
-        if(req.url == obj.path && req.method == obj.method)
-            found = true;
+        if(req.method == obj.method)
+        {
+            if(typeof obj.path === 'string')
+            {
+                if(req.url == obj.path)
+                    found = true;
+            } else {
+                if(obj.path.test(req.url) !== null)
+                    found = true;
+            }
+        }
     });
     return found;
 }
@@ -46,17 +58,19 @@ router.use(function(req, res, next) {
             if (req.user) {
                 return next();
             } else {
-                return res.status(401).send({ status: 'error', code: 'unauthorized' });
+                return unauthorized(res);
             }
         });
     } else {
-        return res.status(401).send({ status: 'error', code: 'no token' });
+        return noSession(res);
     }
 });
 
 // Error handler middleware
 router.use(function(err, req, res, next) {
     console.error(err);
+    if(err.code == "credentials_required")
+        return noSession(res);
     return res.status(err.status || 500).send(err);
 });
 
@@ -84,7 +98,7 @@ router.get("/ping", (req, res) => {
 router.post("/users", (req, res) => {
     if(!req.body.email)
     {
-        error("Email value required.");
+        res.send(error("Email value required."));
     }
     var usr = new User({
         email: req.body.email,
@@ -129,11 +143,11 @@ router.get("/users/:id", (req, res) => {
 router.put("/users/:id", (req, res) => {
     if(!req.isAuthenticated())
     {
-        return res.send(error("You need to be logged in to do this."));
+        return noSession(res);
     }
     if(req.user.id != req.params.id)
     {
-        return res.send(error("You do not have the required permisions to do this."));
+        return unauthorized(res);
     }
 
     const changes = {};
@@ -189,11 +203,11 @@ router.put("/users/:id", (req, res) => {
 router.put("/users/:id/:action", (req, res) => {
     if(!req.isAuthenticated())
     {
-        return res.send(error("You need to be logged in to do this."));
+        return noSession(res);
     }
     if(req.user.id != req.params.id)
     {
-        return res.send(error("You do not have the required permisions to do this."));
+        return unauthorized(res);
     }
     User.findById(req.params.id, (err, user) => {
         if(err)
@@ -216,7 +230,7 @@ router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         if (err) return next(err);
         if (!user) {
-            return res.status(401).send(error('unauthorized'));
+            return unauthorized(res);
         } else {
             var val = {};
             val.token = jwt.sign({id: user.id}, jwtSecret, { expiresIn: 18000 /* 60 * 60 * 5 */ });
@@ -229,7 +243,7 @@ router.post('/auth/login', function(req, res, next) {
 router.post('/auth/logout', (req, res) => {
     if(!req.isAuthenticated())
     {
-        return res.send(error("You need to be logged in to do this."));
+        return noSession(res);
     }
 
     req.logout();
@@ -256,6 +270,14 @@ const sterilizeUser = (user) => {
         lastname: user.lastname,
         teamnumber: user.teamnumber
     };
+};
+
+const noSession = (res) => {
+    res.status(401).send(error("You need to be logged in to do this."))
+};
+
+const unauthorized = (res) => {
+    res.status(401).send(error("Unauthorized"))
 };
 
 const error = (message) => {
