@@ -10,6 +10,8 @@ const router = express.Router();
 
 const User = require('./models/user');
 
+const jwtSecret = process.env.JWT_SECRET;
+
 const unprotectedPaths = [
     {path: '/auth/login', method: 'POST'},
     {path: '/users', method: 'POST'},
@@ -25,7 +27,7 @@ const filter = (req) => {
     return found;
 }
 
-router.use(ejwt({secret: process.env.JWT_SECRET, userProperty: 'tokenPayload', getToken: function fromHeaderOrQuerystring (req) {
+router.use(ejwt({secret: jwtSecret, userProperty: 'tokenPayload', getToken: function fromHeaderOrQuerystring (req) {
     if (req.get('tokenPayload')) {
         return JSON.parse(req.get('tokenPayload')).token;
     } else if (req.query && req.query.token) {
@@ -97,27 +99,19 @@ router.post("/users", (req, res) => {
         {
             if(err)
                 return res.send(err);
-            return res.send({
-                id: user.id,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                teamnumber: user.teamnumber
-            });
+            var val = {};
+            val.user = sterilizeUser(user);
+            return res.send(data(val));
         });
     });
 });
 
 router.get("/users", (req, res) => {
     User.find({},function(err, users){
-        const usrs = users.map( user => ({
-            id: user.id,
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            teamnumber: user.teamnumber
-        }));
-        return res.send({data: usrs});
+        const usrs = users.map( user => (sterilizeUser(user)));
+        var val = {};
+        val.users = usrs;
+        return res.send(data(val));
     });
 });
 
@@ -126,13 +120,9 @@ router.get("/users/:id", (req, res) => {
     {
         if(err)
             return res.send(err);
-        return res.send({
-            id: user.id,
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            teamnumber: user.teamnumber
-        });
+        var val = {};
+        val.user = sterilizeUser(user);
+        return res.send(data(val));
     });
 });
 
@@ -184,25 +174,15 @@ router.put("/users/:id", (req, res) => {
         User.findByIdAndUpdate(req.params.id, changes, options, (err, user) => {
             if(err)
                 return res.send(err);
-            return res.send({
-                id: user.id,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                teamnumber: user.teamnumber
-            });
+            var val = {};
+            val.user = sterilizeUser(user);
+            return res.send(data(val));
         });
     else
         User.findById(req.params.id, (err, user) => {
             if(err)
                 return res.send(err);
-            return res.send({
-                id: user.id,
-                email: user.email,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                teamnumber: user.teamnumber
-            });
+            return res.send(data({user: sterilizeUser(user)}));
         });
 });
 
@@ -225,7 +205,7 @@ router.put("/users/:id/:action", (req, res) => {
             User.findByIdAndRemove(req.params.id, (err) => {
                 if(err)
                     return res.send(err);
-                return res.send({data: {message: "successfully deleted user."}});
+                return res.send(data({message: "successfully deleted user."}));
             });
         }
 
@@ -236,18 +216,26 @@ router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
         if (err) return next(err);
         if (!user) {
-            return res.status(401).json({ status: 'error', code: 'unauthorized' });
+            return res.status(401).send(error('unauthorized'));
         } else {
-            return res.send({ token: jwt.sign({id: user.id}, "correcthorsebatterystaple", { expiresIn: 18000 }) });
+            var val = {};
+            val.token = jwt.sign({id: user.id}, jwtSecret, { expiresIn: 18000 /* 60 * 60 * 5 */ });
+            val.user = sterilizeUser(user);
+            return res.send(data(val));
         }
     })(req, res, next);
 });
 
 router.post('/auth/logout', (req, res) => {
+    if(!req.isAuthenticated())
+    {
+        return res.send(error("You need to be logged in to do this."));
+    }
+
     req.logout();
     req.session.destroy(function() {
         res.clearCookie('connect.sid');
-        return res.send({data: {message: "Logged out successfully"}});
+        return res.send(data({message: "Logged out successfully"}));
     });
 });
 
@@ -256,18 +244,26 @@ const getUserById = (id, cb) => {
     {
         if(err)
             return cb(er, null);
-        return cb(null, {
-            id: user.id,
-            email: user.email,
-            firstname: user.firstname,
-            lastname: user.lastname,
-            teamnumber: user.teamnumber
-        });
+        return cb(null, sterilizeUser(user));
     });
+};
+
+const sterilizeUser = (user) => {
+    return {
+        id: user.id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        teamnumber: user.teamnumber
+    };
 };
 
 const error = (message) => {
     return {error: {message: message}};
+};
+
+const data = (data) => {
+    return {data: data}
 };
 
 module.exports = router;
