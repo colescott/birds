@@ -29,6 +29,13 @@ passport.use(new LocalStrategy((username, password, done) => {
     });
 }));
 
+<<<<<<< HEAD
+=======
+// use static serialize and deserialize of model for passport session support
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+>>>>>>> master
 router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
 });
@@ -139,6 +146,10 @@ router.put("/users/:id", authenticate, (req, res) => {
 });
 
 router.put("/users/:id/:action", authenticate, (req, res) => {
+    if(!req.isAuthenticated())
+    {
+        return noSession(res);
+    }
     if(req.user.id != req.params.id)
     {
         return unauthorized(res);
