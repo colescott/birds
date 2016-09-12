@@ -29,13 +29,6 @@ passport.use(new LocalStrategy((username, password, done) => {
     });
 }));
 
-<<<<<<< HEAD
-=======
-// use static serialize and deserialize of model for passport session support
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
-
->>>>>>> master
 router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
 });
