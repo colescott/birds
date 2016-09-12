@@ -1,5 +1,5 @@
-import firebase from "./firebase.js";
+import v1 from "./v1.js";
 
 export default {
-  firebase
+  v1
 }

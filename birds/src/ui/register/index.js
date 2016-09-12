@@ -10,17 +10,38 @@ const Register = (props) => {
     <div>
       <h2> Register </h2>
       <input
-        type="text"
-        placeholder="email"
+        type="email"
+        placeholder="Email"
         value={props.email}
         onChange={props.updateKey("email")}
       />
       <br />
       <input
         type="password"
-        placeholder="password"
+        placeholder="Password"
         value={props.password}
         onChange={props.updateKey("password")}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="First Name"
+        value={props.firstname}
+        onChange={props.updateKey("firstname")}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="Last Name"
+        value={props.lastname}
+        onChange={props.updateKey("lastname")}
+      />
+      <br />
+      <input
+        type="text"
+        placeholder="Team Number"
+        value={props.teamnumber}
+        onChange={props.updateKey("teamnumber")}
       />
       <br />
       <button onClick={props.addUser(props.email, props.password)}> Register </button>

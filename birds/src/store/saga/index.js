@@ -6,14 +6,17 @@ import api from "../../api/index.js";
 import * as c from "../constants.js";
 import * as a from "../actions.js";
 
-function* addUser(firebase, action) {
+function* addUser(action) {
   const { payload } = action;
-  const { email, password } = payload;
+  const { email, password, firstname, lastname, teamnumber } = payload;
   try {
-    const res = yield api.firebase.addUser(firebase, {email, password});
+    const res = yield api.v1.addUser(payload);
     alert("You have been registired.");
     yield put(a.setRegisterForm("email", ""));
     yield put(a.setRegisterForm("password", ""));
+    yield put(a.setRegisterForm("firstname", ""));
+    yield put(a.setRegisterForm("lastname", ""));
+    yield put(a.setRegisterForm("teamnumber", ""));
   }
   catch (e) {
     alert(e);
@@ -22,8 +25,7 @@ function* addUser(firebase, action) {
 
 
 function* rootSaga() {
-  const { payload: firebase } = yield take(c.FIREBASE_SET);
-  yield* takeEvery(c.ADD_USER, addUser, firebase);
+  yield* takeEvery(c.ADD_USER, addUser);
 }
 
 export default rootSaga;
