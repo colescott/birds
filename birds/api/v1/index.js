@@ -25,7 +25,7 @@ const filter = (req) => {
     return found;
 }
 
-router.use(ejwt({secret: "correcthorsebatterystaple", userProperty: 'tokenPayload', getToken: function fromHeaderOrQuerystring (req) {
+router.use(ejwt({secret: process.env.JWT_SECRET, userProperty: 'tokenPayload', getToken: function fromHeaderOrQuerystring (req) {
     if (req.get('tokenPayload')) {
         return JSON.parse(req.get('tokenPayload')).token;
     } else if (req.query && req.query.token) {
