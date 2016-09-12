@@ -1,8 +1,9 @@
-const express = require("express");
+const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 var User = require('./models/user');
@@ -181,14 +182,15 @@ router.put("/users/:id/:action", (req, res) => {
     });
 });
 
-router.post('/auth/login', passport.authenticate('local'), (req, res) => {
-    return res.send({data: {
-        id: req.user.id,
-        email: req.user.email,
-        firstname: req.user.firstname,
-        lastname: req.user.lastname,
-        teamnumber: req.user.teamnumber
-    }});
+router.post('/auth/login', function(req, res, next) {
+ passport.authenticate('local', function(err, user, info) {
+   if (err) return next(err);
+   if (!user) {
+     return res.status(401).json({ status: 'error', code: 'unauthorized' });
+   } else {
+     return res.json({ token: jwt.sign({id: user.id}, "correcthorsebatterystaple") });
+   }
+ })(req, res, next);
 });
 
 router.post('/auth/logout', (req, res) => {
@@ -198,6 +200,21 @@ router.post('/auth/logout', (req, res) => {
         return res.send({data: {message: "Logged out successfully"}});
     });
 });
+
+const getUserById = (id) => {
+    User.findById(id, (err, user) =>
+    {
+        if(err)
+            return err;
+        return {
+            id: user.id,
+            email: user.email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+            teamnumber: user.teamnumber
+        };
+    });
+};
 
 const error = (message) => {
     return {error: {message: message}};
