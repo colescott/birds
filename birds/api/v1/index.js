@@ -4,9 +4,59 @@ const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
+const ejwt = require('express-jwt');
+const url  = require('url');
 const router = express.Router();
 
-var User = require('./models/user');
+const User = require('./models/user');
+
+const unprotectedPaths = [
+    {path: '/auth/login', method: 'POST'},
+    {path: '/users', method: 'POST'},
+    {path: '/users', method: 'GET'},
+]
+
+const filter = (req) => {
+    var found = false;
+    unprotectedPaths.forEach( (obj) => {
+        if(req.url == obj.path && req.method == obj.method)
+            found = true;
+    });
+    return found;
+}
+
+router.use(ejwt({secret: "correcthorsebatterystaple", userProperty: 'tokenPayload', getToken: function fromHeaderOrQuerystring (req) {
+    if (req.get('tokenPayload')) {
+        return JSON.parse(req.get('tokenPayload')).token;
+    } else if (req.query && req.query.token) {
+        return req.query.token;
+    }
+        return null;
+    }
+}).unless(filter));
+
+router.use(function(req, res, next) {
+    if(filter(req))
+        return next();
+    if (req.tokenPayload) {
+        getUserById(req.tokenPayload.id, (err, user) => {
+            req.user = user;
+            if (req.user) {
+                return next();
+            } else {
+                return res.status(401).send({ status: 'error', code: 'unauthorized' });
+            }
+        });
+    } else {
+        return res.status(401).send({ status: 'error', code: 'no token' });
+    }
+});
+
+// Error handler middleware
+router.use(function(err, req, res, next) {
+    console.error(err);
+    return res.status(err.status || 500).send(err);
+});
 
 passport.use(new LocalStrategy((username, password, done) => {
     User.authenticate()(username, password, (err, user, passErr) => {
@@ -183,14 +233,14 @@ router.put("/users/:id/:action", (req, res) => {
 });
 
 router.post('/auth/login', function(req, res, next) {
- passport.authenticate('local', function(err, user, info) {
-   if (err) return next(err);
-   if (!user) {
-     return res.status(401).json({ status: 'error', code: 'unauthorized' });
-   } else {
-     return res.json({ token: jwt.sign({id: user.id}, "correcthorsebatterystaple") });
-   }
- })(req, res, next);
+    passport.authenticate('local', function(err, user, info) {
+        if (err) return next(err);
+        if (!user) {
+            return res.status(401).json({ status: 'error', code: 'unauthorized' });
+        } else {
+            return res.send({ token: jwt.sign({id: user.id}, "correcthorsebatterystaple", { expiresIn: 18000 }) });
+        }
+    })(req, res, next);
 });
 
 router.post('/auth/logout', (req, res) => {
@@ -201,18 +251,18 @@ router.post('/auth/logout', (req, res) => {
     });
 });
 
-const getUserById = (id) => {
+const getUserById = (id, cb) => {
     User.findById(id, (err, user) =>
     {
         if(err)
-            return err;
-        return {
+            return cb(er, null);
+        return cb(null, {
             id: user.id,
             email: user.email,
             firstname: user.firstname,
             lastname: user.lastname,
             teamnumber: user.teamnumber
-        };
+        });
     });
 };
 
