@@ -1,12 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const ejwt = require('express-jwt');
 const url  = require('url');
-const Regex = require("regex");
 const router = express.Router();
 
 const User = require('./models/user');

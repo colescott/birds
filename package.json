@@ -55,7 +55,6 @@
     "redux": "3.5.2",
     "redux-actions": "0.12.0",
     "redux-saga": "0.11.1",
-    "regex": "0.1.1",
     "reselect": "2.5.3",
     "webpack-merge": "0.14.1",
     "webpack-uglify-js-plugin": "1.1.9",
