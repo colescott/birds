@@ -12,7 +12,6 @@ const User = require('./models/user');
 const jwtSecret = process.env.JWT_SECRET;
 
 router.use(passport.initialize());
-router.use(passport.session());
 
 const authenticate = expressJwt({secret: jwtSecret});
 
@@ -79,10 +78,6 @@ router.get("/users/:id", (req, res) => {
 });
 
 router.put("/users/:id", authenticate, (req, res) => {
-    if(!req.isAuthenticated())
-    {
-        return noSession(res);
-    }
     if(req.user.id != req.params.id)
     {
         return unauthorized(res);
@@ -139,10 +134,6 @@ router.put("/users/:id", authenticate, (req, res) => {
 });
 
 router.put("/users/:id/:action", authenticate, (req, res) => {
-    if(!req.isAuthenticated())
-    {
-        return noSession(res);
-    }
     if(req.user.id != req.params.id)
     {
         return unauthorized(res);
@@ -181,11 +172,6 @@ router.post('/auth/login', function(req, res, next) {
 });
 
 router.post('/auth/logout', authenticate, (req, res) => {
-    if(!req.isAuthenticated())
-    {
-        return noSession(res);
-    }
-
     req.logout();
     return res.send(data({message: "Logged out successfully"}));
 });
