@@ -11,12 +11,6 @@ const mongoose = require('mongoose');
 const dbConfig = require('./db.js');
 mongoose.connect(dbConfig.url);
 
-const passport = require('passport');
-const expressSession = require('express-session');
-app.use(expressSession({secret: 'correcthorsebatterystaple'}));
-app.use(passport.initialize());
-app.use(passport.session());
-
 const api = require("./api");
 
 app.use(cors());
