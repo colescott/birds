@@ -17,7 +17,7 @@ const authenticate = expressJwt({secret: jwtSecret});
 
 passport.use(new LocalStrategy({
         usernameField: 'email'
-    }(username, password, done) => {
+    }, (username, password, done) => {
     User.authenticate()(username, password, (err, user, passErr) => {
         if(err)
             return done(err);
