@@ -13,7 +13,15 @@ const jwtSecret = process.env.JWT_SECRET;
 
 router.use(passport.initialize());
 
-const authenticate = expressJwt({secret: jwtSecret});
+const ejwt = expressJwt({secret: jwtSecret});
+
+const authenticate = (req, res, next) => {
+    ejwt(req, res, (err) => {
+        if(err && err.code && err.code == 'invalid_token')
+            return invalidToken(res);
+        next();
+    });
+};
 
 passport.use(new LocalStrategy({
         usernameField: 'email'
@@ -199,6 +207,10 @@ const sterilizeUser = (user) => {
 
 const noSession = (res) => {
     res.status(401).send(error("You need to be logged in to do this."))
+};
+
+const invalidToken = (res) => {
+    res.status(401).send(error("Invalid token."))
 };
 
 const unauthorized = (res) => {
