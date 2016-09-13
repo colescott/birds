@@ -37,7 +37,7 @@ router.get("/ping", (req, res) => {
 router.post("/users", (req, res) => {
     if(!req.body.email)
     {
-        res.send(error("Email value required."));
+        return res.send(error("Email value required."));
     }
     var usr = new User({
         email: req.body.email,
