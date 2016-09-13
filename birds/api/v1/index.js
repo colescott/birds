@@ -21,6 +21,8 @@ const authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
         if(err && err.code && err.code == 'invalid_token')
             return invalidToken(res);
+        if(err && err.code && err.code == 'credentials_required')
+            return noSession(res);
         next();
     });
 };
