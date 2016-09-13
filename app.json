@@ -6,8 +6,7 @@
     "JWT_SECRET": {
       "generator": "secret",
       "required": "true"
-    },
-    "test": "a"
+    }
   },
   "formation": {
     "web": {
@@ -15,8 +14,7 @@
     }
   },
   "addons": [
-    "mongolab",
-    "heroku-postgresql"
+    "mongolab"
   ],
   "buildpacks": [
     {
