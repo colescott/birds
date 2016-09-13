@@ -1,5 +1,6 @@
 process.env.NODE_ENV = 'test';
 
+const randomstring = require("randomstring");
 const request = require('supertest');
 const app = require("../app.js");
 
@@ -33,6 +34,17 @@ describe('POST /api/v1/users', () => {
                 user: testUserNoPass
             }
         }, done);
+    });
+    it('responds error on empty user', (done) => {
+        request(app)
+        .post('/api/v1/users')
+        .set('Accept', 'application/json')
+        .send({})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Email value required.'))
+                throw new Error('Server not sending error with "Email value required."')
+        })
+        .end(done);
     });
 });
 
@@ -79,7 +91,7 @@ describe('POST /api/v1/auth/login', () => {
         .set('Accept', 'application/json')
         .send(testUser)
         .expect(function(res) {
-            if(res.body.data.user.id != testUserWithId.id)
+            if(!equal(res.body.data.user, testUserWithId))
                 throw new Error('user not in response')
         })
         .end(done);
@@ -96,6 +108,117 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
+    it('responds error on no email', (done) => {
+        request(app)
+        .post('/api/v1/auth/login')
+        .set('Accept', 'application/json')
+        .send({password: testUser.password})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Unauthorized'))
+                throw new Error('Server not sending error with "Unauthorized"')
+        })
+        .end(done);
+    });
+    it('responds error on no password', (done) => {
+        request(app)
+        .post('/api/v1/auth/login')
+        .set('Accept', 'application/json')
+        .send({email: testUser.email})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Unauthorized'))
+                throw new Error('Server not sending error with "Unauthorized"')
+        })
+        .end(done);
+    });
+    it('responds error on bad password', (done) => {
+        request(app)
+        .post('/api/v1/auth/login')
+        .set('Accept', 'application/json')
+        .send({email: testUser.email, password: 'notthepassword'})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Unauthorized'))
+                throw new Error('Server not sending error with "Unauthorized"')
+        })
+        .end(done);
+    });
+});
+
+describe('GET /users/:id', () => {
+    it('respond with json', (done) => {
+        request(app)
+        .get('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
+    it('responds with user', (done) => {
+        request(app)
+        .get('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .expect(function(res) {
+            if(!equal(res.body.data.user, testUserWithId))
+                throw new Error('User not equal to test user')
+        })
+        .end(done);
+    });
+});
+
+describe('PUT /users/:id', () => {
+    it('respond with json', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + loginToken)
+        .send({})
+        .expect('Content-Type', /json/)
+        .expect(200, done);
+    });
+    it('responds with changed user', (done) => {
+        const newUser = {
+            firstname: randomstring.generate(),
+            lastname: randomstring.generate(),
+            teamnumber: randomTeamNumber(1, 6237)
+        };
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + loginToken)
+        .send(newUser)
+        .expect(function(res) {
+            if(equal(res.body.data.user, testUserWithId))
+                throw new Error('User was not changed, equal to old user')
+            if(res.body.data.user.firstname != newUser.firstname)
+                throw new Error('First name was not changed')
+            if(res.body.data.user.lastname != newUser.lastname)
+                throw new Error('Last name was not changed')
+            if(res.body.data.user.teamnumber != newUser.teamnumber)
+                throw new Error('Team number was not changed')
+        })
+        .end(done);
+    });
+    it('responds error on no token', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .send({})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Unauthorized'))
+                throw new Error('Server not sending error with "Unauthorized"')
+        })
+        .end(done);
+    });
+    it('responds error on bad token', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer correcthorsebatterystaple')
+        .send({})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Invalid token.'))
+                throw new Error('Server not sending error with "Invalid token."')
+        })
+        .end(done);
+    });
 });
 
 const clone = (obj) => {
@@ -105,4 +228,14 @@ const clone = (obj) => {
         if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
     }
     return copy;
+}
+
+const equal = (obj1, obj2) => {
+    return JSON.stringify(obj1) == JSON.stringify(obj2);
+}
+
+const randomTeamNumber = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
 }
