@@ -1,4 +1,4 @@
-const xr = require('xr');
+import xr from "xr";
 
 const v1 = {
   addUser: function addUser({ email, password, firstname, lastname, teamnumber }) {
