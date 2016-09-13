@@ -4,7 +4,8 @@
   },
   "env": {
     "JWT_SECRET": {
-      "generator": "secret"
+      "generator": "secret",
+      "required": "true"
     }
   },
   "formation": {
