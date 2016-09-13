@@ -202,14 +202,69 @@ describe('PUT /users/:id', () => {
         .set('Accept', 'application/json')
         .send({})
         .expect(function(res) {
-            if(!(res.body.error.message == 'Unauthorized'))
-                throw new Error('Server not sending error with "Unauthorized"')
+            if(!(res.body.error.message == 'You need to be logged in to do this.'))
+                throw new Error('Server not sending error with "You need to be logged in to do this."')
         })
         .end(done);
     });
     it('responds error on bad token', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id)
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer correcthorsebatterystaple')
+        .send({})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'Invalid token.'))
+                throw new Error('Server not sending error with "Invalid token."')
+        })
+        .end(done);
+    });
+});
+
+describe('PUT /users/:id/:delete', () => {
+    it('responds user deleted', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id + '/delete')
+        .set('Accept', 'application/json')
+        .set('Authorization', 'Bearer ' + loginToken)
+        .expect({
+            data: {
+                message: "successfully deleted user."
+            }
+        }, done);
+    });
+    it('user is deleted from database', (done) => {
+        request(app)
+        .get('/api/v1/users/')
+        .set('Accept', 'application/json')
+        .expect(function(res) {
+            var found = false;
+            res.body.data.users.forEach( (user) => {
+                if(user.email == testUser.email)
+                {
+                    testUserWithId = clone(user);
+                    found = true;
+                }
+            });
+            if(found)
+                throw new Error('The user still exists');
+        })
+        .end(done);
+    });
+    it('responds error on no token', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id + '/delete')
+        .set('Accept', 'application/json')
+        .send({})
+        .expect(function(res) {
+            if(!(res.body.error.message == 'You need to be logged in to do this.'))
+                throw new Error('Server not sending error with "You need to be logged in to do this."')
+        })
+        .end(done);
+    });
+    it('responds error on bad token', (done) => {
+        request(app)
+        .put('/api/v1/users/' + testUserWithId.id + '/delete')
         .set('Accept', 'application/json')
         .set('Authorization', 'Bearer correcthorsebatterystaple')
         .send({})
