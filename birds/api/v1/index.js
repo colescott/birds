@@ -11,6 +11,8 @@ const User = require('./models/user');
 
 const jwtSecret = process.env.JWT_SECRET;
 
+mongoose.Promise = global.Promise;
+
 router.use(passport.initialize());
 
 const ejwt = expressJwt({secret: jwtSecret});
