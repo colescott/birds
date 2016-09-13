@@ -10,7 +10,8 @@ const User = new Schema({
 });
 
 User.plugin(passportLocalMongoose, {
-    usernameField: "email"
+    usernameField: "email",
+    usernameLowerCase: true
 });
 
 module.exports = mongoose.model('User', User);

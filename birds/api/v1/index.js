@@ -15,7 +15,9 @@ router.use(passport.initialize());
 
 const authenticate = expressJwt({secret: jwtSecret});
 
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use(new LocalStrategy({
+    usernameField: 'email'
+    }, (username, password, done) => {
     User.authenticate()(username, password, (err, user, passErr) => {
         if(err)
             return done(err);
@@ -157,7 +159,8 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
 
 router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', {
-      session: false
+        usernameField: 'email',
+        session: false
     }, function(err, user, info) {
         if (err) return next(err);
         if (!user) {
