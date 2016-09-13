@@ -157,7 +157,6 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
 
 router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', {
-        usernameField: 'email',
         session: false
     }, function(err, user, info) {
         if (err) return next(err);
