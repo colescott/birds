@@ -5,7 +5,7 @@
   "env": {
     "JWT_SECRET": {
       "generator": "secret",
-      "required": "true",
+      "required": "true"
     },
     "test": "a"
   },
