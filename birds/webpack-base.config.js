@@ -1,6 +1,6 @@
 const path = require("path");
 const validator = require('webpack-validator');
-
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
@@ -10,12 +10,15 @@ const config = {
         filename: "bundle.js"
     },
     plugins: [
-        new HtmlWebpackPlugin()
+        new HtmlWebpackPlugin(),
+        new webpack.DefinePlugin({
+            URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
+        })
     ],
     module: {
         loaders: [
             {
-                loader: "babel",
+                loaders: ["babel"],
                 test: /\.js$/,
                 exclude: /node_modules/
             }

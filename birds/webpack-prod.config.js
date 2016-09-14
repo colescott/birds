@@ -25,7 +25,7 @@ const config = merge.smart(baseConfig, {
             "process.env": {
                 "NODE_ENV": JSON.stringify("production")
             }
-        })
+        }),
     ]
 });
 
