@@ -81,13 +81,15 @@ router.get("/users", (req, res) => {
     });
 });
 
-router.get("/users/:id", (req, res) => {
+router.get("/users/:id", authenticate, (req, res) => {
     User.findById(req.params.id, (err, user) =>
     {
         if(err)
             return res.send(err);
         var val = {};
         val.user = sterilizeUser(user);
+        if(req.params.id == req.user.id)
+            val.user.progress = user.progress;
         return res.send(data(val));
     });
 });
@@ -253,8 +255,7 @@ const sterilizeUser = (user) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        teamnumber: user.teamnumber,
-        progress: user.progress
+        teamnumber: user.teamnumber
     };
 };
 
