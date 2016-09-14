@@ -56,6 +56,7 @@ router.post("/users", (req, res) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         teamnumber: req.body.teamnumber,
+        progress: []
     });
     User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
         if(err)
@@ -147,6 +148,10 @@ router.put("/users/:id", authenticate, (req, res) => {
         });
 });
 
+//Options for mongoose
+const options = {};
+options.new = true;
+
 router.put("/users/:id/:action", authenticate, (req, res) => {
     if(req.user.id != req.params.id)
     {
@@ -164,6 +169,49 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
                     return res.send(err);
                 return res.send(data({message: "successfully deleted user."}));
             });
+            break;
+        case "setprogress":
+            if(!req.body.id)
+                return res.status(400).send(error("Id not set!"));
+            if(!req.body.state)
+                return res.status(400).send(error("State not set!"));
+
+            var found = false;
+
+            user.progress.forEach( (obj) => {
+                if(found)
+                    return;
+                if(obj.id == req.body.id)
+                {
+                    found = true;
+
+                    User.update({'progress.id': req.body.id}, {'$set': {
+                        'progress.$.state': req.body.state
+                    }}, options, (err, user) => {
+                        if(err)
+                            return res.send(error(err));
+                        return res.send(data({message: "successfully set progress"}));
+                    });
+                }
+            });
+            if(found)
+                return;
+
+            User.findByIdAndUpdate(req.user.id, {$push: {"progress": {id: req.body.id, state: req.body.state}}}, options, (err, user) => {
+                if(err)
+                    return res.send(error(err));
+                return res.send(data({message: "successfully set progress"}));
+            });
+            break;
+        case "resetprogress":
+            User.findByIdAndUpdate(req.user.id, {progress: []}, options, (err, user) => {
+                if(err)
+                    return res.send(error(err));
+                return res.send(data({message: "successfully reset progress"}));
+            });
+            break;
+        default:
+            return res.status(400).send(error("Action not found"));
         }
 
     });
@@ -205,7 +253,8 @@ const sterilizeUser = (user) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        teamnumber: user.teamnumber
+        teamnumber: user.teamnumber,
+        progress: user.progress
     };
 };
 

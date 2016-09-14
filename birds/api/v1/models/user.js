@@ -6,7 +6,11 @@ const User = new Schema({
     email: String,
     firstname: String,
     lastname: String,
-    teamnumber: Number
+    teamnumber: Number,
+    progress: [{
+        id: String,
+        state: String
+    }]
 });
 
 User.plugin(passportLocalMongoose, {
