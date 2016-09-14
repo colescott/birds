@@ -2,6 +2,8 @@ const randomstring = require("randomstring");
 const request = require('supertest');
 const app = require("../app.js");
 
+const util = require("./util.js");
+
 const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159};
 const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};;
 
@@ -63,7 +65,7 @@ describe('GET /api/v1/users', () => {
             res.body.data.users.forEach( (user) => {
                 if(user.email == testUser.email)
                 {
-                    testUserWithId = clone(user);
+                    testUserWithId = util.clone(user);
                     found = true;
                 }
             });
@@ -89,7 +91,7 @@ describe('POST /api/v1/auth/login', () => {
         .set('Accept', 'application/json')
         .send(testUser)
         .expect(function(res) {
-            if(!equal(res.body.data.user, testUserWithId))
+            if(!util.equal(res.body.data.user, testUserWithId))
                 throw new Error('user not in response')
         })
         .end(done);
@@ -154,7 +156,7 @@ describe('GET /users/:id', () => {
         .get('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
         .expect(function(res) {
-            if(!equal(res.body.data.user, testUserWithId))
+            if(!util.equal(res.body.data.user, testUserWithId))
                 throw new Error('User not equal to test user')
         })
         .end(done);
@@ -175,7 +177,7 @@ describe('PUT /users/:id', () => {
         const newUser = {
             firstname: randomstring.generate(),
             lastname: randomstring.generate(),
-            teamnumber: randomTeamNumber(1, 6237)
+            teamnumber: util.randomTeamNumber(1, 6237)
         };
         request(app)
         .put('/api/v1/users/' + testUserWithId.id)
@@ -183,7 +185,7 @@ describe('PUT /users/:id', () => {
         .set('Authorization', 'Bearer ' + loginToken)
         .send(newUser)
         .expect(function(res) {
-            if(equal(res.body.data.user, testUserWithId))
+            if(util.equal(res.body.data.user, testUserWithId))
                 throw new Error('User was not changed, equal to old user')
             if(res.body.data.user.firstname != newUser.firstname)
                 throw new Error('First name was not changed')
@@ -240,7 +242,7 @@ describe('PUT /users/:id/:delete', () => {
             res.body.data.users.forEach( (user) => {
                 if(user.email == testUser.email)
                 {
-                    testUserWithId = clone(user);
+                    testUserWithId = util.clone(user);
                     found = true;
                 }
             });
@@ -273,22 +275,3 @@ describe('PUT /users/:id/:delete', () => {
         .end(done);
     });
 });
-
-const clone = (obj) => {
-    if (null == obj || "object" != typeof obj) return obj;
-    var copy = obj.constructor();
-    for (var attr in obj) {
-        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-    }
-    return copy;
-}
-
-const equal = (obj1, obj2) => {
-    return JSON.stringify(obj1) == JSON.stringify(obj2);
-}
-
-const randomTeamNumber = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
