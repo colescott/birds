@@ -231,6 +231,7 @@ router.post("/auth/login", function(req, res, next) {
             var val = {};
             val.token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 });
             val.user = sterilizeUser(user);
+            val.user.progress = user.progress;
             return res.send(data(val));
         }
     })(req, res, next);
