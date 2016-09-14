@@ -1,4 +1,4 @@
-# Birds
+# Birds [![Build Status](https://travis-ci.org/Team4159/birds.svg?branch=master)](https://travis-ci.org/Team4159/birds)
 CardinalBotics Beginning and Intermediate Role Development System
 
 ## Setup
