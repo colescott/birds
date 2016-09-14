@@ -13,6 +13,9 @@ const config = {
         new HtmlWebpackPlugin(),
         new webpack.DefinePlugin({
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
+        }),
+        new webpack.ProvidePlugin({
+            React: "react"
         })
     ],
     module: {

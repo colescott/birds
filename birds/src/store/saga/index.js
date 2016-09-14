@@ -11,7 +11,7 @@ function* addUser(action) {
     const { email, password, firstname, lastname, teamnumber } = payload;
     try {
       const res = yield api.v1.addUser(payload);
-        alert("You have been registired.");
+        console.log("You have been registired.");
         yield put(a.setRegisterForm("email", ""));
         yield put(a.setRegisterForm("password", ""));
         yield put(a.setRegisterForm("firstname", ""));
