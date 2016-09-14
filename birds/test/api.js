@@ -4,7 +4,7 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
-const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159};
+const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159, progress: []};
 const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};;
 
 var testUserWithId;
@@ -29,6 +29,7 @@ describe('APIv1', () => {
                 if(res.body.name)
                     throw new Error('User already exists in database');
                 delete res.body.data.user.id;
+                delete res.body.data.user.progress;
             })
             .expect(200, {
                 data: {
@@ -149,6 +150,7 @@ describe('APIv1', () => {
             request(app)
             .get('/api/v1/users/' + testUserWithId.id)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loginToken)
             .expect('Content-Type', /json/)
             .expect(200, done);
         });
@@ -156,11 +158,19 @@ describe('APIv1', () => {
             request(app)
             .get('/api/v1/users/' + testUserWithId.id)
             .set('Accept', 'application/json')
+            .set('Authorization', 'Bearer ' + loginToken)
             .expect(function(res) {
+                delete res.body.data.user.progress;
                 if(!util.equal(res.body.data.user, testUserWithId))
                     throw new Error('User not equal to test user')
             })
             .end(done);
+        });
+        it('responds with 401 when not logged in', (done) => {
+            request(app)
+            .get('/api/v1/users/' + testUserWithId.id)
+            .set('Accept', 'application/json')
+            .expect(401, done);
         });
     });
 
