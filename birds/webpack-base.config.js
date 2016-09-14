@@ -15,7 +15,7 @@ const config = {
     module: {
         loaders: [
             {
-                loader: "babel",
+                loaders: ["babel"],
                 test: /\.js$/,
                 exclude: /node_modules/
             }
