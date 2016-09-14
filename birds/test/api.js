@@ -10,7 +10,7 @@ const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, la
 var testUserWithId;
 var loginToken;
 
-describe('APIv1'), () => {
+describe('APIv1', () => {
     describe('POST /api/v1/users', () => {
         it('respond with json', (done) => {
             request(app)
