@@ -4,6 +4,7 @@ export const ADD_USER = "ADD_USER";
 
 export const LOGIN_AUTH = "LOGIN_AUTH";
 export const LOGOUT_AUTH = "LOGOUT_AUTH";
+export const REGISTER_AUTH = "REGISTER_AUTH";
 
 // Redux Store Actions
 export const REGISTER_FORM_SET = "REGISTER_FORM_SET";

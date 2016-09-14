@@ -7,16 +7,14 @@ import * as c from "../constants.js";
 import * as a from "../actions.js";
 
 describe("AUTH SAGA", () => {
-    it("should return a function", () => {
-        assert.typeOf(auth, "Function");
-    });
     it("should wait for LOGIN, LOGOUT, or REGISTER actions", () => {
         const saga = auth();
         assert.deepEqual(
             saga.next().value,
             take([
                 c.LOGOUT_AUTH,
-                c.LOGOUT_AUTH
+                c.LOGIN_AUTH,
+                c.REGISTER_AUTH
             ])
         );
     })
@@ -28,11 +26,11 @@ describe("AUTH SAGA", () => {
                 type: c.LOGIN_AUTH,
                 payload: {
                     username: "test",
-                    password: "test"
+                    password: "password"
                 }
             });
             assert.deepEqual(
-                apiCall,
+                apiCall.value,
                 call(api.auth.login, "test", "password")
             );
         });
@@ -53,7 +51,7 @@ describe("AUTH SAGA", () => {
             });
             const action = saga.next({ data });
             assert.deepEqual(
-                action,
+                action.value,
                 put(a.setAuth(data))
             );
         })
@@ -72,10 +70,36 @@ describe("AUTH SAGA", () => {
             });
             const action = saga.next({ error });
             assert.deepEqual(
-                action,
+                action.value,
                 put(a.setAuth(new Error(error.message)))
             );
         });
+        it("should go back to listening for events", () => {
+            const data = {
+                username: "test",
+                password: "test",
+                token: "aaa.bbb.ccc"
+            };
+            const saga = auth();
+            saga.next();
+            saga.next({
+                type: c.LOGIN_AUTH,
+                payload: {
+                    username: "test",
+                    password: "test"
+                }
+            });
+            saga.next({ data });
+            saga.next();
+            assert.deepEqual(
+                saga.next().value,
+                take([
+                    c.LOGOUT_AUTH,
+                    c.LOGIN_AUTH,
+                    c.REGISTER_AUTH
+                ])
+            );
+        })
     });
     describe("LOGOUT", () => {
         it("should call an auth reducer reset", () => {
@@ -83,18 +107,32 @@ describe("AUTH SAGA", () => {
             saga.next();
             const action = saga.next({ type: c.LOGOUT_AUTH });
             assert.deepEqual(
-                action,
+                action.value,
                 put(a.resetAuth())
+            );
+        });
+        it("shoud go back to listening for events", () => {
+            const saga = auth();
+            saga.next();
+            saga.next({ type: c.LOGOUT_AUTH });
+            saga.next();
+            assert.deepEqual(
+                saga.next().value,
+                take([
+                    c.LOGOUT_AUTH,
+                    c.LOGIN_AUTH,
+                    c.REGISTER_AUTH
+                ])
             );
         });
     });
     describe("REGISTER", () => {
-        it("it should call the regester api")
+        it("it should call the regester api", () => {
+            const saga = auth();
+            saga.next();
+            const apiCall = saga.next({type: c.REGISTER_AUTH});
+        });
         it("it should dispatch a login action on success")
         it("it should dispatch an error action on failure")
     });
-    // TODO: check that all trigger acions eventually return to the ready state
-    it("should go back to listening for events", () => {
-
-    })
 });
