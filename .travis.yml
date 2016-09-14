@@ -3,3 +3,9 @@ node_js:
   - "6"
   - "6.1"
   - "5.11"
+services:
+  - mongodb
+env:
+  - MONGODB_URI=mongodb://localhost/passport
+notifications:
+  slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
