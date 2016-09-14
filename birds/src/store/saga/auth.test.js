@@ -90,7 +90,6 @@ describe("AUTH SAGA", () => {
                 }
             });
             saga.next({ data });
-            saga.next();
             assert.deepEqual(
                 saga.next().value,
                 take([
@@ -115,7 +114,6 @@ describe("AUTH SAGA", () => {
             const saga = auth();
             saga.next();
             saga.next({ type: c.LOGOUT_AUTH });
-            saga.next();
             assert.deepEqual(
                 saga.next().value,
                 take([
@@ -127,10 +125,10 @@ describe("AUTH SAGA", () => {
         });
     });
     describe("REGISTER", () => {
-        it("it should call the regester api", () => {
+        xit("it should call the regester api", () => {
             const saga = auth();
             saga.next();
-            const apiCall = saga.next({type: c.REGISTER_AUTH});
+            saga.next({type: c.REGISTER_AUTH});
         });
         it("it should dispatch a login action on success")
         it("it should dispatch an error action on failure")
