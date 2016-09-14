@@ -8,6 +8,7 @@ const testUser = { email: "test@team4159.org", password: "password", firstname: 
 const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber };
 
 var testUserWithId;
+var testUserWithIdNoProgress;
 var loginToken;
 
 describe("APIv1", () => {
@@ -29,7 +30,6 @@ describe("APIv1", () => {
                 if (res.body.name)
                     throw new Error("User already exists in database");
                 delete res.body.data.user.id;
-                delete res.body.data.user.progress;
             })
             .expect(200, {
                 data: {
@@ -67,7 +67,7 @@ describe("APIv1", () => {
                 res.body.data.users.forEach((user) => {
                     if (user.email == testUser.email)
                     {
-                        testUserWithId = util.clone(user);
+                        testUserWithIdNoProgress = util.clone(user);
                         found = true;
                     }
                 });
@@ -93,8 +93,10 @@ describe("APIv1", () => {
             .set("Accept", "application/json")
             .send(testUser)
             .expect(function(res) {
-                if (!util.equal(res.body.data.user, testUserWithId))
-                    throw new Error("user not in response");
+                testUserWithId = util.clone(res.body.data.user);
+                delete res.body.data.user.progress;
+                if(!util.equal(res.body.data.user, testUserWithIdNoProgress))
+                    throw new Error('user not in response')
             })
             .end(done);
         });
@@ -161,8 +163,8 @@ describe("APIv1", () => {
             .set("Authorization", "Bearer " + loginToken)
             .expect(function(res) {
                 delete res.body.data.user.progress;
-                if (!util.equal(res.body.data.user, testUserWithId))
-                    throw new Error("User not equal to test user");
+                if(!util.equal(res.body.data.user, testUserWithIdNoProgress))
+                    throw new Error('User not equal to test user')
             })
             .end(done);
         });
