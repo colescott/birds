@@ -1,5 +1,3 @@
-process.env.NODE_ENV = 'test';
-
 const randomstring = require("randomstring");
 const request = require('supertest');
 const app = require("../app.js");

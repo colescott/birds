@@ -10,7 +10,7 @@
     "serve": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
-    "test": "mocha birds/test/*.js",
+    "test": "NODE_ENV=TEST mocha birds/test/*.js",
     "postinstall": "npm run build:prod",
     "clean": "rm -rf node_modules & rm -rf birds/public & rm -rf birds/static"
   },

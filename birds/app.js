@@ -14,7 +14,7 @@ mongoose.connect(dbConfig.url);
 const api = require("./api");
 
 app.use(cors());
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'TEST') {
     app.use(morgan("dev"));
 }
 
