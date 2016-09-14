@@ -10,15 +10,15 @@ const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, la
 var testUserWithId;
 var loginToken;
 
-describe('POST /api/v1/users', () => {
-    it('respond with json', (done) => {
+describe('APIv1', () => {
+    it('POST /api/v1/users respond with json', (done) => {
         request(app)
         .post('/api/v1/users')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
-    it('created and returned new user', (done) => {
+    it('POST /api/v1/users created and returned new user', (done) => {
         request(app)
         .post('/api/v1/users')
         .set('Accept', 'application/json')
@@ -35,7 +35,7 @@ describe('POST /api/v1/users', () => {
             }
         }, done);
     });
-    it('responds error on empty user', (done) => {
+    it('POST /api/v1/users responds error on empty user', (done) => {
         request(app)
         .post('/api/v1/users')
         .set('Accept', 'application/json')
@@ -46,17 +46,15 @@ describe('POST /api/v1/users', () => {
         })
         .end(done);
     });
-});
 
-describe('GET /api/v1/users', () => {
-    it('respond with json', (done) => {
+    it('GET /api/v1/users respond with json', (done) => {
         request(app)
         .get('/api/v1/users')
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
-    it('conatins test user', (done) => {
+    it('GET /api/v1/users conatins test user', (done) => {
         request(app)
         .get('/api/v1/users')
         .set('Accept', 'application/json')
@@ -74,10 +72,8 @@ describe('GET /api/v1/users', () => {
         })
         .end(done);
     });
-});
 
-describe('POST /api/v1/auth/login', () => {
-    it('respond with json', (done) => {
+    it('POST /api/v1/auth/login respond with json', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -85,7 +81,7 @@ describe('POST /api/v1/auth/login', () => {
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
-    it('responds with user', (done) => {
+    it('POST /api/v1/auth/login responds with user', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -96,7 +92,7 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
-    it('responds with token', (done) => {
+    it('POST /api/v1/auth/login responds with token', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -108,7 +104,7 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
-    it('responds error on no email', (done) => {
+    it('POST /api/v1/auth/login responds error on no email', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -119,7 +115,7 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
-    it('responds error on no password', (done) => {
+    it('POST /api/v1/auth/login responds error on no password', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -130,7 +126,7 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
-    it('responds error on bad password', (done) => {
+    it('POST /api/v1/auth/login responds error on bad password', (done) => {
         request(app)
         .post('/api/v1/auth/login')
         .set('Accept', 'application/json')
@@ -141,17 +137,15 @@ describe('POST /api/v1/auth/login', () => {
         })
         .end(done);
     });
-});
 
-describe('GET /users/:id', () => {
-    it('respond with json', (done) => {
+    it('GET /users/:id respond with json', (done) => {
         request(app)
         .get('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
-    it('responds with user', (done) => {
+    it('GET /users/:id responds with user', (done) => {
         request(app)
         .get('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
@@ -161,10 +155,8 @@ describe('GET /users/:id', () => {
         })
         .end(done);
     });
-});
 
-describe('PUT /users/:id', () => {
-    it('respond with json', (done) => {
+    it('PUT /users/:id respond with json', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
@@ -173,7 +165,7 @@ describe('PUT /users/:id', () => {
         .expect('Content-Type', /json/)
         .expect(200, done);
     });
-    it('responds with changed user', (done) => {
+    it('PUT /users/:id responds with changed user', (done) => {
         const newUser = {
             firstname: randomstring.generate(),
             lastname: randomstring.generate(),
@@ -196,7 +188,7 @@ describe('PUT /users/:id', () => {
         })
         .end(done);
     });
-    it('responds error on no token', (done) => {
+    it('PUT /users/:id responds error on no token', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
@@ -207,7 +199,7 @@ describe('PUT /users/:id', () => {
         })
         .end(done);
     });
-    it('responds error on bad token', (done) => {
+    it('PUT /users/:id responds error on bad token', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id)
         .set('Accept', 'application/json')
@@ -219,10 +211,8 @@ describe('PUT /users/:id', () => {
         })
         .end(done);
     });
-});
 
-describe('PUT /users/:id/:delete', () => {
-    it('responds user deleted', (done) => {
+    it('PUT /users/:id/delete responds user deleted', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id + '/delete')
         .set('Accept', 'application/json')
@@ -233,7 +223,7 @@ describe('PUT /users/:id/:delete', () => {
             }
         }, done);
     });
-    it('user is deleted from database', (done) => {
+    it('PUT /users/:id/delete user is deleted from database', (done) => {
         request(app)
         .get('/api/v1/users/')
         .set('Accept', 'application/json')
@@ -251,7 +241,7 @@ describe('PUT /users/:id/:delete', () => {
         })
         .end(done);
     });
-    it('responds error on no token', (done) => {
+    it('PUT /users/:id/delete responds error on no token', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id + '/delete')
         .set('Accept', 'application/json')
@@ -262,7 +252,7 @@ describe('PUT /users/:id/:delete', () => {
         })
         .end(done);
     });
-    it('responds error on bad token', (done) => {
+    it('PUT /users/:id/delete responds error on bad token', (done) => {
         request(app)
         .put('/api/v1/users/' + testUserWithId.id + '/delete')
         .set('Accept', 'application/json')
