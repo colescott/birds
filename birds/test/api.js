@@ -178,7 +178,7 @@ describe('APIv1', () => {
             const newUser = {
                 firstname: randomstring.generate(),
                 lastname: randomstring.generate(),
-                teamnumber: util.randomTeamNumber(1, 6237)
+                teamnumber: util.randomInRange(1, 6237)
             };
             request(app)
             .put('/api/v1/users/' + testUserWithId.id)
