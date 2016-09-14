@@ -20,9 +20,6 @@ const config = merge.smart(baseConfig, {
                 "message": `Build took ${seconds} seconds.`
             });
         }),
-        new webpack.DefinePlugin({
-            URL_PREFIX: JSON.stringify("http://localhost:8000")
-        })
     ],
 });
 

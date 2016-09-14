@@ -26,9 +26,6 @@ const config = merge.smart(baseConfig, {
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
-        new webpack.ProvidePlugin({
-            URL_PREFIX: JSON.stringify("")
-        })
     ]
 });
 

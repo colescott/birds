@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node start.js",
     "start:dev": "nodemon start.js",
-    "serve": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
+    "serve": "URL_PREFIX='http://localhost:8000' webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
     "test": "NODE_ENV=TEST mocha birds/test/*.js",
@@ -71,7 +71,6 @@
     "randomstring": "1.1.5",
     "supertest": "2.0.0",
     "webpack-dev-server": "1.15.1",
-    "webpack-dev-server": "1.14.1",
     "webpack-hot-middleware": "2.12.2"
   }
 }
