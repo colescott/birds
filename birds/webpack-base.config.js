@@ -4,7 +4,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const config = {
-    entry: ['babel-polyfill', path.join(__dirname, "./src/index.js")],
+    entry: ['babel-polyfill', "regenerator-runtime", path.join(__dirname, "./src/index.js")],
     output: {
         path: path.join(__dirname, "./static"),
         filename: "bundle.js"

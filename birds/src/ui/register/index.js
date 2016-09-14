@@ -1,3 +1,4 @@
+import React from "react"; 
 import { connect } from 'react-redux';
 
 import * as a from '../../store/actions.js';
@@ -52,7 +53,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateKey: (key) => (e) => dispatch(a.setRegisterForm(key, e.target.value)),
+  updateKey: (key) => (e) => dispatch(a.setRegisterForm({[key]: e.target.value})),
   addUser: (email, password) => () => dispatch(a.addUser(email, password))
 });
 

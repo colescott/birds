@@ -10,7 +10,8 @@ export const addUser = createAction(c.ADD_USER, (email, password, firstname, las
   teamnumber
 }));
 
-export const setRegisterForm = createAction(c.REGISTER_FORM_SET, (key, value) => ({
-  key,
-  value
-}));
+export const setRegisterForm = createAction(c.REGISTER_FORM_SET);
+export const resetRegisterForm = createAction(c.REGISTER_FORM_RESET);
+
+export const setAuth = createAction(c.AUTH_SET);
+export const resetAuth = createAction(c.AUTH_RESET);

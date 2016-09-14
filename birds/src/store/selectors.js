@@ -6,3 +6,8 @@ export const getRegisterForm = createSelector(
   (state) => state.registerForm,
   getStore
 );
+
+export const getAuth = createSelector(
+    (state) => state.auth,
+    getStore
+);

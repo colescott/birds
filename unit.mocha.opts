@@ -3,3 +3,4 @@
 --inline-diffs
 --throw-deprecation
 --recursive
+--require babel-polyfill
