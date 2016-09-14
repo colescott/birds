@@ -4,7 +4,6 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
-const url  = require('url');
 const router = express.Router();
 
 const User = require('./models/user');
@@ -60,7 +59,9 @@ router.post("/users", (req, res) => {
     });
     User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
         if(err)
-            return res.send(err);
+            return res.send(error(err));
+        if(passwordErr)
+            return res.send(error(passwordErr));
         User.findById(thisModel._id, (err, user) =>
         {
             if(err)
@@ -189,7 +190,7 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
 
                     User.update({'progress.id': req.body.id}, {'$set': {
                         'progress.$.state': req.body.state
-                    }}, options, (err, user) => {
+                    }}, options, (err) => {
                         if(err)
                             return res.send(error(err));
                         return res.send(data({message: "successfully set progress"}));
@@ -199,14 +200,14 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
             if(found)
                 return;
 
-            User.findByIdAndUpdate(req.user.id, {$push: {"progress": {id: req.body.id, state: req.body.state}}}, options, (err, user) => {
+            User.findByIdAndUpdate(req.user.id, {$push: {"progress": {id: req.body.id, state: req.body.state}}}, options, (err) => {
                 if(err)
                     return res.send(error(err));
                 return res.send(data({message: "successfully set progress"}));
             });
             break;
         case "resetprogress":
-            User.findByIdAndUpdate(req.user.id, {progress: []}, options, (err, user) => {
+            User.findByIdAndUpdate(req.user.id, {progress: []}, options, (err) => {
                 if(err)
                     return res.send(error(err));
                 return res.send(data({message: "successfully reset progress"}));
@@ -222,7 +223,7 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
 router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', {
         session: false
-    }, function(err, user, info) {
+    }, function(err, user) {
         if (err) return next(err);
         if (!user) {
             return unauthorized(res);
@@ -239,15 +240,6 @@ router.post('/auth/logout', authenticate, (req, res) => {
     req.logout();
     return res.send(data({message: "Logged out successfully"}));
 });
-
-const getUserById = (id, cb) => {
-    User.findById(id, (err, user) =>
-    {
-        if(err)
-            return cb(er, null);
-        return cb(null, sterilizeUser(user));
-    });
-};
 
 const sterilizeUser = (user) => {
     return {

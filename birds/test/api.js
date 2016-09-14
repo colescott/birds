@@ -5,7 +5,7 @@ const app = require("../app.js");
 const util = require("./util.js");
 
 const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159, progress: []};
-const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};;
+const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};
 
 var testUserWithId;
 var loginToken;
