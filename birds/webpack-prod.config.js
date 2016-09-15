@@ -1,6 +1,6 @@
-const validator = require("webpack-validator")
+const validator = require("webpack-validator");
 const merge = require("webpack-merge");
-const webpackUglifyJsPlugin = require('webpack-uglify-js-plugin');
+const webpackUglifyJsPlugin = require("webpack-uglify-js-plugin");
 const webpack = require("webpack");
 const path = require("path");
 
@@ -10,7 +10,7 @@ const config = merge.smart(baseConfig, {
     devtool: "cheap-module-source-map",
     plugins: [
         new webpackUglifyJsPlugin({
-            cacheFolder: path.resolve(__dirname, 'public/cached_uglify/'),
+            cacheFolder: path.resolve(__dirname, "public/cached_uglify/"),
             debug: true,
             minimize: true,
             sourceMap: false,

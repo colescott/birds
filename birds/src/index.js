@@ -15,7 +15,7 @@ import Home from "./ui/home/index.js";
 import Register from "./ui/register/index.js";
 
 // Create and append a div
-const appDiv = document.createElement('div');
+const appDiv = document.createElement("div");
 document.body.appendChild(appDiv);
 
 // Render the page

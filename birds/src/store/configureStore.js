@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, compose } from "redux";
-import createSagaMiddleware from 'redux-saga';
+import createSagaMiddleware from "redux-saga";
 
 import reducer from "./reducers";
 import rootSaga from "./saga/index.js";
@@ -17,4 +17,4 @@ export default function configureStore() {
   );
   sagaMiddleware.run(rootSaga);
   return store;
-};
+}

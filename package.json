@@ -15,7 +15,8 @@
     "test:unit-watch": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts --watch --reporter min",
     "postinstall": "npm run build:prod",
     "clean": "rm -rf node_modules & rm -rf birds/public & rm -rf birds/static",
-    "lint": "find ./birds -name '*.js' | xargs eslint"
+    "lint": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint",
+    "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix"
   },
   "repository": {
     "type": "git",

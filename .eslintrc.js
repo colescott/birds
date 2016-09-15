@@ -52,7 +52,7 @@ module.exports = {
         "comma-spacing": ["error", { "before": false, "after": true }],
         "computed-property-spacing": ["error", "always"],
         "func-call-spacing": ["error", "never"],
-        "key-spacing": ["error", { "beforeColon": true, "afterColon": true, "mode": "strict", "align": "value" }],
+        "key-spacing": ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
         "keyword-spacing": ["error", { "before": true, "after": true }],
         "object-curly-spacing": ["error", "always"],
         "semi-spacing": ["error", {"before": false, "after": false}],

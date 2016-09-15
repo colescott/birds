@@ -1,5 +1,5 @@
 import xr from "xr";
-const url_prefix = (typeof URL_PREFIX !== 'undefined' && URL_PREFIX) || "";
+const url_prefix = (typeof URL_PREFIX !== "undefined" && URL_PREFIX) || "";
 
 const v1 = {
   addUser: function addUser({ email, password, firstname, lastname, teamnumber }) {

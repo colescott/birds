@@ -17,7 +17,7 @@ describe("AUTH SAGA", () => {
                 c.REGISTER_AUTH
             ])
         );
-    })
+    });
     describe("LOGIN", () => {
         it("should call the login api", () => {
             const saga = auth();
@@ -54,7 +54,7 @@ describe("AUTH SAGA", () => {
                 action.value,
                 put(a.setAuth(data))
             );
-        })
+        });
         it("should dispatch an error action on failure", () => {
             const error = {
                 message: "Something went wrong",
@@ -98,7 +98,7 @@ describe("AUTH SAGA", () => {
                     c.REGISTER_AUTH
                 ])
             );
-        })
+        });
     });
     describe("LOGOUT", () => {
         it("should call an auth reducer reset", () => {
@@ -128,9 +128,9 @@ describe("AUTH SAGA", () => {
         xit("it should call the regester api", () => {
             const saga = auth();
             saga.next();
-            saga.next({type: c.REGISTER_AUTH});
+            saga.next({ type: c.REGISTER_AUTH });
         });
-        it("it should dispatch a login action on success")
-        it("it should dispatch an error action on failure")
+        it("it should dispatch a login action on success");
+        it("it should dispatch an error action on failure");
     });
 });
