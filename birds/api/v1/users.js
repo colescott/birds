@@ -1,3 +1,5 @@
+"use strict";
+
 var exports = module.exports = {};
 
 const util = require("./util.js");
@@ -105,8 +107,6 @@ exports.performActionOnUser = (req, res) => {
         return util.unauthorized(res);
 
     User.findById(req.params.id, (err, user) => {
-        "use strict";
-        
         if (err)
             return util.error(res, err);
 
