@@ -4,4 +4,4 @@ import auth from "./auth";
 export default {
   v1,
   auth
-}
+};

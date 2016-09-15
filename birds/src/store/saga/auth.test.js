@@ -17,16 +17,16 @@ describe("AUTH SAGA", () => {
                 c.REGISTER_AUTH
             ])
         );
-    })
+    });
     describe("LOGIN", () => {
         it("should call the login api", () => {
             const saga = auth();
             saga.next();
             const apiCall = saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "password"
+                type :    c.LOGIN_AUTH,
+                payload : {
+                    username : "test",
+                    password : "password"
                 }
             });
             assert.deepEqual(
@@ -36,17 +36,17 @@ describe("AUTH SAGA", () => {
         });
         it("should update the auth reducer on success", () => {
             const data = {
-                username: "test",
-                password: "test",
-                token: "aaa.bbb.ccc"
+                username : "test",
+                password : "test",
+                token :    "aaa.bbb.ccc"
             };
             const saga = auth();
             saga.next();
             saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
+                type :    c.LOGIN_AUTH,
+                payload : {
+                    username : "test",
+                    password : "test"
                 }
             });
             const action = saga.next({ data });
@@ -54,18 +54,18 @@ describe("AUTH SAGA", () => {
                 action.value,
                 put(a.setAuth(data))
             );
-        })
+        });
         it("should dispatch an error action on failure", () => {
             const error = {
-                message: "Something went wrong",
+                message : "Something went wrong",
             };
             const saga = auth();
             saga.next();
             saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
+                type :    c.LOGIN_AUTH,
+                payload : {
+                    username : "test",
+                    password : "test"
                 }
             });
             const action = saga.next({ error });
@@ -76,17 +76,17 @@ describe("AUTH SAGA", () => {
         });
         it("should go back to listening for events", () => {
             const data = {
-                username: "test",
-                password: "test",
-                token: "aaa.bbb.ccc"
+                username : "test",
+                password : "test",
+                token :    "aaa.bbb.ccc"
             };
             const saga = auth();
             saga.next();
             saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
+                type :    c.LOGIN_AUTH,
+                payload : {
+                    username : "test",
+                    password : "test"
                 }
             });
             saga.next({ data });
@@ -98,13 +98,13 @@ describe("AUTH SAGA", () => {
                     c.REGISTER_AUTH
                 ])
             );
-        })
+        });
     });
     describe("LOGOUT", () => {
         it("should call an auth reducer reset", () => {
             const saga = auth();
             saga.next();
-            const action = saga.next({ type: c.LOGOUT_AUTH });
+            const action = saga.next({ type : c.LOGOUT_AUTH });
             assert.deepEqual(
                 action.value,
                 put(a.resetAuth())
@@ -113,7 +113,7 @@ describe("AUTH SAGA", () => {
         it("shoud go back to listening for events", () => {
             const saga = auth();
             saga.next();
-            saga.next({ type: c.LOGOUT_AUTH });
+            saga.next({ type : c.LOGOUT_AUTH });
             assert.deepEqual(
                 saga.next().value,
                 take([
@@ -128,9 +128,9 @@ describe("AUTH SAGA", () => {
         xit("it should call the regester api", () => {
             const saga = auth();
             saga.next();
-            saga.next({type: c.REGISTER_AUTH});
+            saga.next({ type : c.REGISTER_AUTH });
         });
-        it("it should dispatch a login action on success")
-        it("it should dispatch an error action on failure")
+        it("it should dispatch a login action on success");
+        it("it should dispatch an error action on failure");
     });
 });
