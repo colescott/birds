@@ -2,6 +2,7 @@ var exports = module.exports = {};
 
 const util = require('./util.js');
 const User = require('./models/user');
+const Team = require('./models/team');
 
 //Options for mongoose
 const options = {};
@@ -9,29 +10,31 @@ options.new = true;
 
 exports.register = (req, res) => {
     if(!req.body.email) //TODO: make all args required
-    {
-        return util.error(res, "Email value required.");
-    }
-    var usr = new User({
-        email: req.body.email,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        teamnumber: req.body.teamnumber,
-        progress: []
-    });
-    User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
-        if(err)
-            return util.error(res, err);
-        if(passwordErr)
-            return util.error(res, passwordErr);
-        User.findById(thisModel._id, (err, user) =>
-        {
+        return util.error(res, "Email value required.", 400);
+    Team.exists(req.body.teamnumber, (err, value) => {
+        if(err || !value)
+            return util.error(res, "Team does not exist!", 400);
+        var usr = new User({
+            email: req.body.email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            teamnumber: req.body.teamnumber,
+            progress: []
+        });
+        User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
             if(err)
                 return util.error(res, err);
-            var response = {
-                user: util.sterilizeUser(user)
-            };
-            return util.data(res, response);
+            if(passwordErr)
+                return util.error(res, passwordErr);
+            User.findById(thisModel._id, (err, user) =>
+            {
+                if(err)
+                    return util.error(res, err);
+                var response = {
+                    user: util.sterilizeUser(user)
+                };
+                return util.data(res, response);
+            });
         });
     });
 };

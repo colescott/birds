@@ -40,6 +40,13 @@ const sterilizeUserWithProgress = (user) => {
     return usr;
 }
 
+const sterilizeTeam = (team) => {
+    return {
+        name: team.name,
+        teamnumber: team.teamnumber
+    };
+};
+
 exports.noSession = noSession;
 exports.invalidToken = invalidToken;
 exports.unauthorized = unauthorized;
@@ -48,3 +55,4 @@ exports.error = error;
 exports.data = data;
 exports.sterilizeUser = sterilizeUser;
 exports.sterilizeUserWithProgress = sterilizeUserWithProgress;
+exports.sterilizeTeam = sterilizeTeam;

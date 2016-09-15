@@ -7,6 +7,7 @@ const expressJwt = require("express-jwt");
 const router = express.Router();
 
 const users = require('./users.js');
+const teams = require('./teams.js');
 const util = require('./util.js');
 
 const User = require('./models/user');
@@ -48,6 +49,40 @@ router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
 });
 
+/**
+ * @api {post} /users Register user
+ * @apiName Register
+ * @apiGroup User
+ *
+ * @apiParam {String} email Users email.
+ * @apiParam {String} password Users password.
+ * @apiParam {String} firstname Users first name.
+ * @apiParam {String} lastname Users last name.
+ * @apiParam {String} teamnumber Users team number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.id Users lastname
+ * @apiSuccess {Number} data.user.id Users teamnumber
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
 router.post("/users", users.register);
 
 router.get("/users", users.getUsers);
@@ -58,8 +93,12 @@ router.put("/users/:id", authenticate, users.updateUserById);
 
 router.put("/users/:id/:action", authenticate, users.performActionOnUser);
 
-router.post("/auth/login", function(req, res, next) {
-    passport.authenticate("local", {
+router.post("/teams", teams.postCreateTeam);
+
+router.get("/teams", teams.getTeams);
+
+router.post('/auth/login', function(req, res, next) {
+    passport.authenticate('local', {
         session: false
     }, function(err, user) {
         if (err) return util.error(res, err);
