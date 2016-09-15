@@ -122,25 +122,29 @@ exports.performActionOnUser = (req, res) => {
             if (!req.body.state)
                 return util.error(res, "State not set!", 400);
 
-            var found = false;
+            {
+                "use strict";
+                
+                let found = false;
 
-            user.progress.forEach((obj) => {
+                user.progress.forEach((obj) => {
+                    if (found)
+                        return;
+                    if (obj.id == req.body.id) {
+                        found = true;
+
+                        User.update({ "progress.id": req.body.id }, { "$set": {
+                            "progress.$.state": req.body.state
+                        } }, options, (err) => {
+                            if (err)
+                                return util.error(res, err);
+                            return util.message(res, "Successfully set progress");
+                        });
+                    }
+                });
                 if (found)
                     return;
-                if (obj.id == req.body.id) {
-                    found = true;
-
-                    User.update({ "progress.id": req.body.id }, { "$set": {
-                        "progress.$.state": req.body.state
-                    } }, options, (err) => {
-                        if (err)
-                            return util.error(res, err);
-                        return util.message(res, "Successfully set progress");
-                    });
-                }
-            });
-            if (found)
-                return;
+            }
 
             User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options, (err) => {
                 if (err)
