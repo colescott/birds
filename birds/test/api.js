@@ -4,27 +4,27 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
-const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159, adminUser: {email:"admin@team4159.org", password:"adminpass", firstname: 'Admin', lastname: 'Account', teamnumber: 4159} }
-const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159, progress: []};
-const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};
+const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159, adminUser: { email: "admin@team4159.org", password: "adminpass", firstname: "Admin", lastname: "Account", teamnumber: 4159 } };
+const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", teamnumber: 4159, progress: [] };
+const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber };
 
 var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
 
-describe('APIv1', () => {
-    describe('POST /api/v1/teams', () => {
-        it('create new team', (done) => {
+describe("APIv1", () => {
+    describe("POST /api/v1/teams", () => {
+        it("create new team", (done) => {
             request(app)
-            .post('/api/v1/teams')
-            .set('Accept', 'application/json')
+            .post("/api/v1/teams")
+            .set("Accept", "application/json")
             .send(testTeamReqest)
-            .expect('Content-Type', /json/)
+            .expect("Content-Type", /json/)
             .expect(200, done);
         });
     });
-    describe('POST /api/v1/users', () => {
-        it('created and returned new user', (done) => {
+    describe("POST /api/v1/users", () => {
+        it("created and returned new user", (done) => {
             request(app)
             .post("/api/v1/users")
             .set("Accept", "application/json")
@@ -99,8 +99,8 @@ describe('APIv1', () => {
             .expect(function(res) {
                 testUserWithId = util.clone(res.body.data.user);
                 delete res.body.data.user.progress;
-                if(!util.equal(res.body.data.user, testUserWithIdNoProgress))
-                    throw new Error('user not in response')
+                if (!util.equal(res.body.data.user, testUserWithIdNoProgress))
+                    throw new Error("user not in response");
             })
             .end(done);
         });
@@ -122,8 +122,8 @@ describe('APIv1', () => {
             .set("Accept", "application/json")
             .send({ password: testUser.password })
             .expect(function(res) {
-                if (!(res.body.error.message == "Unauthorized"))
-                    throw new Error("Server not sending error with \"Unauthorized\"");
+                if (!(res.body.error.message == "Unauthorized."))
+                    throw new Error("Server not sending error with \"Unauthorized.\"");
             })
             .end(done);
         });
@@ -133,8 +133,8 @@ describe('APIv1', () => {
             .set("Accept", "application/json")
             .send({ email: testUser.email })
             .expect(function(res) {
-                if (!(res.body.error.message == "Unauthorized"))
-                    throw new Error("Server not sending error with \"Unauthorized\"");
+                if (!(res.body.error.message == "Unauthorized."))
+                    throw new Error("Server not sending error with \"Unauthorized.\"");
             })
             .end(done);
         });
@@ -144,8 +144,8 @@ describe('APIv1', () => {
             .set("Accept", "application/json")
             .send({ email: testUser.email, password: "notthepassword" })
             .expect(function(res) {
-                if (!(res.body.error.message == "Unauthorized"))
-                    throw new Error("Server not sending error with \"Unauthorized\"");
+                if (!(res.body.error.message == "Unauthorized."))
+                    throw new Error("Server not sending error with \"Unauthorized.\"");
             })
             .end(done);
         });
@@ -167,8 +167,8 @@ describe('APIv1', () => {
             .set("Authorization", "Bearer " + loginToken)
             .expect(function(res) {
                 delete res.body.data.user.progress;
-                if(!util.equal(res.body.data.user, testUserWithIdNoProgress))
-                    throw new Error('User not equal to test user')
+                if (!util.equal(res.body.data.user, testUserWithIdNoProgress))
+                    throw new Error("User not equal to test user");
             })
             .end(done);
         });

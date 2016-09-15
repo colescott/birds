@@ -6,11 +6,11 @@ const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const router = express.Router();
 
-const users = require('./users.js');
-const teams = require('./teams.js');
-const util = require('./util.js');
+const users = require("./users.js");
+const teams = require("./teams.js");
+const util = require("./util.js");
 
-const User = require('./models/user');
+const User = require("./models/user");
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -22,9 +22,9 @@ const ejwt = expressJwt({ secret: jwtSecret });
 
 const authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
-        if(err && err.code && err.code == 'invalid_token')
+        if (err && err.code && err.code == "invalid_token")
             return util.invalidToken(res);
-        if(err && err.code && err.code == 'credentials_required')
+        if (err && err.code && err.code == "credentials_required")
             return util.noSession(res);
         next();
     });
@@ -106,7 +106,7 @@ router.post('/auth/login', function(req, res, next) {
             return util.unauthorized(res);
         } else {
             const response = {
-                token: jwt.sign({id: user.id}, jwtSecret, { expiresIn: 2 * 60 * 60 }),
+                token: jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 }),
                 user: util.sterilizeUserWithProgress(user)
             };
             return util.data(res, response);
@@ -116,7 +116,7 @@ router.post('/auth/login', function(req, res, next) {
 
 router.post("/auth/logout", authenticate, (req, res) => {
     req.logout();
-    return res.send(util.data({message: "Logged out successfully"}));
+    return res.send(util.data({ message: "Logged out successfully" }));
 });
 
 module.exports = router;

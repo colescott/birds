@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const Team = new Schema({
@@ -21,15 +21,15 @@ Team.query.byNumber = function(teamnumber) {
  // cb is (err, bool)
 Team.statics.containsUser = function(teamnumber, user, cb) {
     this.findOne().byNumber(teamnumber).exec((err, data) => {
-        if(err)
+        if (err)
             return cb(err);
-        if(data.length <= 0)
+        if (data.length <= 0)
             return cb(null, false);
         var found = false;
         data.users.forEach((usr) => {
-            if(found)
+            if (found)
                 return;
-            if(usr.id == user.id)
+            if (usr.id == user.id)
                 found = true;
         });
         return cb(found);
@@ -39,12 +39,12 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
  // cb is (err, bool)
 Team.statics.exists = function(teamnumber, cb) {
     this.findOne().byNumber(teamnumber).exec((err, data) => {
-        if(err)
+        if (err)
             return cb(err);
-        if(data.length <= 0)
+        if (data.length <= 0)
             return cb(null, false);
         return cb(null, true);
     });
 };
 
-module.exports = mongoose.model('Team', Team);
+module.exports = mongoose.model("Team", Team);

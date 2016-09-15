@@ -13,15 +13,15 @@ const unauthorized = (res) => {
 };
 
 const message = (res, message) => {
-    return data(res, {message: message});
+    return data(res, { message: message });
 };
 
 const error = (res, message, status) => {
-    return res.status(status ? status : 500).send({error: {message: message ? message : "Unknown error."}});
+    return res.status(status ? status : 500).send({ error: { message: message ? message : "Unknown error." } });
 };
 
 const data = (res, data) => {
-    return res.status(200).send({data: data});
+    return res.status(200).send({ data: data });
 };
 
 const sterilizeUser = (user) => {
@@ -38,7 +38,7 @@ const sterilizeUserWithProgress = (user) => {
     const usr = sterilizeUser(user);
     usr.progress = user.progress;
     return usr;
-}
+};
 
 const sterilizeTeam = (team) => {
     return {
