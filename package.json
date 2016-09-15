@@ -16,7 +16,8 @@
     "postinstall": "npm run build:prod",
     "clean": "rm -rf node_modules & rm -rf birds/public & rm -rf birds/static",
     "lint": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint",
-    "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix"
+    "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix",
+    "build:docs": "apidoc -i birds/api -o docs"
   },
   "repository": {
     "type": "git",
@@ -72,6 +73,7 @@
     "xr": "0.2.0"
   },
   "devDependencies": {
+    "apidoc": "0.16.1",
     "babel-core": "6.14.0",
     "babel-eslint": "6.1.2",
     "chai": "3.5.0",
