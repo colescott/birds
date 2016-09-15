@@ -39,9 +39,7 @@ passport.use(new LocalStrategy({
         if (passErr)
             return done(null, false, passErr);
         if (user)
-        {
             done(null, user);
-        }
     });
 }));
 
@@ -49,26 +47,28 @@ router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
 });
 
+// TODO: add errors to all apidocs
+
 /**
  * @api {post} /users Register user
  * @apiName Register
- * @apiGroup User
+ * @apiGroup Users
  *
  * @apiParam {String} email Users email.
  * @apiParam {String} password Users password.
  * @apiParam {String} firstname Users first name.
  * @apiParam {String} lastname Users last name.
- * @apiParam {String} teamnumber Users team number.
+ * @apiParam {Number} teamnumber Users team number.
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.user User object
  * @apiSuccess {String} data.user.id Users id
  * @apiSuccess {String} data.user.email Users email
  * @apiSuccess {String} data.user.firstname Users firstname
- * @apiSuccess {String} data.user.id Users lastname
- * @apiSuccess {Number} data.user.id Users teamnumber
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
  *
- * @apiSuccessExample Success-Response:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *     {
  *       "data": {
@@ -85,18 +85,259 @@ router.get("/ping", (req, res) => {
  */
 router.post("/users", users.register);
 
+/**
+ * @api {get} /users Get list of users
+ * @apiName Get users
+ * @apiGroup Users
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object[]} data.users Array of users
+ * @apiSuccess {String} data.users.id Users id
+ * @apiSuccess {String} data.users.email Users email
+ * @apiSuccess {String} data.users.firstname Users firstname
+ * @apiSuccess {String} data.users.lastname Users lastname
+ * @apiSuccess {Number} data.users.teamnumber Users teamnumber
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "users": [{
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         },
+ *         {
+ *           "id": "THISISAFAKEID",
+ *           "email": "admin@team4159.org",
+ *           "firstname": "Admin",
+ *           "lastname": "Account",
+ *           "teamnumber": 4159
+ *         }]
+ *       }
+ *     }
+ *
+ */
 router.get("/users", users.getUsers);
 
+/**
+ * @api {get} /users/:id Get user by id
+ * @apiName Get user
+ * @apiGroup Users
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Object[]} [data.user.progress] User progress NOTE: only returns this if logged in as user trying to get
+ * @apiSuccess {String} data.user.progress.id Id of lesson
+ * @apiSuccess {String} data.user.progress.state Progress of lesson
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159,
+ *           "progress": [
+ *              {
+ *                "id": "thisisalessonid",
+ *                "state": "complete"
+ *              }
+ *            ]
+ *         }
+ *       }
+ *     }
+ *
+ */
 router.get("/users/:id", authenticate, users.getUserById);
 
+/**
+ * @api {put} /users/:id Set user values
+ * @apiName Set user values
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [email] Users new email.
+ * @apiParam {String} [password] Users new password.
+ * @apiParam {String} [firstname] Users new first name.
+ * @apiParam {String} [lastname] Users new last name.
+ * @apiParam {Number} [teamnumber] Users new team number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Object[]} data.user.progress User progress
+ * @apiSuccess {String} data.user.progress.id Id of lesson
+ * @apiSuccess {String} data.user.progress.state Progress of lesson
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159,
+ *           "progress": [
+ *              {
+ *                "id": "thisisalessonid",
+ *                "state": "complete"
+ *              }
+ *            ]
+ *         }
+ *       }
+ *     }
+ *
+ */
 router.put("/users/:id", authenticate, users.updateUserById);
 
+/**
+ * @api {put} /users/:id/:action Perform action on user
+ * @apiName Perform action on user
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [id] Id for lesson when :action = "setprogress"
+ * @apiParam {String} [state] State for lesson when :action = "setprogress"
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully deleted user"
+ *     }
+ *
+ */
 router.put("/users/:id/:action", authenticate, users.performActionOnUser);
 
+/**
+ * @api {post} /teams Create new team
+ * @apiName Create new team
+ * @apiGroup Teams
+ *
+ * @apiParam {String} name Teams name.
+ * @apiParam {Number} teamnumber Teams number.
+ * @apiParam {Object} adminUser New user info for admin (DO NOT post to /users beforehand)
+ * @apiParam {String} adminUser.email Users email.
+ * @apiParam {String} adminUser.password Users password.
+ * @apiParam {String} adminUser.firstname Users first name.
+ * @apiParam {String} adminUser.lastname Users last name.
+ * @apiParam {Number} adminUser.teamnumber Users team number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Object} data.team Team object
+ * @apiSuccess {String} data.team.name Team name
+ * @apiSuccess {Number} data.team.teamnumber Team number
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "FAKEIDORISIT",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         },
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
 router.post("/teams", teams.postCreateTeam);
 
+/**
+ * @api {get} /teams Get list of teams
+ * @apiName Get teams
+ * @apiGroup Teams
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object[]} data.teams Array of teams
+ * @apiSuccess {String} data.teams.name Team name
+ * @apiSuccess {Number} data.teams.teamnumber Team number
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "teams": [{
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         },
+ *         {
+ *           "name": "FireHawk Robotics",
+ *           "teamnumber": 6000
+ *         }]
+ *       }
+ *     }
+ *
+ */
 router.get("/teams", teams.getTeams);
 
+/**
+ * @api {post} /auth/login Login
+ * @apiName Login
+ * @apiGroup Auth
+ *
+ * @apiParam {String} email Users email.
+ * @apiParam {String} password Users password.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.token Auth token to use on subsequent requests
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "token": "correcthorsebatterystaple",
+ *         "user": {
+ *           "id": "FAKEIDORISIT",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
 router.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', {
         session: false
@@ -114,6 +355,23 @@ router.post('/auth/login', function(req, res, next) {
     })(req, res, next);
 });
 
+/**
+ * @api {post} /auth/logout Logout
+ * @apiName Logout
+ * @apiGroup Auth
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Logged out successfully"
+ *       }
+ *     }
+ *
+ */
 router.post("/auth/logout", authenticate, (req, res) => {
     req.logout();
     return res.send(util.data({ message: "Logged out successfully" }));
