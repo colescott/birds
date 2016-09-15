@@ -1,4 +1,4 @@
-{
+define({
   "name": "Birds api v1",
   "version": "1.0",
   "description": "Birds api version 1",
@@ -8,8 +8,8 @@
   "apidoc": "0.2.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-09-15T06:45:53.691Z",
+    "time": "2016-09-15T06:54:13.195Z",
     "url": "http://apidocjs.com",
     "version": "0.16.1"
   }
-}
+});
