@@ -338,8 +338,8 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.post('/auth/login', function(req, res, next) {
-    passport.authenticate('local', {
+router.post("/auth/login", function(req, res, next) {
+    passport.authenticate("local", {
         session: false
     }, function(err, user) {
         if (err) return util.error(res, err);

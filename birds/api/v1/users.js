@@ -9,12 +9,13 @@ const options = {};
 options.new = true;
 
 exports.register = (req, res) => {
-    if (!req.body.email) //TODO: make all args required
+    //TODO: make all args required
+    if (!req.body.email)
         return util.error(res, "Email value required.", 400);
     Team.exists(req.body.teamnumber, (err, value) => {
         if (err || !value)
             return util.error(res, "Team does not exist!", 400);
-        var usr = new User({
+        const usr = new User({
             email: req.body.email,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
@@ -26,11 +27,10 @@ exports.register = (req, res) => {
                 return util.error(res, err);
             if (passwordErr)
                 return util.error(res, passwordErr);
-            User.findById(thisModel._id, (err, user) =>
-            {
+            User.findById(thisModel._id, (err, user) => {
                 if (err)
                     return util.error(res, err);
-                var response = {
+                const response = {
                     user: util.sterilizeUser(user)
                 };
                 return util.data(res, response);
@@ -48,8 +48,7 @@ exports.getUsers = (req, res) => {
 };
 
 exports.getUserById = (req, res) => {
-    User.findById(req.params.id, (err, user) =>
-    {
+    User.findById(req.params.id, (err, user) => {
         if (err)
             return util.error(res, err);
         const response = { user: req.params.id == req.user.id ? util.sterilizeUserWithProgress(user) : util.sterilizeUser(user) };
@@ -59,9 +58,7 @@ exports.getUserById = (req, res) => {
 
 exports.updateUserById = (req, res) => {
     if (req.user.id != req.params.id)
-    {
         return util.unauthorized(res);
-    }
 
     const changes = {};
     if (req.body.email)
@@ -73,10 +70,8 @@ exports.updateUserById = (req, res) => {
     if (req.body.teamnumber)
         changes.teamnumber = req.body.teamnumber;
 
-    if (req.body.password)
-    {
-        User.findById(req.params.id, (err, user) =>
-        {
+    if (req.body.password) {
+        User.findById(req.params.id, (err, user) => {
             if (err)
                 return util.error(res, err);
             user.setPassword(req.body.password, (err, thisModel, passwordErr) => {
@@ -113,8 +108,7 @@ exports.performActionOnUser = (req, res) => {
         if (err)
             return util.error(res, err);
 
-        switch (req.params.action)
-        {
+        switch (req.params.action) {
         case "delete":
             User.findByIdAndRemove(req.params.id, (err) => {
                 if (err)
@@ -128,26 +122,27 @@ exports.performActionOnUser = (req, res) => {
             if (!req.body.state)
                 return util.error(res, "State not set!", 400);
 
-            var found = false;
+            {
+                let found = false;
 
-            user.progress.forEach((obj) => {
+                user.progress.forEach((obj) => {
+                    if (found)
+                        return;
+                    if (obj.id == req.body.id) {
+                        found = true;
+
+                        User.update({ "progress.id": req.body.id }, { "$set": {
+                            "progress.$.state": req.body.state
+                        } }, options, (err) => {
+                            if (err)
+                                return util.error(res, err);
+                            return util.message(res, "Successfully set progress");
+                        });
+                    }
+                });
                 if (found)
                     return;
-                if (obj.id == req.body.id)
-                {
-                    found = true;
-
-                    User.update({ "progress.id": req.body.id }, { "$set": {
-                        "progress.$.state": req.body.state
-                    } }, options, (err) => {
-                        if (err)
-                            return util.error(res, err);
-                        return util.message(res, "Successfully set progress");
-                    });
-                }
-            });
-            if (found)
-                return;
+            }
 
             User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options, (err) => {
                 if (err)

@@ -25,7 +25,7 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
             return cb(err);
         if (data.length <= 0)
             return cb(null, false);
-        var found = false;
+        let found = false;
         data.users.forEach((usr) => {
             if (found)
                 return;
