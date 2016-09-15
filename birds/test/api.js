@@ -11,16 +11,9 @@ var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
 
-describe("APIv1", () => {
-    describe("POST /api/v1/users", () => {
-        it("respond with json", (done) => {
-            request(app)
-            .post("/api/v1/users")
-            .set("Accept", "application/json")
-            .expect("Content-Type", /json/)
-            .expect(200, done);
-        });
-        it("created and returned new user", (done) => {
+describe('APIv1', () => {
+    describe('POST /api/v1/users', () => {
+        it('created and returned new user', (done) => {
             request(app)
             .post("/api/v1/users")
             .set("Accept", "application/json")
