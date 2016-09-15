@@ -93,14 +93,14 @@ exports.updateUserById = (req, res) => {
         User.findByIdAndUpdate(req.params.id, changes, options, (err, user) => {
             if (err)
                 return util.error(res, err);
-            const response = { user: util.sterilizeUser(user) };
+            const response = { user: util.sterilizeUserWithProgress(user) };
             return util.data(res, response);
         });
     else
         User.findById(req.params.id, (err, user) => {
             if (err)
                 return util.error(res, err);
-            const response = { user: util.sterilizeUser(user) };
+            const response = { user: util.sterilizeUserWithProgress(user) };
             return util.data(res, response);
         });
 };
