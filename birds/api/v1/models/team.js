@@ -25,13 +25,17 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
             return cb(err);
         if (data.length <= 0)
             return cb(null, false);
-        var found = false;
-        data.users.forEach((usr) => {
-            if (found)
-                return;
-            if (usr.id == user.id)
-                found = true;
-        });
+        {
+            "use strict";
+
+            let found = false;
+            data.users.forEach((usr) => {
+                if (found)
+                    return;
+                if (usr.id == user.id)
+                    found = true;
+            });
+        }
         return cb(found);
     });
 };
