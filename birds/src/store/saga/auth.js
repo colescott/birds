@@ -9,13 +9,11 @@ import * as s from "../selectors.js";
 function* auth() {
     for (;;) {
         try {
-            console.log("LOADED");
             const action = yield take([
                 c.LOGOUT_AUTH,
                 c.LOGIN_AUTH,
                 c.REGISTER_AUTH
             ]);
-            console.log(action);
             switch (action.type) {
                 case c.LOGIN_AUTH: {
                     const { username, password } = action.payload;

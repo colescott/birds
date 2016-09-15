@@ -1,6 +1,6 @@
 import xr from "xr";
 
-const urlPrefix = (URL_PREFIX !== undefined && URL_PREFIX) || "";
+const urlPrefix = (typeof URL_PREFIX !== "undefined" && URL_PREFIX) || "";
 
 const auth = {
     login: () => {},

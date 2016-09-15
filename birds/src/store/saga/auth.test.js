@@ -5,7 +5,7 @@ import api from "../../api";
 import auth from "./auth";
 import * as c from "../constants.js";
 import * as a from "../actions.js";
-
+ 
 describe("AUTH SAGA", () => {
     it("should wait for LOGIN, LOGOUT, or REGISTER actions", () => {
         const saga = auth();
