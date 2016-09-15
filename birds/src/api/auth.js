@@ -1,6 +1,12 @@
+import xr from "xr";
+
+const urlPrefix = (typeof URL_PREFIX !== "undefined" && URL_PREFIX) || "";
+
 const auth = {
     login: () => {},
-    register: () => {}
+    register: (user) =>
+        xr.post(`${urlPrefix}/api/v1/users`, user)
+            .then(res => res.data)
 };
 
 export default auth;

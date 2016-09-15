@@ -1,60 +1,75 @@
-import React from "react"; 
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import * as a from '../../store/actions.js';
-import * as s from '../../store/selectors.js';
+import * as a from "../../store/actions.js";
+import * as s from "../../store/selectors.js";
+
+import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
+import FlatButton from "material-ui/FlatButton";
+import TextField from "material-ui/TextField";
 
 const Register = (props) => {
-  return (
-    <div>
-      <h2> Register </h2>
-      <input
-        type='text'
-        placeholder='Email'
-        value={props.email || ''}
-        onChange={props.updateKey('email')}
-      />
-      <br />
-      <input
-        type="text"
-        placeholder='Password'
-        value={props.password || ''}
-        onChange={props.updateKey('password')}
-      />
-      <br />
-      <input
-        type="text"
-        placeholder='First Name'
-        value={props.firstname || ''}
-        onChange={props.updateKey('firstname')}
-      />
-      <br />
-      <input
-        type="text"
-        placeholder="Last Name"
-        value={props.lastname || ''}
-        onChange={props.updateKey('lastname')}
-      />
-      <br />
-      <input
-        type="text"
-        placeholder="Team Number"
-        value={props.teamnumber || ''}
-        onChange={props.updateKey('teamnumber')}
-      />
-      <br />
-      <button onClick={props.addUser(props.email, props.password)}> Register </button>
-    </div>
-  )
-}
+    return (
+        <div
+            style={{
+                dislay: "flux",
+                alignItems: "space-around",
+                marginTop: 15
+            }}
+        >
+            <Card>
+                <CardHeader
+                    title="Register"
+                />
+                <CardText>
+                    <TextField
+                        floatingLabelText="Email"
+                        onChange={props.updateKey("email")}
+                        value={props.form.email || ""}
+                    /><br />
+                    <TextField
+                        floatingLabelText="Password"
+                        type="password"
+                        onChange={props.updateKey("password")}
+                        value={props.form.password || ""}
+                    /><br />
+                    <TextField
+                        floatingLabelText="First Name"
+                        onChange={props.updateKey("firstname")}
+                        value={props.form.firstname || ""}
+                    /><br />
+                    <TextField
+                        floatingLabelText="Last Name"
+                        onChange={props.updateKey("lastname")}
+                        value={props.form.lastname || ""}
+                    /><br />
+                    <TextField
+                        floatingLabelText="Team Number"
+                        onChange={props.updateKey("teamnumber")}
+                        type="number"
+                        value={props.form.teamnumber || ""}
+                    /><br />
+                </CardText>
+                <CardActions
+                    style={{
+                        display: "flux",
+                        alignItems: "space-around"
+                    }}
+                >
+                     <FlatButton label="Register" onClick={props.register()}/>
+                </CardActions>
+            </Card>
+        </div>
+    );
+};
 
 const mapStateToProps = (state) => ({
-    ...s.getRegisterForm(state)
+    form: s.getRegisterForm(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateKey: (key) => (e) => dispatch(a.setRegisterForm({[key]: e.target.value})),
-  addUser: (email, password) => () => dispatch(a.addUser(email, password))
+  updateKey: (key) => (e, value) => dispatch(a.setRegisterForm({ [ key ]: value })),
+  register: () => () => dispatch(a.registerAuth())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

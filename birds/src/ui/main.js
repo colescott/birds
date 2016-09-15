@@ -1,21 +1,34 @@
-import React, { Component } from "react";
-import { Link } from "react-router";
+import React from "react";
+import { connect } from "react-redux";
 
-class Main extends Component {
-    render() {
-      return (
-        <div>
-          <h1> Birds </h1>
-          <ul>
-            <li><Link to="/"> Home </Link></li>
-            <li><Link to="/register"> Register </Link></li>
-          </ul>
-          {
-            this.props.children
-          }
+import * as s from "../store/selectors.js";
+
+import NavBar from "./navBar";
+
+const Main = ({ children, auth }) => {
+    return (
+        <div className="wrapper">
+            <div className="main">
+                <NavBar
+                    title={"Birds"}
+                    links={[
+                        { name: "Home", to: "/" },
+                        { name: "Register", to: "/register" }
+                    ]}
+                    user={ auth.firstname || "Not Logged In"}
+                />
+                {
+                    children
+                }
+            </div>
         </div>
-      );
-    }
-}
+  );
+};
 
-export default Main;
+const mapStateToProps = (state) => ({
+    auth: s.getAuth(state)
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
