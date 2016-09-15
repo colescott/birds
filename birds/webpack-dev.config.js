@@ -6,16 +6,16 @@ const notifier = require("node-notifier");
 const baseConfig = require("./webpack-base.config.js");
 
 const config = merge.smart(baseConfig, {
-    devtool :   "eval-source-map",
-    devServer : {
-        inline : true
+    devtool: "eval-source-map",
+    devServer: {
+        inline: true
     },
-    plugins : [
+    plugins: [
         new WebpackOnBuildPlugin((stats) => {
             const seconds = Math.ceil((Number(stats.endTime) - Number(stats.startTime)) / 1000);
             notifier.notify({
-                "title" :   "Webpack",
-                "message" : `Build took ${seconds} seconds.`
+                "title": "Webpack",
+                "message": `Build took ${seconds} seconds.`
             });
         }),
     ],

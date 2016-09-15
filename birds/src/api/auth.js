@@ -1,6 +1,6 @@
 const auth = {
-    login :    () => {},
-    register : () => {}
+    login: () => {},
+    register: () => {}
 };
 
 export default auth;

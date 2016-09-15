@@ -14,7 +14,7 @@ mongoose.Promise = global.Promise;
 
 router.use(passport.initialize());
 
-const ejwt = expressJwt({ secret : jwtSecret });
+const ejwt = expressJwt({ secret: jwtSecret });
 
 const authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
@@ -27,7 +27,7 @@ const authenticate = (req, res, next) => {
 };
 
 passport.use(new LocalStrategy({
-        usernameField : "email"
+        usernameField: "email"
     }, (username, password, done) => {
     User.authenticate()(username, password, (err, user, passErr) => {
         if (err)
@@ -51,11 +51,11 @@ router.post("/users", (req, res) => {
         return res.send(error("Email value required."));
     }
     var usr = new User({
-        email :      req.body.email,
-        firstname :  req.body.firstname,
-        lastname :   req.body.lastname,
-        teamnumber : req.body.teamnumber,
-        progress :   []
+        email: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        teamnumber: req.body.teamnumber,
+        progress: []
     });
     User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
         if (err)
@@ -147,7 +147,7 @@ router.put("/users/:id", authenticate, (req, res) => {
         User.findById(req.params.id, (err, user) => {
             if (err)
                 return res.send(err);
-            return res.send(data({ user : sterilizeUser(user) }));
+            return res.send(data({ user: sterilizeUser(user) }));
         });
 });
 
@@ -170,7 +170,7 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
             User.findByIdAndRemove(req.params.id, (err) => {
                 if (err)
                     return res.send(err);
-                return res.send(data({ message : "successfully deleted user." }));
+                return res.send(data({ message: "successfully deleted user." }));
             });
             break;
         case "setprogress":
@@ -188,29 +188,29 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
                 {
                     found = true;
 
-                    User.update({ "progress.id" : req.body.id }, { "$set" : {
-                        "progress.$.state" : req.body.state
+                    User.update({ "progress.id": req.body.id }, { "$set": {
+                        "progress.$.state": req.body.state
                     } }, options, (err) => {
                         if (err)
                             return res.send(error(err));
-                        return res.send(data({ message : "successfully set progress" }));
+                        return res.send(data({ message: "successfully set progress" }));
                     });
                 }
             });
             if (found)
                 return;
 
-            User.findByIdAndUpdate(req.user.id, { $push : { "progress" : { id : req.body.id, state : req.body.state } } }, options, (err) => {
+            User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options, (err) => {
                 if (err)
                     return res.send(error(err));
-                return res.send(data({ message : "successfully set progress" }));
+                return res.send(data({ message: "successfully set progress" }));
             });
             break;
         case "resetprogress":
-            User.findByIdAndUpdate(req.user.id, { progress : [] }, options, (err) => {
+            User.findByIdAndUpdate(req.user.id, { progress: [] }, options, (err) => {
                 if (err)
                     return res.send(error(err));
-                return res.send(data({ message : "successfully reset progress" }));
+                return res.send(data({ message: "successfully reset progress" }));
             });
             break;
         default:
@@ -222,14 +222,14 @@ router.put("/users/:id/:action", authenticate, (req, res) => {
 
 router.post("/auth/login", function(req, res, next) {
     passport.authenticate("local", {
-        session : false
+        session: false
     }, function(err, user) {
         if (err) return next(err);
         if (!user) {
             return unauthorized(res);
         } else {
             var val = {};
-            val.token = jwt.sign({ id : user.id }, jwtSecret, { expiresIn : 2 * 60 * 60 });
+            val.token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 });
             val.user = sterilizeUser(user);
             return res.send(data(val));
         }
@@ -238,16 +238,16 @@ router.post("/auth/login", function(req, res, next) {
 
 router.post("/auth/logout", authenticate, (req, res) => {
     req.logout();
-    return res.send(data({ message : "Logged out successfully" }));
+    return res.send(data({ message: "Logged out successfully" }));
 });
 
 const sterilizeUser = (user) => {
     return {
-        id :         user.id,
-        email :      user.email,
-        firstname :  user.firstname,
-        lastname :   user.lastname,
-        teamnumber : user.teamnumber
+        id: user.id,
+        email: user.email,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        teamnumber: user.teamnumber
     };
 };
 
@@ -264,11 +264,11 @@ const unauthorized = (res) => {
 };
 
 const error = (message) => {
-    return { error : { message : message } };
+    return { error: { message: message } };
 };
 
 const data = (data) => {
-    return { data : data };
+    return { data: data };
 };
 
 module.exports = router;

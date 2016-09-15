@@ -4,8 +4,8 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
-const testUser = { email : "test@team4159.org", password : "password", firstname : "Test", lastname : "Account", teamnumber : 4159, progress : [] };
-const testUserNoPass = { email : testUser.email, firstname : testUser.firstname, lastname : testUser.lastname, teamnumber : testUser.teamnumber };
+const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", teamnumber: 4159, progress: [] };
+const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber };
 
 var testUserWithId;
 var loginToken;
@@ -32,8 +32,8 @@ describe("APIv1", () => {
                 delete res.body.data.user.progress;
             })
             .expect(200, {
-                data : {
-                    user : testUserNoPass
+                data: {
+                    user: testUserNoPass
                 }
             }, done);
         });
@@ -114,7 +114,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/auth/login")
             .set("Accept", "application/json")
-            .send({ password : testUser.password })
+            .send({ password: testUser.password })
             .expect(function(res) {
                 if (!(res.body.error.message == "Unauthorized"))
                     throw new Error("Server not sending error with \"Unauthorized\"");
@@ -125,7 +125,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/auth/login")
             .set("Accept", "application/json")
-            .send({ email : testUser.email })
+            .send({ email: testUser.email })
             .expect(function(res) {
                 if (!(res.body.error.message == "Unauthorized"))
                     throw new Error("Server not sending error with \"Unauthorized\"");
@@ -136,7 +136,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/auth/login")
             .set("Accept", "application/json")
-            .send({ email : testUser.email, password : "notthepassword" })
+            .send({ email: testUser.email, password: "notthepassword" })
             .expect(function(res) {
                 if (!(res.body.error.message == "Unauthorized"))
                     throw new Error("Server not sending error with \"Unauthorized\"");
@@ -186,9 +186,9 @@ describe("APIv1", () => {
         });
         it("responds with changed user", (done) => {
             const newUser = {
-                firstname :  randomstring.generate(),
-                lastname :   randomstring.generate(),
-                teamnumber : util.randomInRange(1, 6237)
+                firstname: randomstring.generate(),
+                lastname: randomstring.generate(),
+                teamnumber: util.randomInRange(1, 6237)
             };
             request(app)
             .put("/api/v1/users/" + testUserWithId.id)
@@ -239,8 +239,8 @@ describe("APIv1", () => {
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken)
             .expect({
-                data : {
-                    message : "successfully deleted user."
+                data: {
+                    message: "successfully deleted user."
                 }
             }, done);
         });

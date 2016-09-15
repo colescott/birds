@@ -4,26 +4,26 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const config = {
-    entry :  ["babel-polyfill", "regenerator-runtime", path.join(__dirname, "./src/index.js")],
-    output : {
-        path :     path.join(__dirname, "./static"),
-        filename : "bundle.js"
+    entry: ["babel-polyfill", "regenerator-runtime", path.join(__dirname, "./src/index.js")],
+    output: {
+        path: path.join(__dirname, "./static"),
+        filename: "bundle.js"
     },
-    plugins : [
+    plugins: [
         new HtmlWebpackPlugin(),
         new webpack.DefinePlugin({
-            URL_PREFIX : JSON.stringify(process.env.URL_PREFIX || "")
+            URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),
         new webpack.ProvidePlugin({
-            React : "react"
+            React: "react"
         })
     ],
-    module : {
-        loaders : [
+    module: {
+        loaders: [
             {
-                loaders : ["babel"],
-                test :    /\.js$/,
-                exclude : /node_modules/
+                loaders: ["babel"],
+                test: /\.js$/,
+                exclude: /node_modules/
             }
         ]
     }
