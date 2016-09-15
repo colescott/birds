@@ -123,6 +123,7 @@ exports.performActionOnUser = (req, res) => {
                 return util.error(res, "State not set!", 400);
 
             {
+                "use strict";
                 let found = false;
 
                 user.progress.forEach((obj) => {
