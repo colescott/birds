@@ -4,14 +4,25 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
-const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", teamnumber: 4159, progress: [] };
-const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber };
+const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159, adminUser: {email:"admin@team4159.org", password:"adminpass", firstname: 'Admin', lastname: 'Account', teamnumber: 4159} }
+const testUser = {email:'test@team4159.org', password: 'password', firstname: 'Test', lastname: 'Account', teamnumber: 4159, progress: []};
+const testUserNoPass = {email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber};
 
 var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
 
 describe('APIv1', () => {
+    describe('POST /api/v1/teams', () => {
+        it('create new team', (done) => {
+            request(app)
+            .post('/api/v1/teams')
+            .set('Accept', 'application/json')
+            .send(testTeamReqest)
+            .expect('Content-Type', /json/)
+            .expect(200, done);
+        });
+    });
     describe('POST /api/v1/users', () => {
         it('created and returned new user', (done) => {
             request(app)
