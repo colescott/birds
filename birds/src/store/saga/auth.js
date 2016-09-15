@@ -9,11 +9,13 @@ import * as s from "../selectors.js";
 function* auth() {
     for (;;) {
         try {
+            console.log("LOADED");
             const action = yield take([
                 c.LOGOUT_AUTH,
                 c.LOGIN_AUTH,
                 c.REGISTER_AUTH
             ]);
+            console.log(action);
             switch (action.type) {
                 case c.LOGIN_AUTH: {
                     const { username, password } = action.payload;
@@ -31,7 +33,7 @@ function* auth() {
                 }
                 case c.REGISTER_AUTH: {
                     const user = yield select(s.getRegisterForm);
-                    const res = yield call(api.users.register(user));
+                    const res = yield call(api.auth.register, user);
                     if (res.error) throw new Error(res.error.message);
                     yield put(a.setAuth(res.data.user));
                     yield put(a.loginAuth());
@@ -41,6 +43,7 @@ function* auth() {
                     break;
             }
         } catch (e) {
+            console.error(e);
             yield put(a.setAuth(e));
         }
     }
