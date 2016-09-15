@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import * as s from "../store/selectors.js";
 
-import NavBar from "./NavBar";
+import NavBar from "./navBar";
 
 const Main = ({ children, auth }) => {
     return (

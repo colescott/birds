@@ -10,7 +10,7 @@
     "serve": "URL_PREFIX='http://localhost:8000' webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
-    "test": "NODE_ENV=TEST mocha birds/test/*.js",
+    "test": "NODE_ENV=TEST mocha birds/test/*.js && npm run test:unit",
     "test:unit": "URL_PREFIX='' find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts",
     "test:unit-watch": "URL_PREFIX='' find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts --watch --reporter min",
     "postinstall": "npm run build:prod",
