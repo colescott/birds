@@ -15,7 +15,7 @@
     "test:unit-watch": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts --watch --reporter min",
     "postinstall": "npm run build:prod",
     "clean": "rm -rf node_modules & rm -rf birds/public & rm -rf birds/static",
-    "lint": "eslint *.js */**.js"
+    "lint": "find ./birds -name '*.js' | xargs eslint"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,9 @@
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.1",
     "cors": "2.8.1",
+    "eslint-config-standard": "6.0.0",
+    "eslint-plugin-promise": "2.0.1",
+    "eslint-plugin-standard": "2.0.0",
     "express": "4.14.0",
     "express-jwt": "5.0.0",
     "express-session": "1.14.1",
@@ -75,7 +78,7 @@
     "eslint-config-airbnb": "11.1.0",
     "eslint-plugin-import": "1.15.0",
     "eslint-plugin-jsx-a11y": "2.2.2",
-    "eslint-plugin-react": "6.2.1",
+    "eslint-plugin-react": "6.2.2",
     "mocha": "3.0.2",
     "node-notifier": "4.6.1",
     "nodemon": "1.10.2",
