@@ -1,5 +1,5 @@
 import { takeEvery } from "redux-saga";
-import { take, fork, put } from "redux-saga/effects";
+import { put, call } from "redux-saga/effects";
 
 import api from "../../api/index.js";
 
@@ -8,15 +8,13 @@ import * as a from "../actions.js";
 
 function* addUser(action) {
     const { payload } = action;
-    const { email, password, firstname, lastname, teamnumber } = payload;
     try {
-      const res = yield api.v1.addUser(payload);
-        alert("You have been registired.");
-        yield put(a.setRegisterForm("email", ""));
-        yield put(a.setRegisterForm("password", ""));
-        yield put(a.setRegisterForm("firstname", ""));
-        yield put(a.setRegisterForm("lastname", ""));
-        yield put(a.setRegisterForm("teamnumber", ""));
+        const res = yield call(api.v1.addUser, payload);
+        if (res.error) {
+            throw new Error(error.message);
+        }
+        console.log("Success!");
+        yield put(a.resetRegisterForm());
     }
     catch (e) {
       console.error(e);

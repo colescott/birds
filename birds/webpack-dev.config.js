@@ -2,8 +2,6 @@ const validator = require("webpack-validator")
 const merge = require("webpack-merge");
 const WebpackOnBuildPlugin = require('on-build-webpack');
 const notifier = require("node-notifier");
-const moment = require("moment");
-const webpack = require("webpack");
 
 const baseConfig = require("./webpack-base.config.js");
 

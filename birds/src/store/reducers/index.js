@@ -3,5 +3,6 @@ import { combineReducers } from "redux";
 import kvs from "./kvs.js";
 
 export default combineReducers({
-  registerForm: kvs("REGISTER_FORM")
+  registerForm: kvs("REGISTER_FORM"),
+  auth: kvs("AUTH")
 });
