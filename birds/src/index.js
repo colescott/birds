@@ -2,11 +2,17 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
+import MuiThemeProvider from "material-ui/styles/MuiThemeProvider";
+
+// Load Styles
+import "./index.scss";
+
+//Needed for Material Ui
+import injectTapEventPlugin from "react-tap-event-plugin";
+injectTapEventPlugin();
 
 // Setup Redux
 import configureStore from "./store/configureStore";
-import * as c from "./store/constants.js";
-import * as a from "./store/actions.js";
 const store = configureStore();
 
 // Load some components
@@ -20,13 +26,15 @@ document.body.appendChild(appDiv);
 
 // Render the page
 ReactDOM.render(
-    <Provider store={store}>
-      <Router history={hashHistory}>
-        <Route path="/" component={Main}>
-          <Route path="/register" component={Register} />
-          <IndexRoute component={Home} />
-        </Route>
-      </Router>
-    </Provider>,
+    <MuiThemeProvider>
+        <Provider store={store}>
+          <Router history={hashHistory}>
+            <Route path="/" component={Main}>
+              <Route path="/register" component={Register} />
+              <IndexRoute component={Home} />
+            </Route>
+          </Router>
+        </Provider>
+    </MuiThemeProvider>,
     appDiv
 );
