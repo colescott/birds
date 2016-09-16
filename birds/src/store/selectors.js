@@ -16,3 +16,8 @@ export const getLoginForm = createSelector(
     (state) => state.loginForm,
     getStore
 );
+
+export const getTeamForm = createSelector(
+    (state) => state.teamForm,
+    getStore
+);
