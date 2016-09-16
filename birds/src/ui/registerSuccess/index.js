@@ -36,16 +36,16 @@ const RegisterSuccess = (props) => {
                     <FlatButton label="Create" onClick={props.createTeam(props.form.nName, props.form.nNumber)} />
                     <h2> Join a Team </h2>
                     <TextField
-                        hintText="Team Name"
-                        onChange={props.updateKey("name")}
-                        value={props.form.name || ""}
+                        hintText="Team Number"
+                        onChange={props.updateKey("number")}
+                        value={props.form.number || ""}
                     /><br />
                     <TextField
                         hintText="Team Password"
                         onChange={props.updateKey("pass")}
                         value={props.form.pass || ""}
                     /><br />
-                    <FlatButton label="Join"/>
+                    <FlatButton label="Join" onClick={props.joinTeam(props.form.number, props.form.pass)}/>
                 </CardText>
             </Card>
         </div>

@@ -21,13 +21,18 @@ function* teams() {
                 const { number, pass } = action.payload;
                 console.log(action.payload);
                 const { id: uid } = yield select(s.getAuth);
-                yield call(api.teams.join, number, pass, uid, token); 
+                yield call(api.teams.join, number, pass, uid, token);
+                const res = yield call(api.auth.getUser, uid, token);
+                yield put(a.setAuth(res));
                 break;
             }
             case c.CREATE_TEAM: {
                 const { name, number } = action.payload;
                 console.log(action.payload);
                 yield call(api.teams.create, name, number, token);
+                const { id: uid } = yield select(s.getAuth);
+                const res = yield call(api.auth.getUser, uid, token);
+                yield put(a.setAuth(res));
                 break;
             }
             default:
