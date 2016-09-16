@@ -1,7 +1,10 @@
-import v1 from "./v1.js";
 import auth from "./auth";
+import xr from "xr";
+
+xr.configure({
+    abort: false
+});
 
 export default {
-  v1,
   auth
 };

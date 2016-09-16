@@ -31,14 +31,13 @@ function* auth() {
                     const user = yield select(s.getRegisterForm);
                     yield call(register, user);
                     yield call(login, user.email, user.password);
-                    yield put(push("/"));
+                    yield put(push("/registerSuccess"));
                     break;
                 }
                 default:
                     break;
             }
         } catch (e) {
-            console.error(e);
             yield put(a.setAuth(e));
         }
     }

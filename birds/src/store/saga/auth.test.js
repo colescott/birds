@@ -31,7 +31,7 @@ describe("AUTH SAGA", () => {
                 call(login, userData.email, userData.password)
             );
         });
-        it("should redirect back to the home page", () => {
+        it("should redirect to the register success page", () => {
             const userData = { email: "test", password: "pass" };
             const saga = auth();
             saga.next();
@@ -39,7 +39,7 @@ describe("AUTH SAGA", () => {
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
-                put(push("/"))
+                put(push("/registerSuccess"))
             );
         });
     });
