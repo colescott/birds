@@ -1,11 +1,14 @@
 language: node_js
 node_js:
-  - "6"
-  - "6.1"
-  - "5.11"
+    - "6"
+    - "6.1"
 services:
-  - mongodb
+    - mongodb
 env:
-  - MONGODB_URI=mongodb://localhost/passport
+    - MONGODB_URI=mongodb://localhost/passport
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
+script:
+    - npm run cover
+after_success:
+    - bash <(curl -s https://codecov.io/bash)
