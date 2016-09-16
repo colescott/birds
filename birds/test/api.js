@@ -12,6 +12,18 @@ var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
 
+describe("Base Server", () => {
+    it("should return pong on ping", (done) => {
+        request(app)
+            .get("/ping")
+            .set("Accept", "text")
+            .send()
+            .expect("Content-Type", "text/html; charset=utf-8")
+            .expect(200)
+            .expect("Pong!", done);
+    });
+});
+
 describe("APIv1", () => {
     describe("POST /api/v1/teams", () => {
         it("create new team", (done) => {

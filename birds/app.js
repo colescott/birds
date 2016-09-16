@@ -1,12 +1,3 @@
-if (process.env.NODE_ENV == "TEST")
-{
-    if (!process.env.JWT_SECRET)
-        process.env.JWT_SECRET = "correcthorsebatterystaple";
-    if (!process.env.MONGODB_URI)
-        process.env.MONGODB_URI = "mongodb://localhost/passport";
-}
-
-
 const express = require("express");
 const app = express();
 const path = require("path");

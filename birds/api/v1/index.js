@@ -306,6 +306,52 @@ router.post("/teams", teams.postCreateTeam);
 router.get("/teams", teams.getTeams);
 
 /**
+ * @api {get} /teams/:id Get team by number
+ * @apiName Get team by number
+ * @apiGroup Teams
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.team Array of teams
+ * @apiSuccess {String} data.team.name Team name
+ * @apiSuccess {Number} data.team.teamnumber Team number
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.get("/teams/:num", teams.getTeam);
+
+/**
+ * @api {put} /teams/:num/:action Perform action on team
+ * @apiName Perform action on team
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {Object} [user] User when :action = "addadmin" or "removeadmin"
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully removed admin"
+ *     }
+ *
+ */
+router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
+
+/**
  * @api {post} /auth/login Login
  * @apiName Login
  * @apiGroup Auth
@@ -338,8 +384,8 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.post('/auth/login', function(req, res, next) {
-    passport.authenticate('local', {
+router.post("/auth/login", function(req, res, next) {
+    passport.authenticate("local", {
         session: false
     }, function(err, user) {
         if (err) return util.error(res, err);
