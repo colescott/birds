@@ -281,7 +281,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"FAKEIDORISIT\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159\n    },\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -292,7 +292,7 @@ define({ "api": [
   },
   {
     "type": "get",
-    "url": "/teams/:id",
+    "url": "/teams/:num",
     "title": "Get team by number",
     "name": "Get_team_by_number",
     "group": "Teams",

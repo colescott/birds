@@ -260,13 +260,6 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  *     HTTP/1.1 200 OK
  *     {
  *       "data": {
- *         "user": {
- *           "id": "FAKEIDORISIT",
- *           "email": "cardinalbirdsdev@gmail.com",
- *           "firstname": "CardinalBIRDS",
- *           "lastname": "Dev Team",
- *           "teamnumber": 4159
- *         },
  *         "team": {
  *           "name": "CardinalBotics",
  *           "teamnumber": 4159
@@ -275,7 +268,7 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  *     }
  *
  */
-router.post("/teams", teams.postCreateTeam);
+router.post("/teams", authenticate, teams.postCreateTeam);
 
 /**
  * @api {get} /teams Get list of teams
@@ -306,7 +299,7 @@ router.post("/teams", teams.postCreateTeam);
 router.get("/teams", teams.getTeams);
 
 /**
- * @api {get} /teams/:id Get team by number
+ * @api {get} /teams/:num Get team by number
  * @apiName Get team by number
  * @apiGroup Teams
  *

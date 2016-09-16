@@ -8,15 +8,14 @@ const createTeam = (name, teamnumber, adminUser, cb) => {
     var team = new Team({
         name: name,
         teamnumber: teamnumber,
-        users: [{
-            id: adminUser.id,
-            isAdmin: true,
-            isModerator: false,
-            moderates: []
-        }]
+        users: []
     });
     team.save((err) => {
-        return cb(err);
+        if(err)
+            return cb(err);
+        Team.addUser(teamnumber, adminUser, true, (err) => {
+            return cb(err);
+        });
     });
 };
 
@@ -42,34 +41,21 @@ const postCreateTeam = (req, res) => {
             return util.error(res, err);
         if (exists)
             return util.error(res, "A team with that number already exists!", 400);
-        const usr = new User({
-            email: req.body.adminUser.email,
-            firstname: req.body.adminUser.firstname,
-            lastname: req.body.adminUser.lastname,
-            teamnumber: req.body.adminUser.teamnumber,
-            progress: []
-        });
-        User.register(usr, req.body.adminUser.password, (err, thisModel, passwordErr) => {
+        User.findById(req.user.id, (err, user) => {
             if (err)
                 return util.error(res, err);
-            if (passwordErr)
-                return util.error(res, passwordErr);
-            User.findById(thisModel._id, (err, user) => {
+            createTeam(req.body.name, req.body.teamnumber, user, (err) => {
                 if (err)
                     return util.error(res, err);
-                createTeam(req.body.name, req.body.teamnumber, user, (err) => {
+                Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
                     if (err)
                         return util.error(res, err);
-                    Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
-                        if (err)
-                            return util.error(res, err);
-                        const response = {
-                            user: util.sterilizeUser(user),
-                            team: util.sterilizeTeam(data[ 0 ])
-                        };
+                    const response = {
+                        user: util.sterilizeUser(user),
+                        team: util.sterilizeTeam(data[ 0 ])
+                    };
 
-                        util.data(res, response);
-                    });
+                    util.data(res, response);
                 });
             });
         });
@@ -82,9 +68,10 @@ const performActionOnTeam = (req, res) => {
             return util.error(res, err);
         if (!isAdmin)
             return util.error(res, "You are not an admin of this team.", 401);
+
         switch (req.params.action) {
         case "delete":
-            Team.findAndRemove({ teamnumber: req.params.num }, (err) => {
+            Team.findOneAndRemove({ teamnumber: req.params.num }, (err) => {
                 if (err)
                     return util.error(res, err);
                 return util.message(res, "Successfully deleted team.");

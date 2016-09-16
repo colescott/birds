@@ -4,9 +4,9 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
-const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159, adminUser: { email: "admin@team4159.org", password: "adminpass", firstname: "Admin", lastname: "Account", teamnumber: 4159 } };
-const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", teamnumber: 4159, progress: [] };
-const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname, teamnumber: testUser.teamnumber };
+const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159 };
+const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", progress: [] };
+const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname };
 
 var testUserWithId;
 var testUserWithIdNoProgress;
@@ -25,16 +25,6 @@ describe("Base Server", () => {
 });
 
 describe("APIv1", () => {
-    describe("POST /api/v1/teams", () => {
-        it("create new team", (done) => {
-            request(app)
-            .post("/api/v1/teams")
-            .set("Accept", "application/json")
-            .send(testTeamReqest)
-            .expect("Content-Type", /json/)
-            .expect(200, done);
-        });
-    });
     describe("POST /api/v1/users", () => {
         it("created and returned new user", (done) => {
             request(app)
@@ -250,7 +240,94 @@ describe("APIv1", () => {
         });
     });
 
-    describe("PUT /users/:id/:delete", () => {
+    describe("POST /api/v1/teams", () => {
+        it("create new team", (done) => {
+            request(app)
+            .post("/api/v1/teams")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send(testTeamReqest)
+            .expect("Content-Type", /json/)
+            .expect(200, done);
+        });
+    });
+
+    describe("GET /api/v1/teams", () => {
+        it("respond with json", (done) => {
+            request(app)
+            .get("/api/v1/teams")
+            .set("Accept", "application/json")
+            .expect("Content-Type", /json/)
+            .expect(200, done);
+        });
+        it("conatins test team", (done) => {
+            request(app)
+            .get("/api/v1/teams")
+            .set("Accept", "application/json")
+            .expect(function(res) {
+                var found = false;
+                res.body.data.teams.forEach((team) => {
+                    if (team.teamnumber == testTeamReqest.teamnumber) {
+                        found = true;
+                    }
+                });
+                if (!found)
+                    throw new Error("team does not exist!");
+            })
+            .end(done);
+        });
+    });
+
+    describe("PUT /teams/:num/delete", () => {
+        it("responds team deleted", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(200, done);
+        });
+        it("test team deleted from database", (done) => {
+            request(app)
+            .get("/api/v1/teams")
+            .set("Accept", "application/json")
+            .expect(function(res) {
+                var found = false;
+                res.body.data.teams.forEach((team) => {
+                    if (team.teamnumber == testTeamReqest.teamnumber) {
+                        found = true;
+                    }
+                });
+                if (found)
+                    throw new Error("team is still in the database!");
+            })
+            .end(done);
+        });
+        it("responds error on no token", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .set("Accept", "application/json")
+            .send({})
+            .expect(function(res) {
+                if (!(res.body.error.message == "You need to be logged in to do this."))
+                    throw new Error("Server not sending error with \"You need to be logged in to do this.\"");
+            })
+            .end(done);
+        });
+        it("responds error on bad token", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer correcthorsebatterystaple")
+            .send({})
+            .expect(function(res) {
+                if (!(res.body.error.message == "Invalid token."))
+                    throw new Error("Server not sending error with \"Invalid token.\"");
+            })
+            .end(done);
+        });
+    });
+
+    describe("PUT /users/:id/delete", () => {
         it("responds user deleted", (done) => {
             request(app)
             .put("/api/v1/users/" + testUserWithId.id + "/delete")
