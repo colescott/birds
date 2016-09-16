@@ -14,7 +14,8 @@ const Main = ({ children, auth }) => {
                     links={[
                         { text: "Home", to: "/" },
                         { text: "Register", to: "/register" },
-                        { text: "Login", to: "/login" }
+                        { text: "Login", to: "/login" },
+                        { text: "Logout", to: "/logout" }
                     ]}
                     status={ auth.firstname || "Not Logged In"}
                 />

@@ -1,10 +1,11 @@
 import { take, call, put, select } from "redux-saga/effects";
-
-import api from "../../api";
+import { push } from "react-router-redux";
 
 import * as c from "../constants.js";
 import * as a from "../actions.js";
 import * as s from "../selectors.js";
+
+import { login, logout, register } from "./user.js";
 
 function* auth() {
     for (;;) {
@@ -16,28 +17,21 @@ function* auth() {
             ]);
             switch (action.type) {
                 case c.LOGIN_AUTH: {
-                    const { username, password } = action.payload;
-                    const res = yield call(api.auth.login, username, password);
-                    if (res.error) {
-                        yield put(a.setAuth(new Error(res.error.message)));
-                        break;
-                    }
-                    yield put(a.setAuth({
-                        ...res.data.user,
-                        token: res.data.token,
-                    }));
+                    const { email, password } = action.payload;
+                    yield call(login, email, password);
+                    yield put(push("/"));
                     break;
                 }
                 case c.LOGOUT_AUTH: {
-                    yield put(a.resetAuth());
+                    yield call(logout);
+                    yield put(push("/"));
                     break;
                 }
                 case c.REGISTER_AUTH: {
                     const user = yield select(s.getRegisterForm);
-                    const res = yield call(api.auth.register, user);
-                    if (res.error) throw new Error(res.error.message);
-                    yield put(a.setAuth(res.data.user));
-                    yield put(a.loginAuth());
+                    yield call(register, user);
+                    yield call(login, user.email, user.password);
+                    yield put(push("/"));
                     break;
                 }
                 default:

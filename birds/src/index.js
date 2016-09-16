@@ -13,12 +13,13 @@ injectTapEventPlugin();
 
 // Setup Redux
 import configureStore from "./store/configureStore";
-const store = configureStore();
+const store = configureStore(hashHistory);
 
 // Load some components
 import Main from "./ui/main.js";
 import Home from "./ui/home/index.js";
 import Login from "./ui/login/index.js";
+import Logout from "./ui/logout/index.js";
 import Register from "./ui/register/index.js";
 
 // Create and append a div
@@ -33,6 +34,7 @@ ReactDOM.render(
             <Route path="/" component={Main}>
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
+              <Route path="/logout" component={Logout} />
               <IndexRoute component={Home} />
             </Route>
           </Router>
