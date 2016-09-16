@@ -278,6 +278,28 @@ describe("APIv1", () => {
         });
     });
 
+    describe("PUT /users/:id/jointeam", () => {
+        it("join team", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUserWithId.id + "/jointeam")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send({ teamnumber: 4159 })
+            .expect(200, done);
+        });
+        it("user has teamnumber=4159", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUserWithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(function(res) {
+                if (res.body.data.user.teamnumber != 4159)
+                    throw new Error("user.teamnumber is not 4159 :(");
+            })
+            .end(done);
+        });
+    });
+
     describe("PUT /teams/:num/delete", () => {
         it("responds team deleted", (done) => {
             request(app)

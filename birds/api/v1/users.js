@@ -109,8 +109,7 @@ exports.performActionOnUser = (req, res) => {
         if (err)
             return util.error(res, err);
 
-        switch (req.params.action)
-        {
+        switch (req.params.action) {
         case "delete":
             User.findByIdAndRemove(req.params.id, (err) => {
                 if (err)
@@ -157,6 +156,20 @@ exports.performActionOnUser = (req, res) => {
                 if (err)
                     return util.error(res, err);
                 return util.message(res, "Successfully reset progress");
+            });
+            break;
+        case "jointeam":
+            Team.addUser(req.body.teamnumber, user, false, (err) => {
+                if (err)
+                    return util.error(res, err);
+
+                User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber }, options, (err) => {
+                    if (err)
+                        return util.error(res, err);
+                    return util.message(res, "Successfully set progress");
+                });
+
+                return util.message(res, "Successfully joined team");
             });
             break;
         default:
