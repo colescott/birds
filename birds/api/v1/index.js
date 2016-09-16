@@ -243,6 +243,7 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  * @apiSuccess {Object} data.team Team object
  * @apiSuccess {String} data.team.name Team name
  * @apiSuccess {Number} data.team.teamnumber Team number
+ * @apiSuccess {String} data.team.password Team password, 6 char long
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -250,7 +251,8 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  *       "data": {
  *         "team": {
  *           "name": "CardinalBotics",
- *           "teamnumber": 4159
+ *           "teamnumber": 4159,
+ *           "password": "Iluvme"
  *         }
  *       }
  *     }

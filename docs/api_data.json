@@ -191,13 +191,20 @@
             "optional": false,
             "field": "data.team.teamnumber",
             "description": "<p>Team number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.team.password",
+            "description": "<p>Team password, 6 char long</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159,\n      \"password\": \"Iluvme\"\n    }\n  }\n}",
           "type": "json"
         }
       ]

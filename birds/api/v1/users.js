@@ -159,16 +159,26 @@ exports.performActionOnUser = (req, res) => {
             });
             break;
         case "jointeam":
-            Team.addUser(req.body.teamnumber, user, false, (err) => {
+            Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
                 if (err)
                     return util.error(res, err);
+                if (data.length <= 0)
+                    return util.error(res, "That team does not exist.", 400);
 
-                User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber }, options, (err) => {
+                if (req.body.password != data[ 0 ].password)
+                    return util.error(res, "Incorrect password.", 401);
+
+                Team.addUser(req.body.teamnumber, user, false, (err) => {
                     if (err)
                         return util.error(res, err);
-                });
 
-                return util.message(res, "Successfully joined team");
+                    User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber }, options, (err) => {
+                        if (err)
+                            return util.error(res, err);
+                    });
+
+                    return util.message(res, "Successfully joined team");
+                });
             });
             break;
         default:
