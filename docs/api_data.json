@@ -292,6 +292,57 @@
   },
   {
     "type": "get",
+    "url": "/teams/:id",
+    "title": "Get team by number",
+    "name": "Get_team_by_number",
+    "group": "Teams",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.team",
+            "description": "<p>Array of teams</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.team.name",
+            "description": "<p>Team name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "data.team.teamnumber",
+            "description": "<p>Team number</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "get",
     "url": "/teams",
     "title": "Get list of teams",
     "name": "Get_teams",
@@ -333,6 +384,69 @@
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"teams\": [{\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    },\n    {\n      \"name\": \"FireHawk Robotics\",\n      \"teamnumber\": 6000\n    }]\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "put",
+    "url": "/teams/:num/:action",
+    "title": "Perform action on team",
+    "name": "Perform_action_on_team",
+    "group": "Teams",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": true,
+            "field": "user",
+            "description": "<p>User when :action = &quot;addadmin&quot; or &quot;removeadmin&quot;</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully removed admin\"\n}",
           "type": "json"
         }
       ]
