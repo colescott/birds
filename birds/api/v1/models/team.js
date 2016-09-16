@@ -27,7 +27,7 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
         if (data.length <= 0)
             return cb("That team does not exist.");
         let found = false;
-        if(!data.users)
+        if (!data.users)
             return cb(null, false);
         data.users.forEach((usr) => {
             if (found)
@@ -45,14 +45,14 @@ Team.statics.userIsAdmin = function(teamnumber, user, cb) {
             return cb(err);
         if (data.length <= 0)
             return cb("That team does not exist.");
-        var done = false;
+        let done = false;
         data[ 0 ].users.forEach((usr) => {
             if (usr.id == user.id) {
                 done = true;
                 cb(null, usr.isAdmin);
             }
         });
-        if(!done)
+        if (!done)
             return cb(null, false);
     });
 };
