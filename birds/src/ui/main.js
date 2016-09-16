@@ -13,9 +13,14 @@ const Main = ({ children, auth }) => {
                     title={"Birds"}
                     links={[
                         { text: "Home", to: "/" },
-                        { text: "Register", to: "/register" },
-                        { text: "Login", to: "/login" },
-                        { text: "Logout", to: "/logout" }
+                        ...(
+                            auth.token
+                            ? [{ text: "Logout", to: "/logout" }]
+                            : [
+                                { text: "Register", to: "/register" },
+                                { text: "Login", to: "/login" },
+                            ]
+                        )
                     ]}
                     status={ auth.firstname || "Not Logged In"}
                 />

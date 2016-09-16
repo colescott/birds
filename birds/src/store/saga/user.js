@@ -4,6 +4,8 @@ import api from "../../api";
 
 import * as a from "../actions.js";
 
+export const ERROR = "Something went wrong.";
+
 export function* login(email, password) {
     const res = yield call(api.auth.login, email, password);
     if (res.error) throw new Error(res.error.message);
@@ -19,6 +21,8 @@ export function* logout() {
 
 export function* register(user) {
     const res = yield call(api.auth.register, user);
-    if (res.error) throw new Error(res.error.message);
+    if (res.error) {
+        throw new Error(res.error.message || ERROR);
+    }
     yield put(a.setAuth(res.data.user));
 }
