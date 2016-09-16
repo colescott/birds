@@ -305,6 +305,10 @@ router.post("/teams", teams.postCreateTeam);
  */
 router.get("/teams", teams.getTeams);
 
+router.get("/teams/:num", teams.getTeam);
+
+router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
+
 /**
  * @api {post} /auth/login Login
  * @apiName Login
@@ -338,8 +342,8 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.post('/auth/login', function(req, res, next) {
-    passport.authenticate('local', {
+router.post("/auth/login", function(req, res, next) {
+    passport.authenticate("local", {
         session: false
     }, function(err, user) {
         if (err) return util.error(res, err);

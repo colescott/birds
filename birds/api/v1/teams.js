@@ -28,6 +28,14 @@ const getTeams = (req, res) => {
     });
 };
 
+const getTeam = (req, res) => {
+    Team.find({ teamnumber: req.body.teamnumber }, function(err, teams) {
+        const usrs = teams.map(team => (util.sterilizeTeam(team)));
+        const val = { teams: usrs };
+        return util.data(res, val);
+    });
+};
+
 const postCreateTeam = (req, res) => {
     Team.exists(req.body.teamnumber, (err, exists) => {
         if (err)
@@ -68,6 +76,49 @@ const postCreateTeam = (req, res) => {
     });
 };
 
+const performActionOnTeam = (req, res) => {
+    Team.userIsAdmin(req.params.num, req.user, (err, isAdmin) => {
+        if (err)
+            return util.error(res, err);
+        if (!isAdmin)
+            return util.error(res, "You are not an admin of this team.", 401);
+        switch (req.params.action) {
+        case "delete":
+            Team.findAndRemove({ teamnumber: req.params.num }, (err) => {
+                if (err)
+                    return util.error(res, err);
+                return util.message(res, "Successfully deleted team.");
+            });
+            break;
+        case "addadmin":
+            Team.setAdmin(req.params.num, req.user, true, (err) => {
+                if (err)
+                    return util.error(res, err);
+                return util.message(res, "Successfully removed admin.");
+            });
+            break;
+        case "removeadmin":
+            Team.numberOfAdmins(req.params.num, (err, num) => {
+                if (err)
+                    return util.error(res, err);
+                if (num <= 1)
+                    return util.error(res, "You cannot remove the only admin.", 400);
+
+                Team.setAdmin(req.params.num, req.user, false, (err) => {
+                    if (err)
+                        return util.error(res, err);
+                    return util.message(res, "Successfully removed admin.");
+                });
+            });
+            break;
+        default:
+            return util.error(res, "Action not found", 400);
+        }
+    });
+};
+
 exports.createTeam = createTeam;
 exports.getTeams = getTeams;
+exports.getTeam = getTeam;
 exports.postCreateTeam = postCreateTeam;
+exports.performActionOnTeam = performActionOnTeam;
