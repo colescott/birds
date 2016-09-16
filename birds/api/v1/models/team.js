@@ -24,15 +24,53 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
         if (err)
             return cb(err);
         if (data.length <= 0)
-            return cb(null, false);
-        var found = false;
+            return cb("That team does not exist.");
+        let found = false;
         data.users.forEach((usr) => {
             if (found)
                 return;
             if (usr.id == user.id)
                 found = true;
         });
-        return cb(found);
+        return cb(null, found);
+    });
+};
+
+Team.statics.userIsAdmin = function(teamnumber, user, cb) {
+    this.findOne().byNumber(teamnumber).exec((err, data) => {
+        if (err)
+            return cb(err);
+        if (data.length <= 0)
+            return cb("That team does not exist.");
+        data.users.forEach((usr) => {
+            if (usr.id == user.id)
+                return cb(null, usr.isAdmin);
+        });
+        return cb(null, false);
+    });
+};
+
+Team.statics.numberOfAdmins = function(teamnumber, cb) {
+    this.findOne().byNumber(teamnumber).exec((err, data) => {
+        if (err)
+            return cb(err);
+        if (data.length <= 0)
+            return cb("That team does not exist.");
+        let adminNum = 0;
+        data.users.forEach((usr) => {
+            if (usr.isAdmin)
+                adminNum++;
+        });
+        return cb(null, adminNum);
+    });
+};
+
+// cb is (err)
+Team.statics.setAdmin = function(teamnumber, user, isAdmin, cb) {
+    this.findOne({ teamnumber: teamnumber }).update({ "user.id": user.id }, { "$set": {
+        "progress.$.isAdmin": isAdmin
+    } }, (err) => {
+        return cb(err);
     });
 };
 
