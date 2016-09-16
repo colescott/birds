@@ -238,20 +238,8 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  *
  * @apiParam {String} name Teams name.
  * @apiParam {Number} teamnumber Teams number.
- * @apiParam {Object} adminUser New user info for admin (DO NOT post to /users beforehand)
- * @apiParam {String} adminUser.email Users email.
- * @apiParam {String} adminUser.password Users password.
- * @apiParam {String} adminUser.firstname Users first name.
- * @apiParam {String} adminUser.lastname Users last name.
- * @apiParam {Number} adminUser.teamnumber Users team number.
  *
  * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.user User object
- * @apiSuccess {String} data.user.id Users id
- * @apiSuccess {String} data.user.email Users email
- * @apiSuccess {String} data.user.firstname Users firstname
- * @apiSuccess {String} data.user.lastname Users lastname
- * @apiSuccess {Number} data.user.teamnumber Users teamnumber
  * @apiSuccess {Object} data.team Team object
  * @apiSuccess {String} data.team.name Team name
  * @apiSuccess {Number} data.team.teamnumber Team number

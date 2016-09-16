@@ -157,48 +157,6 @@ define({ "api": [
             "optional": false,
             "field": "teamnumber",
             "description": "<p>Teams number.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Object",
-            "optional": false,
-            "field": "adminUser",
-            "description": "<p>New user info for admin (DO NOT post to /users beforehand)</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "adminUser.email",
-            "description": "<p>Users email.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "adminUser.password",
-            "description": "<p>Users password.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "adminUser.firstname",
-            "description": "<p>Users first name.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "adminUser.lastname",
-            "description": "<p>Users last name.</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "Number",
-            "optional": false,
-            "field": "adminUser.teamnumber",
-            "description": "<p>Users team number.</p>"
           }
         ]
       }
@@ -212,48 +170,6 @@ define({ "api": [
             "optional": false,
             "field": "data",
             "description": "<p>Data object containing info</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.user",
-            "description": "<p>User object</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user.id",
-            "description": "<p>Users id</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user.email",
-            "description": "<p>Users email</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user.firstname",
-            "description": "<p>Users firstname</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "String",
-            "optional": false,
-            "field": "data.user.lastname",
-            "description": "<p>Users lastname</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Number",
-            "optional": false,
-            "field": "data.user.teamnumber",
-            "description": "<p>Users teamnumber</p>"
           },
           {
             "group": "Success 200",
