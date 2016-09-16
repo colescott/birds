@@ -42,11 +42,15 @@ Team.statics.userIsAdmin = function(teamnumber, user, cb) {
             return cb(err);
         if (data.length <= 0)
             return cb("That team does not exist.");
+        var done = false;
         data[ 0 ].users.forEach((usr) => {
-            if (usr.id == user.id)
-                return cb(null, usr.isAdmin);
+            if (usr.id == user.id) {
+                done = true;
+                cb(null, usr.isAdmin);
+            }
         });
-        return cb(null, false);
+        if(!done)
+            return cb(null, false);
     });
 };
 
