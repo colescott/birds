@@ -20,5 +20,8 @@
     {
       "url": "heroku/nodejs"
     }
-  ]
+  ],
+  "engines": {
+    "node": "6.1.x"
+  }
 }
