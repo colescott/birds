@@ -37,13 +37,16 @@ const Home = (props) => {
                         : memberPage(props.user)
                     }
                 </p>
+                <p>Welcome to birds!</p>
+                <p>The content is currently under construction. Check back in a few days to get started!</p>
             </div>
         );
     } else {
         return (
             <div>
                 <h1> Welcome to Birds </h1>
-                Get learned
+                <p>Birds is the Beginning and Intermediate Role Development System devloped by Team 4159 CardinalBotics.</p>
+                <p>This website will guide you through learning about everything robotics. Sign in to start!</p>
             </div>
         );
     }
