@@ -12,42 +12,25 @@ exports.register = (req, res) => {
     //TODO: make all args required
     if (!req.body.email)
         return util.error(res, "Email value required.", 400);
-    Team.exists(req.body.teamnumber, (err, value) => {
-        const usr = new User({
-            email: req.body.email,
-            firstname: req.body.firstname,
-            lastname: req.body.lastname,
-            teamnumber: req.body.teamnumber,
-            progress: []
-        });
-        User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
+    const usr = new User({
+        email: req.body.email,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        progress: []
+    });
+    User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
+        if (err)
+            return util.error(res, err);
+        if (passwordErr)
+            return util.error(res, passwordErr);
+        User.findById(thisModel._id, (err, user) => {
             if (err)
                 return util.error(res, err);
-            if (passwordErr)
-                return util.error(res, passwordErr);
-            User.findById(thisModel._id, (err, user) => {
-                if (err)
-                    return util.error(res, err);
 
-                if (req.body.teamnumber) {
-                    if (err || !value)
-                        return util.error(res, "Team does not exist, did not join team.", 400);
-                    Team.addUser(req.body.teamnumber, user, false, (err) => {
-                        if (err)
-                            return util.error(res, err);
-
-                        const response = {
-                            user: util.sterilizeUser(user)
-                        };
-                        return util.data(res, response);
-                    });
-                } else {
-                    const response = {
-                        user: util.sterilizeUser(user)
-                    };
-                    return util.data(res, response);
-                }
-            });
+            const response = {
+                user: util.sterilizeUser(user)
+            };
+            return util.data(res, response);
         });
     });
 };
