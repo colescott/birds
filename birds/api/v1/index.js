@@ -134,6 +134,7 @@ router.get("/users", users.getUsers);
  * @apiSuccess {String} data.user.firstname Users firstname
  * @apiSuccess {String} data.user.lastname Users lastname
  * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Boolean} data.user.isAdmin If user is an admin of team NOTE: only returns this if logged in as user trying to get
  * @apiSuccess {Object[]} [data.user.progress] User progress NOTE: only returns this if logged in as user trying to get
  * @apiSuccess {String} data.user.progress.id Id of lesson
  * @apiSuccess {String} data.user.progress.state Progress of lesson
@@ -148,6 +149,7 @@ router.get("/users", users.getUsers);
  *           "firstname": "CardinalBIRDS",
  *           "lastname": "Dev Team",
  *           "teamnumber": 4159,
+ *           "isAdmin": true,
  *           "progress": [
  *              {
  *                "id": "thisisalessonid",
@@ -350,6 +352,7 @@ router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
  * @apiSuccess {String} data.user.firstname Users firstname
  * @apiSuccess {String} data.user.lastname Users lastname
  * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Boolean} data.user.isAdmin If users is an admin of team
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -361,7 +364,8 @@ router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
  *           "email": "cardinalbirdsdev@gmail.com",
  *           "firstname": "CardinalBIRDS",
  *           "lastname": "Dev Team",
- *           "teamnumber": 4159
+ *           "teamnumber": 4159,
+ *           "isAdmin": true
  *         }
  *       }
  *     }

@@ -7,6 +7,7 @@ const User = new Schema({
     firstname: String,
     lastname: String,
     teamnumber: Number,
+    isAdmin: Boolean,
     progress: [{
         id: String,
         state: String

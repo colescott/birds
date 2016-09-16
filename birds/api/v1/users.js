@@ -171,13 +171,14 @@ exports.performActionOnUser = (req, res) => {
                 Team.addUser(req.body.teamnumber, user, false, (err) => {
                     if (err)
                         return util.error(res, err);
+                    Team.userIsAdmin(req.body.teamnumber, user, (err, isAdmin) => {
+                        User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber, isAdmin: isAdmin }, options, (err) => {
+                            if (err)
+                                return util.error(res, err);
+                        });
 
-                    User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber }, options, (err) => {
-                        if (err)
-                            return util.error(res, err);
-                    });
-
-                    return util.message(res, "Successfully joined team");
+                        return util.message(res, "Successfully joined team");
+                    })
                 });
             });
             break;
