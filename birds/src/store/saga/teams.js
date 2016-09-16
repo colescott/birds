@@ -8,33 +8,31 @@ import * as a from "../actions.js";
 import * as s from "../selectors.js";
 
 function* teams() {
-    console.log("loaded");
-    while (true) {
+    for (;;) {
         try {
             const action = yield take([
                 c.JOIN_TEAM,
                 c.CREATE_TEAM
             ]);
-            console.log("taken");
             const { token } = yield select(s.getAuth);
             switch (action.type) {
                 case c.JOIN_TEAM: {
                     const { number, pass } = action.payload;
-                    console.log(action.payload);
                     const { id: uid } = yield select(s.getAuth);
                     yield call(api.teams.join, number, pass, uid, token);
-                    const res = yield call(api.auth.getUser, uid, token);
-                    yield put(a.setAuth(res));
+                    const { data } = yield call(api.auth.getUser, uid, token);
+                    yield put(a.setAuth(data.user));
                     yield put(push("/"));
                     break;
                 }
                 case c.CREATE_TEAM: {
                     const { name, number } = action.payload;
-                    console.log(action.payload);
-                    yield call(api.teams.create, name, number, token);
+                    const { data: { team } } = yield call(api.teams.create, name, number, token);
+                    yield put(a.setAuth({ teamPass: team.password }));
                     const { id: uid } = yield select(s.getAuth);
-                    const res = yield call(api.auth.getUser, uid, token);
-                    yield put(a.setAuth(res));
+                    const { data } = yield call(api.auth.getUser, uid, token);
+                    console.warn(data);
+                    yield put(a.setAuth(data.user));
                     yield put(push("/"));
                     break;
                 }
