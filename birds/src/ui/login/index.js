@@ -8,7 +8,8 @@ import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
 import TextField from "material-ui/TextField";
 
-const Register = (props) => {
+
+const Login = (props) => {
     return (
         <div
             style={{
@@ -33,16 +34,6 @@ const Register = (props) => {
                         onChange={props.updateKey("password")}
                         value={props.form.password || ""}
                     /><br />
-                    <TextField
-                        floatingLabelText="First Name"
-                        onChange={props.updateKey("firstname")}
-                        value={props.form.firstname || ""}
-                    /><br />
-                    <TextField
-                        floatingLabelText="Last Name"
-                        onChange={props.updateKey("lastname")}
-                        value={props.form.lastname || ""}
-                    /><br />
                 </CardText>
                 <CardActions
                     style={{
@@ -50,7 +41,7 @@ const Register = (props) => {
                         alignItems: "space-around"
                     }}
                 >
-                     <FlatButton label="Register" onClick={props.register()}/>
+                     <FlatButton label="Login" onClick={props.register(props.form)}/>
                 </CardActions>
             </Card>
         </div>
@@ -58,12 +49,12 @@ const Register = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    form: s.getRegisterForm(state)
+    form: s.getLoginForm(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateKey: (key) => (e, value) => dispatch(a.setRegisterForm({ [ key ]: value })),
-  register: () => () => dispatch(a.registerAuth())
+  updateKey: (key) => (e, value) => dispatch(a.setLoginForm({ [ key ]: value })),
+  register: (data) => () => dispatch(a.loginAuth(data))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -12,10 +12,12 @@ const Main = ({ children, auth }) => {
                 <NavBar
                     title={"Birds"}
                     links={[
-                        { name: "Home", to: "/" },
-                        { name: "Register", to: "/register" }
+                        { text: "Home", to: "/" },
+                        { text: "Register", to: "/register" },
+                        { text: "Login", to: "/login" },
+                        { text: "Logout", to: "/logout" }
                     ]}
-                    user={ auth.firstname || "Not Logged In"}
+                    status={ auth.firstname || "Not Logged In"}
                 />
                 {
                     children

@@ -11,3 +11,8 @@ export const getAuth = createSelector(
     (state) => state.auth,
     getStore
 );
+
+export const getLoginForm = createSelector(
+    (state) => state.loginForm,
+    getStore
+);

@@ -1,34 +1,47 @@
 import React from "react";
 import { Link } from "react-router";
+import { Toolbar, ToolbarGroup, ToolbarTitle } from "material-ui/Toolbar";
 
-import AppBar from "material-ui/AppBar";
-import IconButton from "material-ui/IconButton";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-
-const NavBar = ({ title, links, user }) => (
-    <AppBar
-    title={`${title} - ${user}`}
-    iconElementRight={
-        <IconMenu
-            iconButtonElement={
-                <IconButton><MoreVertIcon /></IconButton>
-            }
-            targetOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "top" }}
+const NavBar = (props) => {
+    return (
+        <Toolbar
+            style={{
+                display: "flex",
+                alignItems: "space-between"
+            }}
         >
-            {
-                links.map((v, i) => (
-                    <Link to={v.to} key={i} style={{ textDecoration: "none" }}>
-                        <MenuItem primaryText={v.name}/>
-                    </Link>
-                ))
-            }
-        </IconMenu>
-    }
-    >
-    </AppBar>
-);
+            <ToolbarGroup>
+                <ToolbarTitle text="Birds" />
+            </ToolbarGroup>
+            <ToolbarGroup>
+                <ToolbarTitle text={props.status} />
+                {
+                    props.links.map((v, i) =>
+                        <Link to={v.to} key={i}>
+                            <ToolbarTitle text={v.text} />
+                        </Link>
+                    )
+                }
+                </ToolbarGroup>
+        </Toolbar>
+    );
+};
 
 export default NavBar;
+
+/*
+<Link to={v.to} key={i} style={{ textDecoration: "none" }}>
+    <MenuItem primaryText={v.name}/>
+</Link>
+
+<IconMenu
+  iconButtonElement={
+    <IconButton touch={true}>
+      <NavigationExpandMoreIcon />
+    </IconButton>
+  }
+>
+  <MenuItem primaryText="Download" />
+  <MenuItem primaryText="More Info" />
+</IconMenu>
+*/

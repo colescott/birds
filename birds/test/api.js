@@ -95,7 +95,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/auth/login")
             .set("Accept", "application/json")
-            .send(testUser)
+            .send({ email: "test@team4159.org", password: "password" })
             .expect("Content-Type", /json/)
             .expect(200, done);
         });
