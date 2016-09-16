@@ -8,9 +8,14 @@ const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159 };
 const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", progress: [] };
 const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname };
 
+const testUser2 = { email: "test2@team4159.org", password: "password", firstname: "Test", lastname: "Account #2", progress: [] };
+var testUser2WithId;
+
 var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
+
+var loginTokenTwo;
 
 describe("Base Server", () => {
     it("should return pong on ping", (done) => {
@@ -279,19 +284,40 @@ describe("APIv1", () => {
     });
 
     describe("PUT /users/:id/jointeam", () => {
+        it("created test user 2", (done) => {
+            request(app)
+            .post("/api/v1/users")
+            .set("Accept", "application/json")
+            .send(testUser2)
+            .expect("Content-Type", /json/)
+            .expect(function(res) {
+                testUser2WithId = res.body.data.user;
+            })
+            .end(done);
+        });
+        it("login test user 2", (done) => {
+            request(app)
+            .post("/api/v1/auth/login")
+            .set("Accept", "application/json")
+            .send(testUser2)
+            .expect(function(res) {
+                loginToken2 = res.body.data.token;
+            })
+            .end(done);
+        });
         it("join team", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/jointeam")
+            .put("/api/v1/users/" + testUser2WithId.id + "/jointeam")
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", "Bearer " + loginToken2)
             .send({ teamnumber: 4159 })
             .expect(200, done);
         });
         it("user has teamnumber=4159", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get("/api/v1/users/" + testUser2WithId.id)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", "Bearer " + loginToken2)
             .expect(function(res) {
                 if (res.body.data.user.teamnumber != 4159)
                     throw new Error("user.teamnumber is not 4159 :(");
@@ -355,6 +381,17 @@ describe("APIv1", () => {
             .put("/api/v1/users/" + testUserWithId.id + "/delete")
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken)
+            .expect({
+                data: {
+                    message: "successfully deleted user."
+                }
+            }, done);
+        });
+        it("responds user 2 deleted", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUser2WithId.id + "/delete")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken2)
             .expect({
                 data: {
                     message: "successfully deleted user."
