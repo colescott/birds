@@ -30,14 +30,14 @@ const sterilizeUser = (user) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        teamnumber: user.teamnumber,
-        isAdmin: user.isAdmin
+        teamnumber: user.teamnumber
     };
 };
 
-const sterilizeUserWithProgress = (user) => {
+const sterilizeUserAsUser = (user) => {
     const usr = sterilizeUser(user);
     usr.progress = user.progress;
+    usr.isAdmin = user.isAdmin;
     return usr;
 };
 
@@ -55,5 +55,5 @@ exports.message = message;
 exports.error = error;
 exports.data = data;
 exports.sterilizeUser = sterilizeUser;
-exports.sterilizeUserWithProgress = sterilizeUserWithProgress;
+exports.sterilizeUserAsUser = sterilizeUserAsUser;
 exports.sterilizeTeam = sterilizeTeam;
