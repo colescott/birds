@@ -1,11 +1,13 @@
 import { assert } from "chai";
-import { take, call, put } from "redux-saga/effects";
-import api from "../../api";
+import { take, call, put, select } from "redux-saga/effects";
+import { push } from "react-router-redux";
 
 import auth from "./auth";
+import { login, logout, register } from "./user";
+
 import * as c from "../constants.js";
-import * as a from "../actions.js";
- 
+import * as s from "../selectors.js";
+
 describe("AUTH SAGA", () => {
     it("should wait for LOGIN, LOGOUT, or REGISTER actions", () => {
         const saga = auth();
@@ -19,118 +21,94 @@ describe("AUTH SAGA", () => {
         );
     });
     describe("LOGIN", () => {
-        it("should call the login api", () => {
+        it("should call the login saga", () => {
             const saga = auth();
+            const userData = { email: "test", password: "pass" };
             saga.next();
-            const apiCall = saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "password"
-                }
-            });
+            const { value: out } = saga.next({ type: c.LOGIN_AUTH, payload: userData });
             assert.deepEqual(
-                apiCall.value,
-                call(api.auth.login, "test", "password")
+                out,
+                call(login, userData.email, userData.password)
             );
         });
-        it("should update the auth reducer on success", () => {
-            const data = {
-                username: "test",
-                password: "test",
-                token: "aaa.bbb.ccc"
-            };
+        it("should redirect back to the home page", () => {
+            const userData = { email: "test", password: "pass" };
             const saga = auth();
             saga.next();
-            saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
-                }
-            });
-            const action = saga.next({ data });
+            saga.next({ type: c.LOGIN_AUTH, payload: userData });
+            const { value: out } = saga.next();
             assert.deepEqual(
-                action.value,
-                put(a.setAuth(data))
-            );
-        });
-        it("should dispatch an error action on failure", () => {
-            const error = {
-                message: "Something went wrong",
-            };
-            const saga = auth();
-            saga.next();
-            saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
-                }
-            });
-            const action = saga.next({ error });
-            assert.deepEqual(
-                action.value,
-                put(a.setAuth(new Error(error.message)))
-            );
-        });
-        it("should go back to listening for events", () => {
-            const data = {
-                username: "test",
-                password: "test",
-                token: "aaa.bbb.ccc"
-            };
-            const saga = auth();
-            saga.next();
-            saga.next({
-                type: c.LOGIN_AUTH,
-                payload: {
-                    username: "test",
-                    password: "test"
-                }
-            });
-            saga.next({ data });
-            assert.deepEqual(
-                saga.next().value,
-                take([
-                    c.LOGOUT_AUTH,
-                    c.LOGIN_AUTH,
-                    c.REGISTER_AUTH
-                ])
+                out,
+                put(push("/"))
             );
         });
     });
     describe("LOGOUT", () => {
-        it("should call an auth reducer reset", () => {
+        it("should clear the user reducer", () => {
             const saga = auth();
             saga.next();
-            const action = saga.next({ type: c.LOGOUT_AUTH });
+            const { value: out } = saga.next({ type: c.LOGOUT_AUTH });
             assert.deepEqual(
-                action.value,
-                put(a.resetAuth())
+                out,
+                call(logout)
             );
         });
-        it("shoud go back to listening for events", () => {
+        it("should redirect back to the home page", () => {
             const saga = auth();
             saga.next();
             saga.next({ type: c.LOGOUT_AUTH });
+            const { value: out } = saga.next();
             assert.deepEqual(
-                saga.next().value,
-                take([
-                    c.LOGOUT_AUTH,
-                    c.LOGIN_AUTH,
-                    c.REGISTER_AUTH
-                ])
+                out,
+                put(push("/"))
             );
         });
     });
     describe("REGISTER", () => {
-        xit("it should call the regester api", () => {
+        it("should select the register form", () => {
             const saga = auth();
             saga.next();
-            saga.next({ type: c.REGISTER_AUTH });
+            const { value: out } = saga.next({ type: c.REGISTER_AUTH });
+            assert.deepEqual(
+                out,
+                select(s.getRegisterForm)
+            );
         });
-        it("it should dispatch a login action on success");
-        it("it should dispatch an error action on failure");
+        it("should register", () => {
+            const saga = auth();
+            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
+            saga.next();
+            saga.next({ type: c.REGISTER_AUTH });
+            const { value: out } = saga.next(userData);
+            assert.deepEqual(
+                out,
+                call(register, userData)
+            );
+        });
+        it("should login", () => {
+            const saga = auth();
+            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
+            saga.next();
+            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(userData);
+            const { value: out } = saga.next();
+            assert.deepEqual(
+                out,
+                call(login, userData.email, userData.password)
+            );
+        });
+        it("it should redirect back to the front page", () => {
+            const saga = auth();
+            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
+            saga.next();
+            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(userData);
+            saga.next();
+            const { value: out } = saga.next();
+            assert.deepEqual(
+                out,
+                put(push("/"))
+            );
+        });
     });
 });
