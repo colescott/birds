@@ -8,3 +8,6 @@ npm-debug.log
 # Webpack build artifacts
 birds/static
 birds/public
+
+# Other Generated Files
+coverage/
