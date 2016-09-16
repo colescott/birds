@@ -83,13 +83,20 @@ define({ "api": [
             "optional": false,
             "field": "data.user.teamnumber",
             "description": "<p>Users teamnumber</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "data.user.isAdmin",
+            "description": "<p>If users is an admin of team</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"token\": \"correcthorsebatterystaple\",\n    \"user\": {\n      \"id\": \"FAKEIDORISIT\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"token\": \"correcthorsebatterystaple\",\n    \"user\": {\n      \"id\": \"FAKEIDORISIT\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159,\n      \"isAdmin\": true\n    }\n  }\n}",
           "type": "json"
         }
       ]
@@ -438,6 +445,13 @@ define({ "api": [
           },
           {
             "group": "Success 200",
+            "type": "Boolean",
+            "optional": false,
+            "field": "data.user.isAdmin",
+            "description": "<p>If user is an admin of team NOTE: only returns this if logged in as user trying to get</p>"
+          },
+          {
+            "group": "Success 200",
             "type": "Object[]",
             "optional": true,
             "field": "data.user.progress",
@@ -462,7 +476,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"ILUVULESSTHAN3\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159,\n      \"progress\": [\n         {\n           \"id\": \"thisisalessonid\",\n           \"state\": \"complete\"\n         }\n       ]\n    }\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"ILUVULESSTHAN3\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159,\n      \"isAdmin\": true,\n      \"progress\": [\n         {\n           \"id\": \"thisisalessonid\",\n           \"state\": \"complete\"\n         }\n       ]\n    }\n  }\n}",
           "type": "json"
         }
       ]

@@ -27,6 +27,8 @@ Team.statics.containsUser = function(teamnumber, user, cb) {
         if (data.length <= 0)
             return cb("That team does not exist.");
         let found = false;
+        if (!data.users)
+            return cb(null, false);
         data.users.forEach((usr) => {
             if (found)
                 return;
@@ -43,14 +45,14 @@ Team.statics.userIsAdmin = function(teamnumber, user, cb) {
             return cb(err);
         if (data.length <= 0)
             return cb("That team does not exist.");
-        var done = false;
+        let done = false;
         data[ 0 ].users.forEach((usr) => {
             if (usr.id == user.id) {
                 done = true;
                 cb(null, usr.isAdmin);
             }
         });
-        if(!done)
+        if (!done)
             return cb(null, false);
     });
 };
@@ -91,8 +93,14 @@ Team.statics.exists = function(teamnumber, cb) {
 };
 
 Team.statics.addUser = function(teamnumber, user, isAdmin, cb) {
-    this.findOne({ teamnumber: teamnumber }).update({ $push: { "users": { id: user.id, isAdmin: isAdmin } } }, (err) => {
-        return cb(err);
+    this.containsUser(teamnumber, user, (err, exists) => {
+        if (err)
+            return cb(err);
+        if (exists)
+            return cb(null);
+        this.findOne({ teamnumber: teamnumber }).update({ $push: { "users": { id: user.id, isAdmin: isAdmin } } }, (err) => {
+            return cb(err);
+        });
     });
 };
 
