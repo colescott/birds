@@ -91,7 +91,7 @@ const performActionOnTeam = (req, res) => {
             });
             break;
         case "addadmin":
-            Team.setAdmin(req.params.num, req.user, true, (err) => {
+            Team.setAdmin(req.params.num, req.body.user, true, (err) => {
                 if (err)
                     return util.error(res, err);
                 return util.message(res, "Successfully removed admin.");
@@ -104,7 +104,7 @@ const performActionOnTeam = (req, res) => {
                 if (num <= 1)
                     return util.error(res, "You cannot remove the only admin.", 400);
 
-                Team.setAdmin(req.params.num, req.user, false, (err) => {
+                Team.setAdmin(req.params.num, req.body.user, false, (err) => {
                     if (err)
                         return util.error(res, err);
                     return util.message(res, "Successfully removed admin.");
