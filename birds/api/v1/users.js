@@ -48,7 +48,7 @@ exports.getUserById = (req, res) => {
     {
         if (err)
             return util.error(res, err);
-        const response = { user: req.params.id == req.user.id ? util.sterilizeUserWithProgress(user) : util.sterilizeUser(user) };
+        const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
         return util.data(res, response);
     });
 };
@@ -89,14 +89,14 @@ exports.updateUserById = (req, res) => {
         User.findByIdAndUpdate(req.params.id, changes, options, (err, user) => {
             if (err)
                 return util.error(res, err);
-            const response = { user: util.sterilizeUserWithProgress(user) };
+            const response = { user: util.sterilizeUserAsUser(user) };
             return util.data(res, response);
         });
     else
         User.findById(req.params.id, (err, user) => {
             if (err)
                 return util.error(res, err);
-            const response = { user: util.sterilizeUserWithProgress(user) };
+            const response = { user: util.sterilizeUserAsUser(user) };
             return util.data(res, response);
         });
 };
