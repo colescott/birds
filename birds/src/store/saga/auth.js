@@ -22,7 +22,10 @@ function* auth() {
                         yield put(a.setAuth(new Error(res.error.message)));
                         break;
                     }
-                    yield put(a.setAuth(res.data));
+                    yield put(a.setAuth({
+                        ...res.data.user,
+                        token: res.data.token,
+                    }));
                     break;
                 }
                 case c.LOGOUT_AUTH: {

@@ -18,6 +18,7 @@ const store = configureStore();
 // Load some components
 import Main from "./ui/main.js";
 import Home from "./ui/home/index.js";
+import Login from "./ui/login/index.js";
 import Register from "./ui/register/index.js";
 
 // Create and append a div
@@ -31,6 +32,7 @@ ReactDOM.render(
           <Router history={hashHistory}>
             <Route path="/" component={Main}>
               <Route path="/register" component={Register} />
+              <Route path="/login" component={Login} />
               <IndexRoute component={Home} />
             </Route>
           </Router>

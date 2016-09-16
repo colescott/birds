@@ -10,5 +10,8 @@ export const REGISTER_AUTH = "REGISTER_AUTH";
 export const REGISTER_FORM_SET = "REGISTER_FORM_SET";
 export const REGISTER_FORM_RESET = "REGISTER_FORM_RESET";
 
+export const LOGIN_FORM_SET = "LOGIN_FORM_SET";
+export const LOGIN_FORM_RESET = "LOGIN_FORM_RESET";
+
 export const AUTH_SET = "AUTH_SET";
 export const AUTH_RESET = "AUTH_RESET";

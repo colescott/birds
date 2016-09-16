@@ -17,5 +17,8 @@ export const registerAuth = createAction(c.REGISTER_AUTH);
 export const setRegisterForm = createAction(c.REGISTER_FORM_SET);
 export const resetRegisterForm = createAction(c.REGISTER_FORM_RESET);
 
+export const setLoginForm = createAction(c.LOGIN_FORM_SET);
+export const resetLoginForm = createAction(c.LOGIN_FORM_RESET);
+
 export const setAuth = createAction(c.AUTH_SET);
 export const resetAuth = createAction(c.AUTH_RESET);
