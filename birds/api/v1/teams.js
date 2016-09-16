@@ -1,20 +1,27 @@
 var exports = module.exports = {};
 
+const randomstring = require("randomstring");
+
 const util = require("./util.js");
 const Team = require("./models/team");
 const User = require("./models/user");
 
 const createTeam = (name, teamnumber, adminUser, cb) => {
+
     var team = new Team({
         name: name,
         teamnumber: teamnumber,
+        password: randomstring.generate(6),
         users: []
     });
     team.save((err) => {
         if(err)
             return cb(err);
         Team.addUser(teamnumber, adminUser, true, (err) => {
-            return cb(err);
+            if(err)
+                return cb(err);
+            else
+                return cb(null, team.password);
         });
     });
 };
@@ -44,15 +51,17 @@ const postCreateTeam = (req, res) => {
         User.findById(req.user.id, (err, user) => {
             if (err)
                 return util.error(res, err);
-            createTeam(req.body.name, req.body.teamnumber, user, (err) => {
+            createTeam(req.body.name, req.body.teamnumber, user, (err, password) => {
                 if (err)
                     return util.error(res, err);
                 Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
                     if (err)
                         return util.error(res, err);
+                    let team = util.sterilizeTeam(data[ 0 ]);
+                    team.password = password;
                     const response = {
                         user: util.sterilizeUser(user),
-                        team: util.sterilizeTeam(data[ 0 ])
+                        team: team
                     };
 
                     util.data(res, response);

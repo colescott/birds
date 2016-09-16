@@ -10,6 +10,7 @@ const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, l
 
 const testUser2 = { email: "test2@team4159.org", password: "password", firstname: "Test", lastname: "Account #2", progress: [] };
 var testUser2WithId;
+var teamPassword;
 
 var testUserWithId;
 var testUserWithIdNoProgress;
@@ -253,7 +254,10 @@ describe("APIv1", () => {
             .set("Authorization", "Bearer " + loginToken)
             .send(testTeamReqest)
             .expect("Content-Type", /json/)
-            .expect(200, done);
+            .expect(function(res) {
+                teamPassword = res.body.data.team.password;
+            })
+            .end(done);
         });
     });
 
@@ -310,7 +314,7 @@ describe("APIv1", () => {
             .put("/api/v1/users/" + testUser2WithId.id + "/jointeam")
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken2)
-            .send({ teamnumber: 4159 })
+            .send({ teamnumber: 4159, password: teamPassword })
             .expect(200, done);
         });
         it("user has teamnumber=4159", (done) => {

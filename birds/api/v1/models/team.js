@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const Team = new Schema({
     name: String,
     teamnumber: Number,
+    password: String,
     users: [{
         id: String,
         isAdmin: Boolean,
