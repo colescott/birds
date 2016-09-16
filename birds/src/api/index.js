@@ -1,10 +1,7 @@
 import auth from "./auth";
-import xr from "xr";
-
-xr.configure({
-    abort: false
-});
+import teams from "./teams";
 
 export default {
-  auth
+  auth,
+  teams
 };
