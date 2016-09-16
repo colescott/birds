@@ -102,5 +102,8 @@
     "supertest": "2.0.0",
     "webpack-dev-server": "1.15.1",
     "webpack-hot-middleware": "2.12.2"
+  },
+  "engines": {
+    "node": "6.0.0"
   }
 }
