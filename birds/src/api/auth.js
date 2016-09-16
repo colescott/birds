@@ -8,6 +8,13 @@ const auth = {
             .then(res => res.data),
     register: (user) =>
         xr.post(`${urlPrefix}/api/v1/users`, user)
+            .then(res => res.data),
+    getUser: (id, token) =>
+        xr.get(`${urlPrefix}/api/v1/users/${id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then(res => res.data)
 };
 
