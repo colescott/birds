@@ -166,7 +166,6 @@ exports.performActionOnUser = (req, res) => {
                 User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber }, options, (err) => {
                     if (err)
                         return util.error(res, err);
-                    return util.message(res, "Successfully set progress");
                 });
 
                 return util.message(res, "Successfully joined team");
