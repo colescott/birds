@@ -30,7 +30,8 @@ const sterilizeUser = (user) => {
         email: user.email,
         firstname: user.firstname,
         lastname: user.lastname,
-        teamnumber: user.teamnumber
+        teamnumber: user.teamnumber,
+        isAdmin: user.isAdmin
     };
 };
 

@@ -15,13 +15,17 @@ const createTeam = (name, teamnumber, adminUser, cb) => {
         users: []
     });
     team.save((err) => {
-        if(err)
+        if (err)
             return cb(err);
         Team.addUser(teamnumber, adminUser, true, (err) => {
-            if(err)
+            if (err)
                 return cb(err);
-            else
+            User.findByIdAndUpdate(adminUser.id, { teamnumber: teamnumber, isAdmin: true }, (err) => {
+                if (err)
+                    return cb(err);
+
                 return cb(null, team.password);
+            });
         });
     });
 };
@@ -60,7 +64,6 @@ const postCreateTeam = (req, res) => {
                     let team = util.sterilizeTeam(data[ 0 ]);
                     team.password = password;
                     const response = {
-                        user: util.sterilizeUser(user),
                         team: team
                     };
 
