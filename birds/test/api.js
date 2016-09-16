@@ -15,7 +15,7 @@ var testUserWithId;
 var testUserWithIdNoProgress;
 var loginToken;
 
-var loginTokenTwo;
+var loginToken2;
 
 describe("Base Server", () => {
     it("should return pong on ping", (done) => {
