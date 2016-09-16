@@ -43,12 +43,6 @@ const Register = (props) => {
                         onChange={props.updateKey("lastname")}
                         value={props.form.lastname || ""}
                     /><br />
-                    <TextField
-                        floatingLabelText="Team Number"
-                        onChange={props.updateKey("teamnumber")}
-                        type="number"
-                        value={props.form.teamnumber || ""}
-                    /><br />
                 </CardText>
                 <CardActions
                     style={{
