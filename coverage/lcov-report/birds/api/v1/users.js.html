@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for birds/api/v1/users.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../../index.html">All files</a> / <a href="index.html">birds/api/v1</a> users.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">14.15% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>15/106</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">3.03% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>2/66</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">9.52% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">14.29% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>15/105</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var exports = module.exports = {};
+&nbsp;
+const util = require("./util.js");
+const User = require("./models/user");
+const Team = require("./models/team");
+&nbsp;
+//Options for mongoose
+const options = {};
+options.new = true;
+&nbsp;
+exports.register = (req, res) =&gt; {
+    if (!req.body.email) //TODO: make all args required
+        return util.error(res, "Email value required.", 400);
+    Team.exists(req.body.teamnumber, <span class="fstat-no" title="function not covered" >(</span>err, value) =&gt; {
+<span class="cstat-no" title="statement not covered" >        if (err || !value)</span>
+<span class="cstat-no" title="statement not covered" >            return util.error(res, "Team does not exist!", 400);</span>
+        v</span>ar usr = <span class="cstat-no" title="statement not covered" >new User({
+            email: req.body.email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            teamnumber: req.body.teamnumber,
+            progress: []
+        });
+<span class="cstat-no" title="statement not covered" >        User.register(usr, req.body.password, <span class="fstat-no" title="function not covered" >(</span>err, thisModel, passwordErr) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (err)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >            if (passwordErr)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, passwordErr);</span>
+<span class="cstat-no" title="statement not covered" >            User.findById(thisModel._id, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt;</span>
+            {
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, err);</span>
+                v</span>ar response = <span class="cstat-no" title="statement not covered" >{
+                    user: util.sterilizeUser(user)
+                };
+<span class="cstat-no" title="statement not covered" >                return util.data(res, response);</span>
+            });
+        });
+    });
+};
+&nbsp;
+exports.getUsers = (req, res) =&gt; {
+    User.find({}, <span class="fstat-no" title="function not covered" >function(</span>err, users) {
+        c</span>onst usrs = <span class="cstat-no" title="statement not covered" >users.map(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >user =&gt; (util.sterilizeUser(user)));</span></span>
+        c</span>onst val = <span class="cstat-no" title="statement not covered" >{ users: usrs };
+<span class="cstat-no" title="statement not covered" >        return util.data(res, val);</span>
+    });
+};
+&nbsp;
+exports.getUserById = <span class="fstat-no" title="function not covered" >(</span>req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >    User.findById(req.params.id, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt;</span>
+    {
+<span class="cstat-no" title="statement not covered" >        if (err)</span>
+<span class="cstat-no" title="statement not covered" >            return util.error(res, err);</span>
+        c</span>onst response = <span class="cstat-no" title="statement not covered" >{ user: req.params.id == req.user.id ? util.sterilizeUserWithProgress(user) : util.sterilizeUser(user) };
+<span class="cstat-no" title="statement not covered" >        return util.data(res, response);</span>
+    });
+};
+&nbsp;
+exports.updateUserById = <span class="fstat-no" title="function not covered" >(</span>req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >    if (req.user.id != req.params.id)</span>
+    {
+<span class="cstat-no" title="statement not covered" >        return util.unauthorized(res);</span>
+    }
+&nbsp;
+    c</span>onst changes = <span class="cstat-no" title="statement not covered" >{};
+<span class="cstat-no" title="statement not covered" >    if (req.body.email)</span>
+<span class="cstat-no" title="statement not covered" >        changes.email = req.body.email;</span>
+<span class="cstat-no" title="statement not covered" >    if (req.body.firstname)</span>
+<span class="cstat-no" title="statement not covered" >        changes.firstname = req.body.firstname;</span>
+<span class="cstat-no" title="statement not covered" >    if (req.body.lastname)</span>
+<span class="cstat-no" title="statement not covered" >        changes.lastname = req.body.lastname;</span>
+<span class="cstat-no" title="statement not covered" >    if (req.body.teamnumber)</span>
+<span class="cstat-no" title="statement not covered" >        changes.teamnumber = req.body.teamnumber;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (req.body.password)</span>
+    {
+<span class="cstat-no" title="statement not covered" >        User.findById(req.params.id, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt;</span>
+        {
+<span class="cstat-no" title="statement not covered" >            if (err)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >            user.setPassword(req.body.password, <span class="fstat-no" title="function not covered" >(</span>err, thisModel, passwordErr) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >                if (passwordErr)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, passwordErr);</span>
+                // TODO: finish password setting
+            });
+        });
+    }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    if (changes != {})</span>
+<span class="cstat-no" title="statement not covered" >        User.findByIdAndUpdate(req.params.id, changes, options, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (err)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, err);</span>
+            c</span>onst response = <span class="cstat-no" title="statement not covered" >{ user: util.sterilizeUserWithProgress(user) };
+<span class="cstat-no" title="statement not covered" >            return util.data(res, response);</span>
+        });
+    else
+<span class="cstat-no" title="statement not covered" >        User.findById(req.params.id, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (err)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, err);</span>
+            c</span>onst response = <span class="cstat-no" title="statement not covered" >{ user: util.sterilizeUserWithProgress(user) };
+<span class="cstat-no" title="statement not covered" >            return util.data(res, response);</span>
+        });
+};
+&nbsp;
+exports.performActionOnUser = <span class="fstat-no" title="function not covered" >(</span>req, res) =&gt; {
+<span class="cstat-no" title="statement not covered" >    if (req.user.id != req.params.id)</span>
+<span class="cstat-no" title="statement not covered" >        return util.unauthorized(res);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    User.findById(req.params.id, <span class="fstat-no" title="function not covered" >(</span>err, user) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        if (err)</span>
+<span class="cstat-no" title="statement not covered" >            return util.error(res, err);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        switch (req.params.action)</span>
+        {
+        case "delete":
+<span class="cstat-no" title="statement not covered" >            User.findByIdAndRemove(req.params.id, <span class="fstat-no" title="function not covered" >(</span>err) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >                return util.message(res, "successfully deleted user.");</span>
+            });
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        case "setprogress":
+<span class="cstat-no" title="statement not covered" >            if (!req.body.id)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, "Id not set!", 400);</span>
+<span class="cstat-no" title="statement not covered" >            if (!req.body.state)</span>
+<span class="cstat-no" title="statement not covered" >                return util.error(res, "State not set!", 400);</span>
+&nbsp;
+            v</span>ar found = <span class="cstat-no" title="statement not covered" >false;
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            user.progress.forEach(<span class="fstat-no" title="function not covered" >(</span>obj) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (found)</span>
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+<span class="cstat-no" title="statement not covered" >                if (obj.id == req.body.id)</span>
+                {
+<span class="cstat-no" title="statement not covered" >                    found = true;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    User.update({ "progress.id": req.body.id }, { "$set": {</span>
+                        "progress.$.state": req.body.state
+                    } }, options, <span class="fstat-no" title="function not covered" >(</span>err) =&gt; {
+<span class="cstat-no" title="statement not covered" >                        if (err)</span>
+<span class="cstat-no" title="statement not covered" >                            return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >                        return util.message(res, "Successfully set progress");</span>
+                    });
+                }
+            });
+<span class="cstat-no" title="statement not covered" >            if (found)</span>
+<span class="cstat-no" title="statement not covered" >                return;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options, <span class="fstat-no" title="function not covered" >(</span>err) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >                return util.message(res, "Successfully set progress");</span>
+            });
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        case "resetprogress":
+<span class="cstat-no" title="statement not covered" >            User.findByIdAndUpdate(req.user.id, { progress: [] }, options, <span class="fstat-no" title="function not covered" >(</span>err) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                if (err)</span>
+<span class="cstat-no" title="statement not covered" >                    return util.error(res, err);</span>
+<span class="cstat-no" title="statement not covered" >                return util.message(res, "Successfully reset progress");</span>
+            });
+<span class="cstat-no" title="statement not covered" >            break;</span>
+        default:
+<span class="cstat-no" title="statement not covered" >            return util.error(res, "Action not found", 400);</span>
+        }
+    });
+};
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Sep 15 2016 17:18:54 GMT-0700 (PDT)
+</div>
+</div>
+<script src="../../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../../sorter.js"></script>
+</body>
+</html>
