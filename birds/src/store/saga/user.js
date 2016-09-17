@@ -13,6 +13,7 @@ export function* login(email, password) {
         token: res.data.token,
         ...res.data.user
     }));
+    return res.data.user;
 }
 
 export function* logout() {

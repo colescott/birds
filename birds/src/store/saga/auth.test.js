@@ -39,7 +39,7 @@ describe("AUTH SAGA", () => {
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
-                put(push("/registerSuccess"))
+                put(push("/selectTeam"))
             );
         });
     });
