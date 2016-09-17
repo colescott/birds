@@ -20,7 +20,7 @@ const Login = (props) => {
         >
             <Card>
                 <CardHeader
-                    title="Register"
+                    title="Login"
                 />
                 <CardText>
                     <TextField
@@ -41,7 +41,7 @@ const Login = (props) => {
                         alignItems: "space-around"
                     }}
                 >
-                     <FlatButton label="Login" onClick={props.register(props.form)}/>
+                     <FlatButton label="Login" onClick={props.login(props.form)}/>
                 </CardActions>
             </Card>
         </div>
@@ -54,7 +54,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   updateKey: (key) => (e, value) => dispatch(a.setLoginForm({ [ key ]: value })),
-  register: (data) => () => dispatch(a.loginAuth(data))
+  login: (data) => () => dispatch(a.loginAuth(data))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
