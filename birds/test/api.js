@@ -31,6 +31,15 @@ describe("Base Server", () => {
 });
 
 describe("APIv1", () => {
+    it("should return pong on ping", (done) => {
+        request(app)
+            .get("/api/v1/ping")
+            .set("Accept", "text")
+            .send()
+            .expect("Content-Type", "text/html; charset=utf-8")
+            .expect(200)
+            .expect("Pong v1!", done);
+    });
     describe("POST /api/v1/users", () => {
         it("created and returned new user", (done) => {
             request(app)
@@ -376,6 +385,24 @@ describe("APIv1", () => {
                     throw new Error("Server not sending error with \"Invalid token.\"");
             })
             .end(done);
+        });
+    });
+
+    describe("POST /auth/logout", () => {
+        it("logs out with 200", (done) => {
+            request(app)
+            .post("/api/v1/auth/logout")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(200, done);
+        });
+        it("logs in with 200", (done) => {
+            request(app)
+            .post("/api/v1/auth/login")
+            .set("Accept", "application/json")
+            .send({ email: "test@team4159.org", password: "password" })
+            .expect("Content-Type", /json/)
+            .expect(200, done);
         });
     });
 

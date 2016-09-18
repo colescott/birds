@@ -407,7 +407,7 @@ router.post("/auth/login", function(req, res, next) {
  */
 router.post("/auth/logout", authenticate, (req, res) => {
     req.logout();
-    return res.send(util.data({ message: "Logged out successfully" }));
+    return util.message(res, "Logged out successfully");
 });
 
 module.exports = router;
