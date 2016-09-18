@@ -21,7 +21,7 @@ import Home from "./ui/home/index.js";
 import Login from "./ui/login/index.js";
 import Logout from "./ui/logout/index.js";
 import Register from "./ui/register/index.js";
-import RegisterSuccess from "./ui/registerSuccess/index.js";
+import SelectTeam from "./ui/selectTeam/index.js";
 
 // Create and append a div
 const appDiv = document.createElement("div");
@@ -36,7 +36,7 @@ ReactDOM.render(
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
               <Route path="/logout" component={Logout} />
-              <Route path="/registerSuccess" component={RegisterSuccess} />
+              <Route path="/selectTeam" component={SelectTeam} />
               <IndexRoute component={Home} />
             </Route>
           </Router>

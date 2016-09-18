@@ -18,8 +18,11 @@ function* auth() {
             switch (action.type) {
                 case c.LOGIN_AUTH: {
                     const { email, password } = action.payload;
-                    yield call(login, email, password);
-                    yield put(push("/"));
+                    const user = yield call(login, email, password);
+                    if (!user.teamnumber)
+                        yield put(push("/selectTeam"));
+                    else
+                        yield put(push("/"));
                     break;
                 }
                 case c.LOGOUT_AUTH: {
@@ -31,7 +34,7 @@ function* auth() {
                     const user = yield select(s.getRegisterForm);
                     yield call(register, user);
                     yield call(login, user.email, user.password);
-                    yield put(push("/registerSuccess"));
+                    yield put(push("/selectTeam"));
                     break;
                 }
                 default:

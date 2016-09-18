@@ -8,7 +8,7 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 
-const RegisterSuccess = (props) => {
+const selectTeam = (props) => {
     return (
         <div
             style={{
@@ -19,21 +19,9 @@ const RegisterSuccess = (props) => {
         >
             <Card>
                 <CardHeader
-                    title="Register Success"
+                    title="Select Team"
                 />
                 <CardText>
-                    <h2> Make a Team </h2>
-                    <TextField
-                        hintText="Team Name"
-                        onChange={props.updateKey("nName")}
-                        value={props.form.nName || ""}
-                    /><br />
-                    <TextField
-                        hintText="Team Number"
-                        onChange={props.updateKey("nNumber")}
-                        value={props.form.nNumber || ""}
-                    /><br />
-                    <FlatButton label="Create" onClick={props.createTeam(props.form.nName, props.form.nNumber)} />
                     <h2> Join a Team </h2>
                     <TextField
                         hintText="Team Number"
@@ -46,6 +34,18 @@ const RegisterSuccess = (props) => {
                         value={props.form.pass || ""}
                     /><br />
                     <FlatButton label="Join" onClick={props.joinTeam(props.form.number, props.form.pass)}/>
+                    <h2> Make a Team </h2>
+                    <TextField
+                        hintText="Team Name"
+                        onChange={props.updateKey("nName")}
+                        value={props.form.nName || ""}
+                    /><br />
+                    <TextField
+                        hintText="Team Number"
+                        onChange={props.updateKey("nNumber")}
+                        value={props.form.nNumber || ""}
+                    /><br />
+                    <FlatButton label="Create" onClick={props.createTeam(props.form.nName, props.form.nNumber)} />
                 </CardText>
             </Card>
         </div>
@@ -62,4 +62,4 @@ const mapDispatchToProps = (dispatch) => ({
     joinTeam: (number, pass) => () => dispatch(a.joinTeam(number, pass))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterSuccess);
+export default connect(mapStateToProps, mapDispatchToProps)(selectTeam);
