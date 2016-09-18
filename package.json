@@ -78,6 +78,7 @@
     "sass-material-colors": "0.0.5",
     "style-loader": "0.13.1",
     "supertest": "2.0.0",
+    "valid-email": "0.0.2",
     "webpack": "1.13.2",
     "webpack-dev-middleware": "1.7.0",
     "webpack-merge": "0.14.1",
