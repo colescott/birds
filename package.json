@@ -79,7 +79,7 @@
     "style-loader": "0.13.1",
     "supertest": "2.0.0",
     "webpack": "1.13.2",
-    "webpack-dev-middleware": "1.7.0",
+    "webpack-dev-middleware": "1.8.0",
     "webpack-merge": "0.14.1",
     "webpack-uglify-js-plugin": "1.1.9",
     "webpack-validator": "2.2.7",
