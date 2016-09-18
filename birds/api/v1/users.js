@@ -12,10 +12,10 @@ exports.register = (req, res) => {
     //TODO: make all args required
     if (!req.body.email)
         return util.error(res, "Email value required.", 400);
-    User.find({ email: req.body.email }, (err, user) => {
+    User.find({ email: req.body.email }, (err, users) => {
         if (err)
             return util.error(res, err);
-        if (user)
+        if (users[ 0 ])
             return util.error(res, "A user with that email already exists!", 400);
     });
     const usr = new User({
