@@ -1,5 +1,7 @@
 var exports = module.exports = {};
 
+const isValidEmail = require("valid-email");
+
 const util = require("./util.js");
 const User = require("./models/user");
 const Team = require("./models/team");
@@ -10,7 +12,7 @@ options.new = true;
 
 exports.register = (req, res) => {
     //TODO: make all args required
-    if (!req.body.email)
+    if (!(req.body.email && isValidEmail(req.body.email)))
         return util.error(res, "Email value required.", 400);
     const usr = new User({
         email: req.body.email,
