@@ -15,7 +15,7 @@ exports.register = (req, res) => {
     User.find({ email: req.body.email }, (err, users) => {
         if (err)
             return util.error(res, err);
-        if (users[ 0 ])
+        if (users.length > 0)
             return util.error(res, "A user with that email already exists!", 400);
     });
     const usr = new User({
