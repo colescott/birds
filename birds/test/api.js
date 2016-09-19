@@ -28,6 +28,13 @@ describe("Base Server", () => {
             .expect(200)
             .expect("Pong!", done);
     });
+    it("should return 404 on random path", (done) => {
+        request(app)
+            .get("/kafbsjkfbjsfkdjsflhsdfk")
+            .set("Accept", "text")
+            .expect("Content-Type", "text/html; charset=utf-8")
+            .expect(404, done);
+    });
 });
 
 describe("APIv1", () => {
@@ -396,13 +403,17 @@ describe("APIv1", () => {
             .set("Authorization", "Bearer " + loginToken)
             .expect(200, done);
         });
-        it("logs in with 200", (done) => {
+        it("logs in with token", (done) => {
             request(app)
             .post("/api/v1/auth/login")
             .set("Accept", "application/json")
-            .send({ email: "test@team4159.org", password: "password" })
-            .expect("Content-Type", /json/)
-            .expect(200, done);
+            .send(testUser)
+            .expect(function(res) {
+                if (!res.body.data.token)
+                    throw new Error("Login token not set");
+                loginToken = res.body.data.token;
+            })
+            .end(done);
         });
     });
 
