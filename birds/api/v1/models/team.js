@@ -64,7 +64,7 @@ Team.statics.numberOfAdmins = function(teamnumber, cb) {
         if (data.length <= 0)
             return cb("That team does not exist.");
         let adminNum = 0;
-        data.users.forEach((usr) => {
+        data[ 0 ].users.forEach((usr) => {
             if (usr.isAdmin)
                 adminNum++;
         });
