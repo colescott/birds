@@ -53,7 +53,11 @@ function* auth() {
                     yield call(register, user);
 
                     // Login
-                    yield call(login, user.email, user.password);
+                    const { user: userData, token } = yield call(login, user.email, user.password);
+                    yield put(a.setAuth({
+                        token,
+                        ...userData
+                    }));
 
                     // Redirect to the select team page
                     yield put(push("/selectTeam"));
