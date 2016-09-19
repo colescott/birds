@@ -204,6 +204,46 @@ describe("APIv1", () => {
         });
     });
 
+    describe("PUT /users/:id/setprogress", () => {
+        it("set progress of lesson 1", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUserWithId.id + "/setprogress")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send({ id: 1, state: "complete" })
+            .expect(200, done);
+        });
+        it("test user has progress in lesson 1", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUserWithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(function(res) {
+                if (res.body.data.user.progress.length < 1)
+                    throw new Error("lesson progress was not set :()");
+            })
+            .end(done);
+        });
+        it("reset progress of lesson 1", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUserWithId.id + "/resetprogress")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(200, done);
+        });
+        it("test user has no progress in lesson 1", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUserWithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(function(res) {
+                if (res.body.data.user.progress.length > 0)
+                    throw new Error("lesson progress was still set :()");
+            })
+            .end(done);
+        });
+    });
+
     describe("PUT /users/:id", () => {
         it("respond with json", (done) => {
             request(app)
