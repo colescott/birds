@@ -213,14 +213,11 @@ router.get("/users/:id", authenticate, users.getUserById);
 router.put("/users/:id", authenticate, users.updateUserById);
 
 /**
- * @api {put} /users/:id/:action Perform action on user
- * @apiName Perform action on user
+ * @api {put} /users/:id/delete Delete user
+ * @apiName Delete user
  * @apiGroup Users
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {String} [id] Id for lesson when :action = "setprogress"
- * @apiParam {String} [state] State for lesson when :action = "setprogress"
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -230,6 +227,69 @@ router.put("/users/:id", authenticate, users.updateUserById);
  *     {
  *       "data": {
  *         "message": "Successfully deleted user"
+ *     }
+ *
+ */
+
+/**
+ * @api {put} /users/:id/setprogress Set lesson progress
+ * @apiName Set lesson progress
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [id] Id for lesson
+ * @apiParam {String} [state] State for lesson
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully set progress"
+ *     }
+ *
+ */
+
+/**
+ * @api {put} /users/:id/jointeam Join team
+ * @apiName Join team
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully reset progress"
+ *     }
+ *
+ */
+
+/**
+ * @api {put} /users/:id/resetprogress Reset all lesson progress
+ * @apiName Reset all lesson progress
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [teamnumber] Number of team
+ * @apiParam {String} [password] Password for team
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully joined team"
  *     }
  *
  */
@@ -317,13 +377,11 @@ router.get("/teams", teams.getTeams);
 router.get("/teams/:num", teams.getTeam);
 
 /**
- * @api {put} /teams/:num/:action Perform action on team
- * @apiName Perform action on team
+ * @api {put} /teams/:id/delete Delete team
+ * @apiName Delete team
  * @apiGroup Teams
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {Object} [user] User when :action = "addadmin" or "removeadmin"
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -332,7 +390,49 @@ router.get("/teams/:num", teams.getTeam);
  *     HTTP/1.1 200 OK
  *     {
  *       "data": {
- *         "message": "Successfully removed admin"
+ *         "message": "Successfully deleted team."
+ *     }
+ *
+ */
+
+/**
+ * @api {put} /teams/:num/addadmin Add admin
+ * @apiName Add admin
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {Object} [user] User to add as admin
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully added admin."
+ *     }
+ *
+ */
+
+/**
+ * @api {put} /teams/:num/removeadmin Remove admin
+ * @apiName Remove admin
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {Object} [user] User to remove as admin
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully removed admin."
  *     }
  *
  */

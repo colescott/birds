@@ -93,7 +93,7 @@ const performActionOnTeam = (req, res) => {
             Team.setAdmin(req.params.num, req.body.user, true, (err) => {
                 if (err)
                     return util.error(res, err);
-                return util.message(res, "Successfully removed admin.");
+                return util.message(res, "Successfully added admin.");
             });
             break;
         case "removeadmin":
