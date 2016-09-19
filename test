@@ -1,0 +1,125 @@
+
+> birds@0.1.0 test /home/cole/BIRDS
+> npm run test:fe && npm run test:api
+
+
+> birds@0.1.0 test:fe /home/cole/BIRDS
+> NODE_ENV=TEST URL_PREFIX='' find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts
+
+
+
+  AUTH SAGA
+    ✓ should wait for LOGIN, LOGOUT, or REGISTER actions
+    LOGIN
+      ✓ should call the login saga
+      - should redirect to the register success page
+    LOGOUT
+      ✓ should clear the user reducer
+      ✓ should redirect back to the home page
+    REGISTER
+      ✓ should select the register form
+      ✓ should register
+      ✓ should login
+      - it should redirect back to the front page
+
+  KVS REDUCER
+    ✓ should export a function
+    ✓ should take one paramater
+    ✓ should export the getStore selector
+    ✓ should default to an empty object
+    ✓ should allow update on dispatching an object
+    ✓ should select the store with getStore
+    ✓ should allow setting multiple properties
+    ✓ should ignore dispathes to another prefix
+    ✓ should allow resets
+    ✓ should ignore actions with errors
+
+
+  17 passing (27ms)
+  2 pending
+
+
+> birds@0.1.0 test:api /home/cole/BIRDS
+> NODE_ENV=TEST JWT_SECRET=TEST MONGODB_URI='mongodb://localhost/passport' mocha birds/test/*.js
+
+
+
+  ✓ should run this test
+  Base Server
+    ✓ should return pong on ping
+    ✓ should return 404 on random path
+
+  APIv1
+    ✓ should return pong on ping
+    POST /api/v1/users
+      ✓ created and returned new user (1403ms)
+      ✓ responds error on empty user
+    GET /api/v1/users
+      ✓ respond with json
+      ✓ conatins test user
+    POST /api/v1/auth/login
+      ✓ respond with json (358ms)
+      ✓ responds with user (342ms)
+      ✓ responds with token (341ms)
+      ✓ responds error on no email
+      ✓ responds error on no password
+      ✓ responds error on bad password (338ms)
+    GET /users/:id
+      ✓ respond with json
+      ✓ responds with user
+      ✓ responds with 401 when not logged in
+    PUT /users/:id
+      ✓ respond with json
+      ✓ responds with changed user
+      ✓ responds error on no token
+      ✓ responds error on bad token
+    POST /api/v1/teams
+      ✓ create new team (418ms)
+      ✓ get team data
+    GET /api/v1/teams
+      ✓ respond with json
+      ✓ conatins test team
+    PUT /users/:id/jointeam
+      ✓ created test user 2 (387ms)
+      ✓ login test user 2 (405ms)
+      ✓ join team
+      ✓ user has teamnumber=4159
+    PUT /users/:id/addadmin
+{ id: '57df646f79b4815c7e9e5ff1',
+  email: 'test2@team4159.org',
+  firstname: 'Test',
+  lastname: 'Account #2' }
+setAdmin
+undefined
+      1) add test user 2 as admin
+      ✓ test user 2 is admin
+      2) remove test user 2 as admin
+    PUT /teams/:num/delete
+      ✓ responds team deleted
+      ✓ test team deleted from database
+      ✓ responds error on no token
+      ✓ responds error on bad token
+    POST /auth/logout
+      ✓ logs out with 200
+      ✓ logs in with token (341ms)
+    PUT /users/:id/delete
+      ✓ responds user deleted
+      ✓ responds user 2 deleted
+      ✓ user is deleted from database
+      ✓ responds error on no token
+      ✓ responds error on bad token
+
+
+  41 passing (9s)
+  2 failing
+
+  1) APIv1 PUT /users/:id/addadmin add test user 2 as admin:
+     Error: timeout of 2000ms exceeded. Ensure the done() callback is being called in this test.
+  
+
+  2) APIv1 PUT /users/:id/addadmin remove test user 2 as admin:
+     Error: timeout of 2000ms exceeded. Ensure the done() callback is being called in this test.
+  
+
+
+
