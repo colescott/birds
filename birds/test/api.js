@@ -28,9 +28,25 @@ describe("Base Server", () => {
             .expect(200)
             .expect("Pong!", done);
     });
+    it("should return 404 on random path", (done) => {
+        request(app)
+            .get("/kafbsjkfbjsfkdjsflhsdfk")
+            .set("Accept", "text")
+            .expect("Content-Type", "text/html; charset=utf-8")
+            .expect(404, done);
+    });
 });
 
 describe("APIv1", () => {
+    it("should return pong on ping", (done) => {
+        request(app)
+            .get("/api/v1/ping")
+            .set("Accept", "text")
+            .send()
+            .expect("Content-Type", "text/html; charset=utf-8")
+            .expect(200)
+            .expect("Pong v1!", done);
+    });
     describe("POST /api/v1/users", () => {
         it("created and returned new user", (done) => {
             request(app)
@@ -374,6 +390,28 @@ describe("APIv1", () => {
             .expect(function(res) {
                 if (!(res.body.error.message == "Invalid token."))
                     throw new Error("Server not sending error with \"Invalid token.\"");
+            })
+            .end(done);
+        });
+    });
+
+    describe("POST /auth/logout", () => {
+        it("logs out with 200", (done) => {
+            request(app)
+            .post("/api/v1/auth/logout")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(200, done);
+        });
+        it("logs in with token", (done) => {
+            request(app)
+            .post("/api/v1/auth/login")
+            .set("Accept", "application/json")
+            .send(testUser)
+            .expect(function(res) {
+                if (!res.body.data.token)
+                    throw new Error("Login token not set");
+                loginToken = res.body.data.token;
             })
             .end(done);
         });
