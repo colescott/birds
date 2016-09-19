@@ -143,6 +143,69 @@ define({ "api": [
     "groupTitle": "Auth"
   },
   {
+    "type": "put",
+    "url": "/teams/:num/addadmin",
+    "title": "Add admin",
+    "name": "Add_admin",
+    "group": "Teams",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": true,
+            "field": "user",
+            "description": "<p>User to add as admin</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully added admin.\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Teams"
+  },
+  {
     "type": "post",
     "url": "/teams",
     "title": "Create new team",
@@ -212,6 +275,56 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159,\n      \"password\": \"Iluvme\"\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "put",
+    "url": "/teams/:id/delete",
+    "title": "Delete team",
+    "name": "Delete_team",
+    "group": "Teams",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully deleted team.\"\n}",
           "type": "json"
         }
       ]
@@ -324,9 +437,9 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/teams/:num/:action",
-    "title": "Perform action on team",
-    "name": "Perform_action_on_team",
+    "url": "/teams/:num/removeadmin",
+    "title": "Remove admin",
+    "name": "Remove_admin",
     "group": "Teams",
     "header": {
       "fields": {
@@ -349,7 +462,7 @@ define({ "api": [
             "type": "Object",
             "optional": true,
             "field": "user",
-            "description": "<p>User when :action = &quot;addadmin&quot; or &quot;removeadmin&quot;</p>"
+            "description": "<p>User to remove as admin</p>"
           }
         ]
       }
@@ -376,7 +489,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully removed admin\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully removed admin.\"\n}",
           "type": "json"
         }
       ]
@@ -384,6 +497,56 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "birds/api/v1/index.js",
     "groupTitle": "Teams"
+  },
+  {
+    "type": "put",
+    "url": "/users/:id/delete",
+    "title": "Delete user",
+    "name": "Delete_user",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully deleted user\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Users"
   },
   {
     "type": "get",
@@ -559,9 +722,9 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/users/:id/:action",
-    "title": "Perform action on user",
-    "name": "Perform_action_on_user",
+    "url": "/users/:id/jointeam",
+    "title": "Join team",
+    "name": "Join_team",
     "group": "Users",
     "header": {
       "fields": {
@@ -572,26 +735,6 @@ define({ "api": [
             "optional": false,
             "field": "authorization",
             "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "id",
-            "description": "<p>Id for lesson when :action = &quot;setprogress&quot;</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "state",
-            "description": "<p>State for lesson when :action = &quot;setprogress&quot;</p>"
           }
         ]
       }
@@ -618,7 +761,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully deleted user\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully reset progress\"\n}",
           "type": "json"
         }
       ]
@@ -732,6 +875,146 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"ILUVULESSTHAN3\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "put",
+    "url": "/users/:id/resetprogress",
+    "title": "Reset all lesson progress",
+    "name": "Reset_all_lesson_progress",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "teamnumber",
+            "description": "<p>Number of team</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "password",
+            "description": "<p>Password for team</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully joined team\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Users"
+  },
+  {
+    "type": "put",
+    "url": "/users/:id/setprogress",
+    "title": "Set lesson progress",
+    "name": "Set_lesson_progress",
+    "group": "Users",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "id",
+            "description": "<p>Id for lesson</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "state",
+            "description": "<p>State for lesson</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully set progress\"\n}",
           "type": "json"
         }
       ]

@@ -12,6 +12,12 @@ exports.register = (req, res) => {
     //TODO: make all args required
     if (!req.body.email)
         return util.error(res, "Email value required.", 400);
+    User.find({ email: req.body.email }, (err, users) => {
+        if (err)
+            return util.error(res, err);
+        if (users.length > 0)
+            return util.error(res, "A user with that email already exists!", 400);
+    });
     const usr = new User({
         email: req.body.email,
         firstname: req.body.firstname,
@@ -22,7 +28,7 @@ exports.register = (req, res) => {
         if (err)
             return util.error(res, err);
         if (passwordErr)
-            return util.error(res, passwordErr);
+            return util.error(res, passwordErr, 400);
         User.findById(thisModel._id, (err, user) => {
             if (err)
                 return util.error(res, err);
@@ -36,7 +42,7 @@ exports.register = (req, res) => {
 };
 
 exports.getUsers = (req, res) => {
-    User.find({}, function(err, users) {
+    User.find({}, (err, users) => {
         const usrs = users.map(user => (util.sterilizeUser(user)));
         const val = { users: usrs };
         return util.data(res, val);
@@ -44,8 +50,7 @@ exports.getUsers = (req, res) => {
 };
 
 exports.getUserById = (req, res) => {
-    User.findById(req.params.id, (err, user) =>
-    {
+    User.findById(req.params.id, (err, user) => {
         if (err)
             return util.error(res, err);
         const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
@@ -55,9 +60,7 @@ exports.getUserById = (req, res) => {
 
 exports.updateUserById = (req, res) => {
     if (req.user.id != req.params.id)
-    {
         return util.unauthorized(res);
-    }
 
     const changes = {};
     if (req.body.email)
@@ -178,7 +181,7 @@ exports.performActionOnUser = (req, res) => {
                         });
 
                         return util.message(res, "Successfully joined team");
-                    })
+                    });
                 });
             });
             break;
