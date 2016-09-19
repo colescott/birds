@@ -275,6 +275,14 @@ describe("APIv1", () => {
             })
             .end(done);
         });
+        it("get team data", (done) => {
+            request(app)
+            .get("/api/v1/teams")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect("Content-Type", /json/)
+            .expect(200, done);
+        });
     });
 
     describe("GET /api/v1/teams", () => {
