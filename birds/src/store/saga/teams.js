@@ -7,43 +7,72 @@ import * as c from "../constants.js";
 import * as a from "../actions.js";
 import * as s from "../selectors.js";
 
+import { getUser } from "./auth.js";
+
 function* teams() {
     for (;;) {
         try {
+            // Wait for team related actions
             const action = yield take([
                 c.JOIN_TEAM,
                 c.CREATE_TEAM
             ]);
+
+            // Read the token
             const { token } = yield select(s.getAuth);
             switch (action.type) {
                 case c.JOIN_TEAM: {
+                    // Get Needed Params
                     const { number, pass } = action.payload;
                     const { id: uid } = yield select(s.getAuth);
-                    yield call(api.teams.join, number, pass, uid, token);
-                    const { data } = yield call(api.auth.getUser, uid, token);
-                    yield put(a.setAuth(data.user));
+
+                    // Join the Team
+                    yield joinTeam(number, pass, uid, token);
+
+                    // Refetch and Update the User
+                    const user = yield call(getUser, uid, token);
+                    yield put(a.setAuth(user));
+
+                    // Redirect to the Home Page
                     yield put(push("/"));
                     break;
                 }
                 case c.CREATE_TEAM: {
+                    // Get Needed Params
                     const { name, number } = action.payload;
-                    const { data: { team } } = yield call(api.teams.create, name, number, token);
-                    yield put(a.setAuth({ teamPass: team.password }));
                     const { id: uid } = yield select(s.getAuth);
-                    const { data } = yield call(api.auth.getUser, uid, token);
-                    console.warn(data);
-                    yield put(a.setAuth(data.user));
+
+                    // Create The Team
+                    const team = yield call(createTeam, name, number, token);
+                    yield put(a.setAuth({ teamPass: team.password }));
+
+                    // Refetch the User
+                    const user = yield call(getUser, uid, token);
+                    yield put(a.setAuth(user));
+
+                    // Redirect to the Home Page
                     yield put(push("/"));
                     break;
                 }
                 default:
                     break;
             }
-        }
-        catch (e) {
+        } catch (e) {
+            // Log errors
             console.error(e);
         }
     }
+}
+
+export function* joinTeam(number, pass, uid, token) {
+    yield call(api.teams.join, number, pass, uid, token);
+}
+
+export function* createTeam(name, number, token) {
+    const res = yield call(api.teams.create, name, number, token);
+    if (res.error) throw new Error(res.error.message);
+    const { data } = res;
+    return data.team;
 }
 
 export default teams;

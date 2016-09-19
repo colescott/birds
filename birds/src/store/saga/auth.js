@@ -1,11 +1,11 @@
 import { take, call, put, select } from "redux-saga/effects";
 import { push } from "react-router-redux";
 
-import * as c from "../constants.js";
-import * as a from "../actions.js";
-import * as s from "../selectors.js";
+import api from "../../api";
 
-import { login, logout, register } from "./user.js";
+import * as c from "../constants.js";
+import * as s from "../selectors.js";
+import * as a from "../actions.js";
 
 function* auth() {
     for (;;) {
@@ -18,7 +18,11 @@ function* auth() {
             switch (action.type) {
                 case c.LOGIN_AUTH: {
                     const { email, password } = action.payload;
-                    const user = yield call(login, email, password);
+                    const { user, token } = yield call(login, email, password);
+                    yield put(a.setAuth({
+                        token,
+                        ...user
+                    }));
                     if (!user.teamnumber)
                         yield put(push("/selectTeam"));
                     else
@@ -44,6 +48,28 @@ function* auth() {
             yield put(a.setAuth(e));
         }
     }
+}
+
+export function* login(email, password) {
+    const res = yield call(api.auth.login, email, password);
+    if (res.error) throw new Error(res.error.message);
+    return res.data;
+}
+
+export function* logout() {
+    yield put(a.resetAuth());
+}
+
+export function* register(user) {
+    const res = yield call(api.auth.register, user);
+    if (res.error) throw new Error(res.error.message);
+    return res.data.user;
+}
+
+export function* getUser(id, token) {
+    const res = yield call(api.auth.getUser, id, token);
+    if (res.error) throw new Error(res.error.message);
+    return res.data.user;
 }
 
 export default auth;
