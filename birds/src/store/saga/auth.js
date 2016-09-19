@@ -10,6 +10,7 @@ import * as a from "../actions.js";
 function* auth() {
     for (;;) {
         try {
+            // Wait for auth realated actions
             const action = yield take([
                 c.LOGOUT_AUTH,
                 c.LOGIN_AUTH,
@@ -17,12 +18,19 @@ function* auth() {
             ]);
             switch (action.type) {
                 case c.LOGIN_AUTH: {
+                    // Gather relevent params
                     const { email, password } = action.payload;
+
+                    // Login
                     const { user, token } = yield call(login, email, password);
+
+                    // Update user data
                     yield put(a.setAuth({
                         token,
                         ...user
                     }));
+
+                    // Redirect to the correct page
                     if (!user.teamnumber)
                         yield put(push("/selectTeam"));
                     else
@@ -30,14 +38,24 @@ function* auth() {
                     break;
                 }
                 case c.LOGOUT_AUTH: {
+                    // Logout
                     yield call(logout);
+
+                    // Redirect home
                     yield put(push("/"));
                     break;
                 }
                 case c.REGISTER_AUTH: {
+                    // Gether relevent params
                     const user = yield select(s.getRegisterForm);
+
+                    // Register
                     yield call(register, user);
+
+                    // Login
                     yield call(login, user.email, user.password);
+
+                    // Redirect to the select team page
                     yield put(push("/selectTeam"));
                     break;
                 }
@@ -45,6 +63,7 @@ function* auth() {
                     break;
             }
         } catch (e) {
+            // If there is an error, dispatch an error action
             yield put(a.setAuth(e));
         }
     }
