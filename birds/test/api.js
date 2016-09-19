@@ -277,7 +277,7 @@ describe("APIv1", () => {
         });
         it("get team data", (done) => {
             request(app)
-            .get("/api/v1/teams")
+            .get("/api/v1/teams/4159")
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken)
             .expect("Content-Type", /json/)
@@ -351,6 +351,36 @@ describe("APIv1", () => {
                     throw new Error("user.teamnumber is not 4159 :(");
             })
             .end(done);
+        });
+    });
+
+    describe("PUT /users/:id/", () => {
+        it("add test user 2 as admin", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/addadmin")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send(testUser2WithId)
+            .expect(200, done);
+        });
+        it("test user 2 is admin", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUser2WithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken2)
+            .expect(function(res) {
+                if (res.body.data.user.isAdmin)
+                    throw new Error("user.teamnumber is not 4159 :(");
+            })
+            .end(done);
+        });
+        it("remove test user 2 as admin", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/removeadmin")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send(testUser2WithId)
+            .expect(200, done);
         });
     });
 
