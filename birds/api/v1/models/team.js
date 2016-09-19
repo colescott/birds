@@ -74,8 +74,8 @@ Team.statics.numberOfAdmins = function(teamnumber, cb) {
 
 // cb is (err)
 Team.statics.setAdmin = function(teamnumber, user, isAdmin, cb) {
-    this.findOne({ teamnumber: teamnumber }).update({ "user.id": user.id }, { "$set": {
-        "progress.$.isAdmin": isAdmin
+    this.findOne().byNumber(teamnumber).update({ "users.id": user.id }, { "$set": {
+        "users.$.isAdmin": isAdmin
     } }, (err) => {
         return cb(err);
     });

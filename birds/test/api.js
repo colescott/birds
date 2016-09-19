@@ -354,13 +354,13 @@ describe("APIv1", () => {
         });
     });
 
-    describe("PUT /users/:id/", () => {
+    describe("PUT /users/:id/addadmin", () => {
         it("add test user 2 as admin", (done) => {
             request(app)
             .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/addadmin")
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken)
-            .send(testUser2WithId)
+            .send({ user: testUser2WithId })
             .expect(200, done);
         });
         it("test user 2 is admin", (done) => {
@@ -379,7 +379,7 @@ describe("APIv1", () => {
             .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/removeadmin")
             .set("Accept", "application/json")
             .set("Authorization", "Bearer " + loginToken)
-            .send(testUser2WithId)
+            .send({ user: testUser2WithId })
             .expect(200, done);
         });
     });
