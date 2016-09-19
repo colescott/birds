@@ -155,13 +155,31 @@ describe("AUTH SAGA", () => {
                 call(login, userData.email, userData.password)
             );
         });
-        it("it should redirect back to the front page", () => {
+        it("it should update the user data", () => {
+            const saga = auth();
+            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
+            const token = "meh";
+            saga.next();
+            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(userData);
+            saga.next();
+            const { value: out } = saga.next({ user: userData, token: "meh" });
+            assert.deepEqual(
+                out,
+                put(a.setAuth({
+                    token,
+                    ...userData,
+                }))
+            );
+        });
+        it("it should go to the select team page", () => {
             const saga = auth();
             const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
             saga.next();
             saga.next({ type: c.REGISTER_AUTH });
             saga.next(userData);
             saga.next();
+            saga.next({ user: userData, token: "meh" });
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
