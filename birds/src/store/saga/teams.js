@@ -19,15 +19,14 @@ function* teams() {
             ]);
 
             // Read the token
-            const { token } = yield select(s.getAuth);
+            const { token, id: uid } = yield select(s.getAuth);
             switch (action.type) {
                 case c.JOIN_TEAM: {
                     // Get Needed Params
                     const { number, pass } = action.payload;
-                    const { id: uid } = yield select(s.getAuth);
 
                     // Join the Team
-                    yield joinTeam(number, pass, uid, token);
+                    yield call(joinTeam, number, pass, uid, token);
 
                     // Refetch and Update the User
                     const user = yield call(getUser, uid, token);
@@ -40,7 +39,6 @@ function* teams() {
                 case c.CREATE_TEAM: {
                     // Get Needed Params
                     const { name, number } = action.payload;
-                    const { id: uid } = yield select(s.getAuth);
 
                     // Create The Team
                     const team = yield call(createTeam, name, number, token);
@@ -58,14 +56,15 @@ function* teams() {
                     break;
             }
         } catch (e) {
-            // Log errors
-            console.error(e);
+            // If there is an error, dispatch an error action
+            yield put(a.setAuth(e));
         }
     }
 }
 
 export function* joinTeam(number, pass, uid, token) {
-    yield call(api.teams.join, number, pass, uid, token);
+    const res = yield call(api.teams.join, number, pass, uid, token);
+    if (res.error) throw res.error.message;
 }
 
 export function* createTeam(name, number, token) {
