@@ -204,6 +204,46 @@ describe("APIv1", () => {
         });
     });
 
+    describe("PUT /users/:id/setprogress", () => {
+        it("set progress of lesson 1", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUserWithId.id + "/setprogress")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send({ id: 1, state: "complete" })
+            .expect(200, done);
+        });
+        it("test user has progress in lesson 1", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUserWithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(function(res) {
+                if (res.body.data.user.progress.length < 1)
+                    throw new Error("lesson progress was not set :()");
+            })
+            .end(done);
+        });
+        it("reset progress of lesson 1", (done) => {
+            request(app)
+            .put("/api/v1/users/" + testUserWithId.id + "/resetprogress")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(200, done);
+        });
+        it("test user has no progress in lesson 1", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUserWithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect(function(res) {
+                if (res.body.data.user.progress.length > 0)
+                    throw new Error("lesson progress was still set :()");
+            })
+            .end(done);
+        });
+    });
+
     describe("PUT /users/:id", () => {
         it("respond with json", (done) => {
             request(app)
@@ -275,6 +315,14 @@ describe("APIv1", () => {
             })
             .end(done);
         });
+        it("get team data", (done) => {
+            request(app)
+            .get("/api/v1/teams/4159")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .expect("Content-Type", /json/)
+            .expect(200, done);
+        });
     });
 
     describe("GET /api/v1/teams", () => {
@@ -343,6 +391,36 @@ describe("APIv1", () => {
                     throw new Error("user.teamnumber is not 4159 :(");
             })
             .end(done);
+        });
+    });
+
+    describe("PUT /users/:id/addadmin", () => {
+        it("add test user 2 as admin", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/addadmin")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send({ user: testUser2WithId })
+            .expect(200, done);
+        });
+        it("test user 2 is admin", (done) => {
+            request(app)
+            .get("/api/v1/users/" + testUser2WithId.id)
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken2)
+            .expect(function(res) {
+                if (res.body.data.user.isAdmin)
+                    throw new Error("user.teamnumber is not 4159 :(");
+            })
+            .end(done);
+        });
+        it("remove test user 2 as admin", (done) => {
+            request(app)
+            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/removeadmin")
+            .set("Accept", "application/json")
+            .set("Authorization", "Bearer " + loginToken)
+            .send({ user: testUser2WithId })
+            .expect(200, done);
         });
     });
 

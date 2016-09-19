@@ -64,7 +64,7 @@ Team.statics.numberOfAdmins = function(teamnumber, cb) {
         if (data.length <= 0)
             return cb("That team does not exist.");
         let adminNum = 0;
-        data.users.forEach((usr) => {
+        data[ 0 ].users.forEach((usr) => {
             if (usr.isAdmin)
                 adminNum++;
         });
@@ -74,8 +74,8 @@ Team.statics.numberOfAdmins = function(teamnumber, cb) {
 
 // cb is (err)
 Team.statics.setAdmin = function(teamnumber, user, isAdmin, cb) {
-    this.findOne({ teamnumber: teamnumber }).update({ "user.id": user.id }, { "$set": {
-        "progress.$.isAdmin": isAdmin
+    this.findOne().byNumber(teamnumber).update({ "users.id": user.id }, { "$set": {
+        "users.$.isAdmin": isAdmin
     } }, (err) => {
         return cb(err);
     });
