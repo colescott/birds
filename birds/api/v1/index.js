@@ -26,6 +26,8 @@ const authenticate = (req, res, next) => {
             return util.invalidToken(res);
         if (err && err.code && err.code == "credentials_required")
             return util.noSession(res);
+        if (err)
+            return util.console.error(res, "Unknown server error when logging in");
         next();
     });
 };
