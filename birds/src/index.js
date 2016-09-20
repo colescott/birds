@@ -19,7 +19,6 @@ const store = configureStore(hashHistory);
 import Main from "./ui/main.js";
 import Home from "./ui/home/index.js";
 import Login from "./ui/login/index.js";
-import Logout from "./ui/logout/index.js";
 import Register from "./ui/register/index.js";
 import SelectTeam from "./ui/selectTeam/index.js";
 
@@ -35,7 +34,6 @@ ReactDOM.render(
             <Route path="/" component={Main}>
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
-              <Route path="/logout" component={Logout} />
               <Route path="/selectTeam" component={SelectTeam} />
               <IndexRoute component={Home} />
             </Route>

@@ -15,7 +15,7 @@ const Main = ({ children, auth }) => {
                         { text: "Home", to: "/" },
                         ...(
                             auth.token
-                            ? [{ text: "Logout", to: "/logout" }]
+                            ? [{ text: "Logout", to: "/logout" }] //TODO: change '/logout' link to proper check... or not
                             : [
                                 { text: "Register", to: "/register" },
                                 { text: "Login", to: "/login" },
