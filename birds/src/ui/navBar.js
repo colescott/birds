@@ -4,8 +4,9 @@ import { Link } from "react-router";
 import { Toolbar, ToolbarGroup, ToolbarTitle } from "material-ui/Toolbar";
 
 import * as a from "../store/actions.js";
+import * as s from "../store/selectors.js";
 
-const NavBar = (props) => {
+const NavBar = ({ auth, logout }) => {
     return (
         <Toolbar
             style={{
@@ -16,41 +17,47 @@ const NavBar = (props) => {
             <ToolbarGroup>
                 <ToolbarTitle text="Birds" />
             </ToolbarGroup>
-            <ToolbarGroup>
-                <ToolbarTitle text={props.status} />
-                {
-                    props.links.map((v, i) =>
-                        <Link to={v.to == "/logout" ? "#" : v.to} key={i}>
-                            <ToolbarTitle text={v.text} onClick={v.to == "/logout" ? props.logout() : null}/>
-                        </Link>
-                    )
-                }
+                <ToolbarGroup>
+                    <ToolbarTitle text={auth.firstname || "Not Logged In"} />
+                    {
+                        navLinks(auth, logout)
+                    }
                 </ToolbarGroup>
         </Toolbar>
     );
 };
 
-const mapStateToProps = () => ({});
+const navLinks = (auth, logout) =>  {
+    if (auth.token) {
+        return (
+            <div>
+                { link("Home", "/") }
+                { link("Logout", "/", logout()) }
+            </div>
+        );
+    } else {
+        return (
+            <div>
+                { link("Home", "/") }
+                { link("Register", "/register") }
+                { link("Login", "/login") }
+            </div>
+        );
+    }
+};
+
+const link = (text, to, onClick) => {
+    return <Link to={to}>
+        <ToolbarTitle text={text} onClick={onClick || null} />
+    </Link>;
+};
+
+const mapStateToProps = (state) => ({
+    auth: s.getAuth(state)
+});
 
 const mapDispatchToProps = (dispatch) => ({
     logout: () => () => dispatch(a.logoutAuth())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
-
-/*
-<Link to={v.to} key={i} style={{ textDecoration: "none" }}>
-    <MenuItem primaryText={v.name}/>
-</Link>
-
-<IconMenu
-  iconButtonElement={
-    <IconButton touch={true}>
-      <NavigationExpandMoreIcon />
-    </IconButton>
-  }
->
-  <MenuItem primaryText="Download" />
-  <MenuItem primaryText="More Info" />
-</IconMenu>
-*/

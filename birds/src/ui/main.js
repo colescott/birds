@@ -1,29 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import * as s from "../store/selectors.js";
-
 import NavBar from "./navBar";
 
-const Main = ({ children, auth }) => {
+const Main = ({ children }) => {
     return (
         <div className="wrapper">
             <div className="main">
-                <NavBar
-                    title={"Birds"}
-                    links={[
-                        { text: "Home", to: "/" },
-                        ...(
-                            auth.token
-                            ? [{ text: "Logout", to: "/logout" }] //TODO: change '/logout' link to proper check... or not
-                            : [
-                                { text: "Register", to: "/register" },
-                                { text: "Login", to: "/login" },
-                            ]
-                        )
-                    ]}
-                    status={ auth.firstname || "Not Logged In"}
-                />
+                <NavBar />
                 {
                     children
                 }
@@ -32,9 +16,7 @@ const Main = ({ children, auth }) => {
   );
 };
 
-const mapStateToProps = (state) => ({
-    auth: s.getAuth(state)
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 
