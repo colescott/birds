@@ -12,12 +12,12 @@ function* auth() {
         try {
             // Wait for auth realated actions
             const action = yield take([
-                c.LOGOUT_AUTH,
-                c.LOGIN_AUTH,
-                c.REGISTER_AUTH
+                c.AUTH_LOGOUT,
+                c.AUTH_LOGIN,
+                c.AUTH_REGISTER
             ]);
             switch (action.type) {
-                case c.LOGIN_AUTH: {
+                case c.AUTH_LOGIN: {
                     // Gather relevent params
                     const { email, password } = action.payload;
 
@@ -25,7 +25,7 @@ function* auth() {
                     const { user, token } = yield call(login, email, password);
 
                     // Update user data
-                    yield put(a.setAuth({
+                    yield put(a.setUser({
                         token,
                         ...user
                     }));
@@ -37,7 +37,7 @@ function* auth() {
                         yield put(push("/"));
                     break;
                 }
-                case c.LOGOUT_AUTH: {
+                case c.AUTH_LOGOUT: {
                     // Logout
                     yield call(logout);
 
@@ -45,7 +45,7 @@ function* auth() {
                     yield put(push("/"));
                     break;
                 }
-                case c.REGISTER_AUTH: {
+                case c.AUTH_REGISTER: {
                     // Gether relevent params
                     const user = yield select(s.getRegisterForm);
 
@@ -54,7 +54,7 @@ function* auth() {
 
                     // Login
                     const { user: userData, token } = yield call(login, user.email, user.password);
-                    yield put(a.setAuth({
+                    yield put(a.setUser({
                         token,
                         ...userData
                     }));
@@ -68,7 +68,7 @@ function* auth() {
             }
         } catch (e) {
             // If there is an error, dispatch an error action
-            yield put(a.setAuth(e));
+            yield put(a.setUser(e));
         }
     }
 }
@@ -80,7 +80,7 @@ export function* login(email, password) {
 }
 
 export function* logout() {
-    yield put(a.resetAuth());
+    yield put(a.resetUser());
 }
 
 export function* register(user) {

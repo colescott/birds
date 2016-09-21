@@ -4,7 +4,7 @@ import kvs from "./kvs.js";
 
 export default combineReducers({
   registerForm: kvs("REGISTER_FORM"),
-  auth: kvs("AUTH"),
+  auth: kvs("USER"),
   loginForm: kvs("LOGIN_FORM"),
   teamForm: kvs("TEAM_FORM")
 });
