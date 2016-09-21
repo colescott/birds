@@ -18,13 +18,13 @@ describe("KVS REDUCER", () => {
         const store = createStore(reducer);
         store.dispatch({ type: "" });
         const state = store.getState();
-        assert.deepEqual(state, {});
+        assert.deepEqual(getStore(state), {});
     });
     it("should allow update on dispatching an object", () => {
         const store = createStore(reducer);
         store.dispatch({ type: "KVS_SET", payload: { test: 1 } });
         const state = store.getState();
-        assert.deepEqual(state, { test: 1 });
+        assert.deepEqual(getStore(state), { test: 1 });
     });
     it("should select the store with getStore", () => {
         const store = createStore(reducer);

@@ -15,9 +15,9 @@ describe("AUTH SAGA", () => {
         assert.deepEqual(
             saga.next().value,
             take([
-                c.LOGOUT_AUTH,
-                c.LOGIN_AUTH,
-                c.REGISTER_AUTH
+                c.AUTH_LOGOUT,
+                c.AUTH_LOGIN,
+                c.AUTH_REGISTER
             ])
         );
     });
@@ -27,7 +27,7 @@ describe("AUTH SAGA", () => {
         const { value: out } = saga.next();
         assert.deepEqual(
             out,
-            put(a.setAuth(new Error("error")))
+            put(a.setUser(new Error("error")))
         );
     });
     describe("LOGIN", () => {
@@ -35,7 +35,7 @@ describe("AUTH SAGA", () => {
             const saga = auth();
             const userData = { email: "test", password: "pass" };
             saga.next();
-            const { value: out } = saga.next({ type: c.LOGIN_AUTH, payload: userData });
+            const { value: out } = saga.next(a.loginAuth(userData));
             assert.deepEqual(
                 out,
                 call(login, userData.email, userData.password)
@@ -52,11 +52,11 @@ describe("AUTH SAGA", () => {
                 }
             };
             saga.next();
-            saga.next({ type: c.LOGIN_AUTH, payload: loginData.user });
+            saga.next(a.loginAuth(loginData.user));
             const { value: out } = saga.next(loginData);
             assert.deepEqual(
                 out,
-                put(a.setAuth({
+                put(a.setUser({
                     token: loginData.token,
                     ...loginData.user
                 }))
@@ -73,7 +73,7 @@ describe("AUTH SAGA", () => {
                 }
             };
             saga.next();
-            saga.next({ type: c.LOGIN_AUTH, payload: loginData.user });
+            saga.next(a.loginAuth(loginData.user));
             saga.next(loginData);
             const { value: out } = saga.next();
             assert.deepEqual(
@@ -92,7 +92,7 @@ describe("AUTH SAGA", () => {
                 }
             };
             saga.next();
-            saga.next({ type: c.LOGIN_AUTH, payload: loginData.user });
+            saga.next(a.loginAuth(loginData.user));
             saga.next(loginData);
             const { value: out } = saga.next();
             assert.deepEqual(
@@ -105,7 +105,7 @@ describe("AUTH SAGA", () => {
         it("should clear the user reducer", () => {
             const saga = auth();
             saga.next();
-            const { value: out } = saga.next({ type: c.LOGOUT_AUTH });
+            const { value: out } = saga.next(a.logoutAuth());
             assert.deepEqual(
                 out,
                 call(logout)
@@ -114,7 +114,7 @@ describe("AUTH SAGA", () => {
         it("should redirect back to the home page", () => {
             const saga = auth();
             saga.next();
-            saga.next({ type: c.LOGOUT_AUTH });
+            saga.next(a.logoutAuth());
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -126,7 +126,7 @@ describe("AUTH SAGA", () => {
         it("should select the register form", () => {
             const saga = auth();
             saga.next();
-            const { value: out } = saga.next({ type: c.REGISTER_AUTH });
+            const { value: out } = saga.next(a.registerAuth());
             assert.deepEqual(
                 out,
                 select(s.getRegisterForm)
@@ -136,7 +136,7 @@ describe("AUTH SAGA", () => {
             const saga = auth();
             const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
             saga.next();
-            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(a.registerAuth());
             const { value: out } = saga.next(userData);
             assert.deepEqual(
                 out,
@@ -147,7 +147,7 @@ describe("AUTH SAGA", () => {
             const saga = auth();
             const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
             saga.next();
-            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(a.registerAuth());
             saga.next(userData);
             const { value: out } = saga.next();
             assert.deepEqual(
@@ -160,13 +160,13 @@ describe("AUTH SAGA", () => {
             const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
             const token = "meh";
             saga.next();
-            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(a.registerAuth());
             saga.next(userData);
             saga.next();
             const { value: out } = saga.next({ user: userData, token: "meh" });
             assert.deepEqual(
                 out,
-                put(a.setAuth({
+                put(a.setUser({
                     token,
                     ...userData,
                 }))
@@ -176,7 +176,7 @@ describe("AUTH SAGA", () => {
             const saga = auth();
             const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
             saga.next();
-            saga.next({ type: c.REGISTER_AUTH });
+            saga.next(a.registerAuth());
             saga.next(userData);
             saga.next();
             saga.next({ user: userData, token: "meh" });
@@ -239,7 +239,7 @@ describe("LOGOUT SAGA", () => {
         const { value: out } = saga.next();
         assert.deepEqual(
             out,
-            put(a.resetAuth())
+            put(a.resetUser())
         );
     });
 });

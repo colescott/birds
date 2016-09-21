@@ -25,8 +25,8 @@ describe("TEAM SAGA", () => {
         assert.deepEqual(
             out,
             take([
-                c.JOIN_TEAM,
-                c.CREATE_TEAM
+                c.TEAM_JOIN,
+                c.TEAM_CREATE
             ])
         );
     });
@@ -36,7 +36,7 @@ describe("TEAM SAGA", () => {
         const { value: out } = saga.next();
         assert.deepEqual(
             out,
-            select(s.getAuth)
+            select(s.getUser)
         );
     });
     it("should throw on error", () => {
@@ -55,7 +55,7 @@ describe("TEAM SAGA", () => {
         it("should call join team", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.JOIN_TEAM, payload: { number, pass } });
+            saga.next(a.joinTeam(number, pass));
             const { value: out } = saga.next({ token, id });
             assert.deepEqual(
                 out,
@@ -65,7 +65,7 @@ describe("TEAM SAGA", () => {
         it("should get the user", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.JOIN_TEAM, payload: { number, pass } });
+            saga.next(a.joinTeam(number, pass));
             saga.next({ token, id });
             const { value: out } = saga.next();
             assert.deepEqual(
@@ -76,19 +76,19 @@ describe("TEAM SAGA", () => {
         it("shoud update the user", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.JOIN_TEAM, payload: { number, pass } });
+            saga.next(a.joinTeam(number, pass));
             saga.next({ token, id });
             saga.next();
             const { value: out } = saga.next(user);
             assert.deepEqual(
                 out,
-                put(a.setAuth(user))
+                put(a.setUser(user))
             );
         });
         it("should redirect back to the home page", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.JOIN_TEAM, payload: { number, pass } });
+            saga.next(a.joinTeam(number, pass));
             saga.next({ token, id });
             saga.next();
             saga.next(user);
@@ -103,7 +103,7 @@ describe("TEAM SAGA", () => {
         it("should call api create team", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.CREATE_TEAM, payload: { name, number } });
+            saga.next(a.createTeam(name, number));
             const { value: out } = saga.next({ token, id });
             assert.deepEqual(
                 out,
@@ -113,18 +113,18 @@ describe("TEAM SAGA", () => {
         it("should update the team password", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.CREATE_TEAM, payload: { name, number } });
+            saga.next(a.createTeam(name, number));
             saga.next({ token, id });
             const { value: out } = saga.next({ password: pass });
             assert.deepEqual(
                 out,
-                put(a.setAuth({ teamPass: pass }))
+                put(a.setUser({ teamPass: pass }))
             );
         });
         it("should refetch the user", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.CREATE_TEAM, payload: { name, number } });
+            saga.next(a.createTeam(name, number));
             saga.next({ token, id });
             saga.next({ password: pass });
             const { value: out } = saga.next();
@@ -136,20 +136,20 @@ describe("TEAM SAGA", () => {
         it("should update the user data", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.CREATE_TEAM, payload: { name, number } });
+            saga.next(a.createTeam(name, number));
             saga.next({ token, id });
             saga.next({ password: pass });
             saga.next();
             const { value: out } = saga.next(user);
             assert.deepEqual(
                 out,
-                put(a.setAuth(user))
+                put(a.setUser(user))
             );
         });
         it("should redirect back to the home page", () => {
             const saga = teams();
             saga.next();
-            saga.next({ type: c.CREATE_TEAM, payload: { name, number } });
+            saga.next(a.createTeam(name, number));
             saga.next({ token, id });
             saga.next({ password: pass });
             saga.next();
