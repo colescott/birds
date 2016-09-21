@@ -1,5 +1,8 @@
+import { combineReducers } from "redux";
+
 const kvs = (prefix) => (state = {}, action) => {
     if (action.error) {
+        console.error(action.payload);
         return state;
     }
     switch (action.type) {
@@ -13,8 +16,35 @@ const kvs = (prefix) => (state = {}, action) => {
         default:
             return state;
     }
-}
+};
 
-export default kvs;
+const error = (prefix) => (state = {}, action) => {
+    if (!action.error) {
+        return state;
+    }
+    switch (action.type) {
+        case `${prefix}_SET`:
+            return {
+                ...state,
+                error: action.payload.message
+            };
+        case `${prefix}_RESET`:
+            return {
+                ...state,
+                error: action.payload.message
+            };
+        default:
+            return state;
+    }
+};
 
-export const getStore = (store) => store;
+
+export default (prefix) =>
+    combineReducers({
+        kvs: kvs(prefix),
+        error: error(prefix)
+    });
+
+export const getStore = (store) => store.kvs;
+
+export const getError = (store) => store.error;
