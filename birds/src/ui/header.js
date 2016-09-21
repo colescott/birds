@@ -16,7 +16,7 @@ const Header = ({ auth, logout }) => {
                 link("Home", "/"),
                 ...authLinks(auth, logout)
             ]}
-            status={ auth.firstname || "Not Logged In"}
+            status={ auth.firstname || "Not Logged In" }
         />
     );
 };
