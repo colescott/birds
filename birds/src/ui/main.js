@@ -1,13 +1,12 @@
 import React from "react";
-import { connect } from "react-redux";
 
-import NavBar from "./navBar";
+import Header from "./header";
 
 const Main = ({ children }) => {
     return (
         <div className="wrapper">
             <div className="main">
-                <NavBar />
+                <Header />
                 {
                     children
                 }
@@ -16,8 +15,4 @@ const Main = ({ children }) => {
   );
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;
