@@ -14,14 +14,14 @@ function* teams() {
         try {
             // Wait for team related actions
             const action = yield take([
-                c.JOIN_TEAM,
-                c.CREATE_TEAM
+                c.TEAM_JOIN,
+                c.TEAM_CREATE
             ]);
 
             // Read the token
             const { token, id: uid } = yield select(s.getAuth);
             switch (action.type) {
-                case c.JOIN_TEAM: {
+                case c.TEAM_JOIN: {
                     // Get Needed Params
                     const { number, pass } = action.payload;
 
@@ -30,23 +30,23 @@ function* teams() {
 
                     // Refetch and Update the User
                     const user = yield call(getUser, uid, token);
-                    yield put(a.setAuth(user));
+                    yield put(a.setUser(user));
 
                     // Redirect to the Home Page
                     yield put(push("/"));
                     break;
                 }
-                case c.CREATE_TEAM: {
+                case c.TEAM_CREATE: {
                     // Get Needed Params
                     const { name, number } = action.payload;
 
                     // Create The Team
                     const team = yield call(createTeam, name, number, token);
-                    yield put(a.setAuth({ teamPass: team.password }));
+                    yield put(a.setUser({ teamPass: team.password }));
 
                     // Refetch the User
                     const user = yield call(getUser, uid, token);
-                    yield put(a.setAuth(user));
+                    yield put(a.setUser(user));
 
                     // Redirect to the Home Page
                     yield put(push("/"));
@@ -57,7 +57,7 @@ function* teams() {
             }
         } catch (e) {
             // If there is an error, dispatch an error action
-            yield put(a.setAuth(e));
+            yield put(a.setUser(e));
         }
     }
 }
