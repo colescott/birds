@@ -40,7 +40,7 @@ const link = (text, to = "#", onClick = () => {}) => {
 };
 
 const mapStateToProps = (state) => ({
-    auth: s.getAuth(state)
+    auth: s.getUser(state)
 });
 
 const mapDispatchToProps = (dispatch) => ({
