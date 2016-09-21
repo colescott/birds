@@ -12,12 +12,11 @@ const Header = ({ auth, logout }) => {
     return (
         <NavBar
             title={"Birds"}
-            links={[
-                link("Home", "/"),
-                ...authLinks(auth, logout)
-            ]}
             status={ auth.firstname || "Not Logged In" }
-        />
+        >
+            { link("Home", "/") }
+            { authLinks(auth, logout) }
+        </ NavBar>
     );
 };
 
@@ -34,10 +33,8 @@ const authLinks = (auth, logout) => {
     }
 };
 
-let links = 0;
-
 const link = (text, to = "#", onClick = () => {}) => {
-    return <Link to={to} key={links++}>
+    return <Link to={to} key={`${text}${to}`}>
         <ToolbarTitle text={text} onClick={onClick} />
     </Link>;
 };

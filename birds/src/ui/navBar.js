@@ -15,7 +15,7 @@ const NavBar = (props) => {
                 <ToolbarGroup>
                     <ToolbarTitle text={props.status} />
                     {
-                        props.links
+                        props.children
                     }
                 </ToolbarGroup>
         </Toolbar>
