@@ -33,7 +33,7 @@ const Main = ({ children, auth }) => {
 };
 
 const mapStateToProps = (state) => ({
-    auth: s.getAuth(state)
+    auth: s.getUser(state)
 });
 
 const mapDispatchToProps = () => ({});

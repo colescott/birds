@@ -19,7 +19,7 @@ function* teams() {
             ]);
 
             // Read the token
-            const { token, id: uid } = yield select(s.getAuth);
+            const { token, id: uid } = yield select(s.getUser);
             switch (action.type) {
                 case c.TEAM_JOIN: {
                     // Get Needed Params
