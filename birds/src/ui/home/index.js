@@ -53,7 +53,7 @@ const Home = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    user: s.getAuth(state)
+    user: s.getUser(state)
 });
 
 const mapDispatchToProps = () => ({});

@@ -28,20 +28,3 @@ const NavBar = (props) => {
 };
 
 export default NavBar;
-
-/*
-<Link to={v.to} key={i} style={{ textDecoration: "none" }}>
-    <MenuItem primaryText={v.name}/>
-</Link>
-
-<IconMenu
-  iconButtonElement={
-    <IconButton touch={true}>
-      <NavigationExpandMoreIcon />
-    </IconButton>
-  }
->
-  <MenuItem primaryText="Download" />
-  <MenuItem primaryText="More Info" />
-</IconMenu>
-*/

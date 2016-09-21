@@ -36,7 +36,7 @@ describe("TEAM SAGA", () => {
         const { value: out } = saga.next();
         assert.deepEqual(
             out,
-            select(s.getAuth)
+            select(s.getUser)
         );
     });
     it("should throw on error", () => {

@@ -2,7 +2,6 @@ import { combineReducers } from "redux";
 
 const kvs = (prefix) => (state = {}, action) => {
     if (action.error) {
-        console.error(action.payload);
         return state;
     }
     switch (action.type) {
@@ -26,12 +25,12 @@ const error = (prefix) => (state = {}, action) => {
         case `${prefix}_SET`:
             return {
                 ...state,
-                error: action.payload.message
+                error: action.payload
             };
         case `${prefix}_RESET`:
             return {
                 ...state,
-                error: action.payload.message
+                error: action.payload
             };
         default:
             return state;
