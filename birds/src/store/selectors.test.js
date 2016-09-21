@@ -12,7 +12,7 @@ import * as a from "./actions";
 describe("Selecotor Tests", () => {
     const store = createStore(reducer);
     store.dispatch(a.setRegisterForm({ reducer: "registerForm" }));
-    store.dispatch(a.setAuth({ reducer: "auth" }));
+    store.dispatch(a.setUser({ reducer: "user" }));
     store.dispatch(a.setLoginForm({ reducer: "loginForm" }));
     store.dispatch(a.setTeamForm({ reducer: "teamForm" }));
     const state = store.getState();
@@ -24,10 +24,10 @@ describe("Selecotor Tests", () => {
         );
     });
     it("should return the auth", () => {
-        const data = s.getAuth(state);
+        const data = s.getUser(state);
         assert.deepEqual(
             data,
-            { reducer: "auth" }
+            { reducer: "user" }
         );
     });
     it("should return the login form", () => {
