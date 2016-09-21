@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router";
 import { Toolbar, ToolbarGroup, ToolbarTitle } from "material-ui/Toolbar";
 
 const NavBar = (props) => {
@@ -11,17 +10,13 @@ const NavBar = (props) => {
             }}
         >
             <ToolbarGroup>
-                <ToolbarTitle text="Birds" />
+                <ToolbarTitle text={props.title} />
             </ToolbarGroup>
-            <ToolbarGroup>
-                <ToolbarTitle text={props.status} />
-                {
-                    props.links.map((v, i) =>
-                        <Link to={v.to} key={i}>
-                            <ToolbarTitle text={v.text} />
-                        </Link>
-                    )
-                }
+                <ToolbarGroup>
+                    <ToolbarTitle text={props.status} />
+                    {
+                        props.children
+                    }
                 </ToolbarGroup>
         </Toolbar>
     );
