@@ -78,6 +78,7 @@ describe("AUTH SAGA", () => {
             saga.next();
             saga.next(a.loginAuth(loginData.user));
             saga.next(loginData);
+            saga.next();
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -97,6 +98,7 @@ describe("AUTH SAGA", () => {
             saga.next();
             saga.next(a.loginAuth(loginData.user));
             saga.next(loginData);
+            saga.next();
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -152,6 +154,7 @@ describe("AUTH SAGA", () => {
             saga.next();
             saga.next(a.registerAuth());
             saga.next(userData);
+            saga.next();
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -165,6 +168,7 @@ describe("AUTH SAGA", () => {
             saga.next();
             saga.next(a.registerAuth());
             saga.next(userData);
+            saga.next();
             saga.next();
             const { value: out } = saga.next({ user: userData, token: "meh" });
             assert.deepEqual(
@@ -181,6 +185,7 @@ describe("AUTH SAGA", () => {
             saga.next();
             saga.next(a.registerAuth());
             saga.next(userData);
+            saga.next();
             saga.next();
             saga.next({ user: userData, token: "meh" });
             const { value: out } = saga.next();
