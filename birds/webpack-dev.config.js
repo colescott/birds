@@ -2,6 +2,7 @@ const validator = require("webpack-validator");
 const merge = require("webpack-merge");
 const WebpackOnBuildPlugin = require("on-build-webpack");
 const notifier = require("node-notifier");
+const webpack = require("webpack");
 
 const baseConfig = require("./webpack-base.config.js");
 
@@ -17,6 +18,11 @@ const config = merge.smart(baseConfig, {
                 "title": "Webpack",
                 "message": `Build took ${seconds} seconds.`
             });
+        }),
+        new webpack.DefinePlugin({
+            "process.env": {
+                "NODE_ENV": JSON.stringify("development")
+            }
         }),
     ],
 });
