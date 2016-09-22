@@ -22,9 +22,7 @@ function* auth() {
                     const { email, password } = action.payload;
 
                     // Login
-                    const { user, token } = yield call(login, email, password);
-
-                    // Update user data
+                    const { user, token } = yield call(authWrapper, login, email, password);
                     yield put(a.setUser({
                         token,
                         ...user
@@ -50,10 +48,10 @@ function* auth() {
                     const user = yield select(s.getRegisterForm);
 
                     // Register
-                    yield call(register, user);
+                    yield call(authWrapper, register, user);
 
                     // Login
-                    const { user: userData, token } = yield call(login, user.email, user.password);
+                    const { user: userData, token } = yield call(authWrapper, login, user.email, user.password);
                     yield put(a.setUser({
                         token,
                         ...userData
@@ -68,7 +66,7 @@ function* auth() {
             }
         } catch (e) {
             // If there is an error, dispatch an error action
-            yield put(a.setUser(e));
+            yield put(a.authFailure(e.message));
         }
     }
 }
@@ -93,6 +91,13 @@ export function* getUser(id, token) {
     const res = yield call(api.auth.getUser, id, token);
     if (res.error) throw new Error(res.error.message);
     return res.data.user;
+}
+
+export function* authWrapper(func, ...args) {
+    yield put(a.authLoad());
+    const res = yield call(func, ...args);
+    yield put(a.authSuccess());
+    return res;
 }
 
 export default auth;

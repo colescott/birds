@@ -1,20 +1,21 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { routerMiddleware } from "react-router-redux";
-import createLogger from "redux-logger";
+import { routerReducer, routerMiddleware } from "react-router-redux";
 
-import reducer from "./reducers";
+import reducers from "./reducers";
 import rootSaga from "./saga/index.js";
 
-export default function configureStore(history) {
+export default function configureStore(basicHistory) {
   const sagaMiddleware = createSagaMiddleware();
   const store = createStore(
-    reducer,
+    combineReducers({
+        ...reducers,
+        routing: routerReducer
+    }),
     compose(
       applyMiddleware(...[
-            routerMiddleware(history),
+            routerMiddleware(basicHistory),
             sagaMiddleware,
-            //createLogger()
       ]),
       window.devToolsExtension ? window.devToolsExtension() : f => f
     )
