@@ -27,6 +27,7 @@ function* auth() {
                         token,
                         ...user
                     }));
+                    yield put(a.resetLoginForm());
 
                     // Redirect to the correct page
                     if (!user.teamnumber)
@@ -49,6 +50,7 @@ function* auth() {
 
                     // Register
                     yield call(authWrapper, register, user);
+                    yield put(a.resetRegisterForm());
 
                     // Login
                     const { user: userData, token } = yield call(authWrapper, login, user.email, user.password);
