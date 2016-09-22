@@ -1,15 +1,17 @@
 import { assert } from "chai";
+import { combineReducers } from "redux";
 
 import { createSelector } from "reselect";
 import { getStore } from "./reducers/kvs.js";
 import { createStore } from "redux";
 
-import reducer from "./reducers";
+import reducers from "./reducers";
 
 import * as s from "./selectors";
 import * as a from "./actions";
 
 describe("Selecotor Tests", () => {
+    const reducer = combineReducers(reducers);
     const store = createStore(reducer);
     store.dispatch(a.setRegisterForm({ reducer: "registerForm" }));
     store.dispatch(a.setUser({ reducer: "user" }));
