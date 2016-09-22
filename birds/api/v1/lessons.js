@@ -5,7 +5,7 @@ const Lesson = require("./models/lesson");
 
 const aws = require("aws-sdk");
 
-const s3bucket = new aws.S3({ params: { Bucket: "cardinal-birds-dev" } });
+const s3bucket = new aws.S3({ params: { Bucket: process.env.AWS_BUCKET } });
 
 s3bucket.createBucket();
 
