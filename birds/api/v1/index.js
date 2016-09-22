@@ -8,6 +8,7 @@ const router = express.Router();
 
 const users = require("./users.js");
 const teams = require("./teams.js");
+const lessons = require("./lessons.js");
 const util = require("./util.js");
 
 const User = require("./models/user");
@@ -511,5 +512,122 @@ router.post("/auth/logout", authenticate, (req, res) => {
     req.logout();
     return util.message(res, "Logged out successfully");
 });
+
+/**
+ * @api {post} /lessons Create lesson
+ * @apiName Create lesson
+ * @apiGroup Lessons
+ *
+ * @apiParam {String} title Lesson title
+ * @apiParam {String} branch Lesson branch
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": []
+ *       }
+ *     }
+ *
+ */
+router.post("/lessons", lessons.createLesson);
+
+/**
+ * @api {get} /lessons/:id Get lesson by id
+ * @apiName Get lesson by id
+ * @apiGroup Lessons
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ * @apiSuccess {String} data.data Lesson data
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": [],
+ *         "data": "This is a default lesson"
+ *       }
+ *     }
+ *
+ */
+router.get("/lessons/:id", lessons.getLesson);
+
+/**
+ * @api {put} /lessons Upload lesson data
+ * @apiName Upload lesson data
+ * @apiGroup Lessons
+ *
+ * @apiParam {String} id Lesson id
+ * @apiParam {String} data Lesson data
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": []
+ *       }
+ *     }
+ *
+ */
+router.put("/lessons/:id", lessons.setLessonData);
+
+/**
+ * @api {get} /lessons Get lesson by id
+ * @apiName Get lesson by id
+ * @apiGroup Lessons
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ * @apiSuccess {String} data.data Lesson data
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": [
+ *         {
+ *           "id": "i<3u",
+ *           "title": "CAD22",
+ *           "branch": "design",
+ *           "prerequisites": []
+ *         },
+ *         {
+ *           "id": "4159<3u",
+ *           "title": "CAD Basics",
+ *           "branch": "design",
+ *           "prerequisites": []
+ *         }
+ *       ]
+ *     }
+ *
+ */
+router.get("/lessons", lessons.getLessons);
 
 module.exports = router;
