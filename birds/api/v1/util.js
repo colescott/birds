@@ -50,6 +50,27 @@ const sterilizeTeam = (team) => {
     };
 };
 
+const sterilizeLesson = (lesson) => {
+    return {
+        id: lesson.id,
+        title: lesson.title,
+        branch: lesson.branch,
+        prerequisites: lesson.prerequisites.map((prereq) => sterilizePrereq(prereq))
+    };
+};
+
+const sterilizePrereq = (prereq) => {
+    return {
+        id: prereq.id
+    };
+};
+
+const sterilizeLessonWithData = (lesson, data) => {
+    let sterilized = sterilizeLesson(lesson);
+    sterilized.data = data;
+    return sterilized;
+};
+
 exports.noSession = noSession;
 exports.invalidToken = invalidToken;
 exports.unauthorized = unauthorized;
@@ -59,3 +80,5 @@ exports.data = data;
 exports.sterilizeUser = sterilizeUser;
 exports.sterilizeUserAsUser = sterilizeUserAsUser;
 exports.sterilizeTeam = sterilizeTeam;
+exports.sterilizeLesson = sterilizeLesson;
+exports.sterilizeLessonWithData = sterilizeLessonWithData;

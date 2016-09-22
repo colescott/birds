@@ -143,6 +143,292 @@
     "groupTitle": "Auth"
   },
   {
+    "type": "post",
+    "url": "/lessons",
+    "title": "Create lesson",
+    "name": "Create_lesson",
+    "group": "Lessons",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "title",
+            "description": "<p>Lesson title</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "branch",
+            "description": "<p>Lesson branch</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.id",
+            "description": "<p>Lesson id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.title",
+            "description": "<p>Lesson title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.branch",
+            "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"id\": \"4159<3u\",\n    \"title\": \"CAD Basics\",\n    \"branch\": \"design\",\n    \"prerequisites\": []\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Lessons"
+  },
+  {
+    "type": "get",
+    "url": "/lessons",
+    "title": "Get lesson by id",
+    "name": "Get_lesson_by_id",
+    "group": "Lessons",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.id",
+            "description": "<p>Lesson id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.title",
+            "description": "<p>Lesson title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.branch",
+            "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.data",
+            "description": "<p>Lesson data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": [\n    {\n      \"id\": \"i<3u\",\n      \"title\": \"CAD22\",\n      \"branch\": \"design\",\n      \"prerequisites\": []\n    },\n    {\n      \"id\": \"4159<3u\",\n      \"title\": \"CAD Basics\",\n      \"branch\": \"design\",\n      \"prerequisites\": []\n    }\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Lessons"
+  },
+  {
+    "type": "get",
+    "url": "/lessons/:id",
+    "title": "Get lesson by id",
+    "name": "Get_lesson_by_id",
+    "group": "Lessons",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.id",
+            "description": "<p>Lesson id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.title",
+            "description": "<p>Lesson title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.branch",
+            "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.data",
+            "description": "<p>Lesson data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"id\": \"4159<3u\",\n    \"title\": \"CAD Basics\",\n    \"branch\": \"design\",\n    \"prerequisites\": [],\n    \"data\": \"This is a default lesson\"\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Lessons"
+  },
+  {
+    "type": "put",
+    "url": "/lessons",
+    "title": "Upload lesson data",
+    "name": "Upload_lesson_data",
+    "group": "Lessons",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "id",
+            "description": "<p>Lesson id</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Lesson data</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.id",
+            "description": "<p>Lesson id</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.title",
+            "description": "<p>Lesson title</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.branch",
+            "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "data.prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"id\": \"4159<3u\",\n    \"title\": \"CAD Basics\",\n    \"branch\": \"design\",\n    \"prerequisites\": []\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "birds/api/v1/index.js",
+    "groupTitle": "Lessons"
+  },
+  {
     "type": "put",
     "url": "/teams/:num/addadmin",
     "title": "Add admin",
