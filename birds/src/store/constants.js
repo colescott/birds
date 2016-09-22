@@ -6,6 +6,10 @@ export const AUTH_LOGIN = "AUTH_LOGIN";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 export const AUTH_REGISTER = "AUTH_REGISTER";
 
+export const AUTH_SUCCESS = "AUTH_SUCCESS";
+export const AUTH_FAILURE = "AUTH_FAILURE";
+export const AUTH_LOAD = "AUTH_LOAD";
+
 export const TEAM_CREATE = "TEAM_CREATE";
 export const TEAM_JOIN = "TEAM_JOIN";
 

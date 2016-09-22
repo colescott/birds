@@ -6,19 +6,11 @@ const auth = {
     login: (email, password) =>
         xr.post(`${urlPrefix}/api/v1/auth/login`, { email, password })
             .then(res => res.data)
-            .catch(() => ({
-                error: {
-                    message: "Network Error"
-                }
-            })),
+            .catch(handleNetworkError),
     register: (user) =>
         xr.post(`${urlPrefix}/api/v1/users`, user)
             .then(res => res.data)
-            .catch(() => ({
-                error: {
-                    message: "Network Error"
-                }
-            })),
+            .catch(handleNetworkError),
     getUser: (id, token) =>
         xr.get(`${urlPrefix}/api/v1/users/${id}`, {}, {
             headers: {
@@ -26,11 +18,20 @@ const auth = {
             }
         })
             .then(res => res.data)
-            .catch(() => ({
-                error: {
-                    message: "Network Error"
-                }
-            }))
+            .catch(handleNetworkError)
+};
+
+export const handleNetworkError = (e) => {
+    try {
+        const res = JSON.parse(e.response);
+        return res;
+    } catch (parseError) {
+        return {
+            error: {
+                message: "Network Error"
+            }
+        };
+    }
 };
 
 export default auth;
