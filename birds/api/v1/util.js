@@ -19,10 +19,14 @@ const message = (res, message) => {
 const error = (res, message, status) => {
     if (!status)
         console.error(message);
+    if (res.headersSent)
+        return console.error("Headers already sent on error. Ignoring response");
     return res.status(status ? status : 500).send({ error: { message: message ? message : "Unknown error." } });
 };
 
 const data = (res, data) => {
+    if (res.headersSent)
+        return console.error("Headers already sent on data. Ignoring response");
     return res.status(200).send({ data: data });
 };
 
