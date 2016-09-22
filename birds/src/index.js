@@ -1,7 +1,7 @@
 // Load Libraries
 import React from "react";
 import ReactDOM from "react-dom";
-import { hashHistory } from "react-router";
+import { hashHistory, browserHistory } from "react-router";
 import { syncHistoryWithStore } from "react-router-redux";
 
 // Load Styles
@@ -13,8 +13,14 @@ injectTapEventPlugin();
 
 // Setup Redux
 import configureStore from "./store/configureStore";
-const store = configureStore(hashHistory);
-const history = syncHistoryWithStore(hashHistory, store);
+let basicHistory;
+if (process.env.NODE_ENV === "development") {
+    basicHistory = hashHistory;
+} else {
+    basicHistory = browserHistory;
+}
+const store = configureStore(basicHistory);
+const history = syncHistoryWithStore(basicHistory, store);
 
 // Create and append a div
 const appDiv = document.createElement("div");
