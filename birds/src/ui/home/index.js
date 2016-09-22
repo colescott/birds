@@ -26,7 +26,7 @@ const memberPage = (user) => {
 };
 
 const Home = (props) => {
-    if (props.user.teamnumber) {
+    if (props.user.id) {
         return (
             <div>
                 <h1> {`Welcome, ${props.user.firstname}`} </h1>
