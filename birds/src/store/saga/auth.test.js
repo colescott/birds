@@ -2,7 +2,7 @@ import { assert } from "chai";
 import { take, call, put, select } from "redux-saga/effects";
 import { push } from "react-router-redux";
 
-import auth, { login, logout, register, getUser } from "./auth";
+import auth, { authWrapper, login, logout, register, getUser } from "./auth";
 import api from "../../api";
 
 import * as c from "../constants.js";
@@ -23,12 +23,15 @@ describe("AUTH SAGA", () => {
     });
     it("should put an error action on throw", () => {
         const saga = auth();
-        saga.next(new Error("error"));
-        const { value: out } = saga.next();
-        assert.deepEqual(
-            out,
-            put(a.setUser(new Error("error")))
-        );
+        try {
+            saga.next();
+            saga.next(new Error("error"));
+        } catch (e) {
+            assert.deepEqual(
+                e,
+                put(a.authFailure("error"))
+            );
+        }
     });
     describe("LOGIN", () => {
         it("should call the login saga", () => {
@@ -38,7 +41,7 @@ describe("AUTH SAGA", () => {
             const { value: out } = saga.next(a.loginAuth(userData));
             assert.deepEqual(
                 out,
-                call(login, userData.email, userData.password)
+                call(authWrapper, login, userData.email, userData.password)
             );
         });
         it("should update the user data", () => {
@@ -140,7 +143,7 @@ describe("AUTH SAGA", () => {
             const { value: out } = saga.next(userData);
             assert.deepEqual(
                 out,
-                call(register, userData)
+                call(authWrapper, register, userData)
             );
         });
         it("should login", () => {
@@ -152,7 +155,7 @@ describe("AUTH SAGA", () => {
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
-                call(login, userData.email, userData.password)
+                call(authWrapper, login, userData.email, userData.password)
             );
         });
         it("it should update the user data", () => {
