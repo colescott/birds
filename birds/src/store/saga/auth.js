@@ -1,6 +1,8 @@
 import { take, call, put, select } from "redux-saga/effects";
 import { push } from "react-router-redux";
 
+import trim from "trim";
+
 import api from "../../api";
 
 import * as c from "../constants.js";
@@ -84,7 +86,12 @@ export function* logout() {
 }
 
 export function* register(user) {
-    const res = yield call(api.auth.register, user);
+    const res = yield call(api.auth.register, {
+        ...user,
+        email: trim(user.email),
+        firstname: trim(user.firstname),
+        lastname: trim(user.lastname)
+    });
     if (res.error) throw new Error(res.error.message);
     return res.data.user;
 }
