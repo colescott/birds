@@ -76,7 +76,7 @@ function* auth() {
 }
 
 export function* login(email, password) {
-    const res = yield call(api.auth.login, email, password);
+    const res = yield call(api.auth.login, trim(email), password);
     if (res.error) throw new Error(res.error.message);
     return res.data;
 }
