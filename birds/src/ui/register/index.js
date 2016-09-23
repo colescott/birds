@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
-import { Card, CardActions, CardHeader, CardText } from "material-ui/Card";
+import { Card, CardHeader, CardText } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
 import TextField from "material-ui/TextField";
 
@@ -50,13 +50,6 @@ const Register = (props) => {
                         <FlatButton type="submit" label="Register" onClick={props.register()}/>
                     </form>
                 </CardText>
-                <CardActions
-                    style={{
-                        display: "flux",
-                        alignItems: "space-around"
-                    }}
-                >
-                </CardActions>
             </Card>
         </div>
     );
