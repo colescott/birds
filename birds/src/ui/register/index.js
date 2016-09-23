@@ -22,27 +22,33 @@ const Register = (props) => {
                     title="Register"
                 />
                 <CardText>
-                    <TextField
-                        floatingLabelText="Email"
-                        onChange={props.updateKey("email")}
-                        value={props.form.email || ""}
-                    /><br />
-                    <TextField
-                        floatingLabelText="Password"
-                        type="password"
-                        onChange={props.updateKey("password")}
-                        value={props.form.password || ""}
-                    /><br />
-                    <TextField
-                        floatingLabelText="First Name"
-                        onChange={props.updateKey("firstname")}
-                        value={props.form.firstname || ""}
-                    /><br />
-                    <TextField
-                        floatingLabelText="Last Name"
-                        onChange={props.updateKey("lastname")}
-                        value={props.form.lastname || ""}
-                    /><br />
+                    <form onSubmit={e => {
+                        e.preventDefault();
+                        props.register();
+                    }}>
+                        <TextField
+                            floatingLabelText="Email"
+                            onChange={props.updateKey("email")}
+                            value={props.form.email || ""}
+                        /><br />
+                        <TextField
+                            floatingLabelText="Password"
+                            type="password"
+                            onChange={props.updateKey("password")}
+                            value={props.form.password || ""}
+                        /><br />
+                        <TextField
+                            floatingLabelText="First Name"
+                            onChange={props.updateKey("firstname")}
+                            value={props.form.firstname || ""}
+                        /><br />
+                        <TextField
+                            floatingLabelText="Last Name"
+                            onChange={props.updateKey("lastname")}
+                            value={props.form.lastname || ""}
+                        /><br />
+                        <FlatButton type="submit" label="Register" onClick={props.register()}/>
+                    </form>
                 </CardText>
                 <CardActions
                     style={{
@@ -50,7 +56,6 @@ const Register = (props) => {
                         alignItems: "space-around"
                     }}
                 >
-                     <FlatButton label="Register" onClick={props.register()}/>
                 </CardActions>
             </Card>
         </div>
