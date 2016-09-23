@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { connect } from "react-redux";
 
-import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
 const adminPage = (user) => {
@@ -30,13 +29,13 @@ const Home = (props) => {
         return (
             <div>
                 <h1> {`Welcome, ${props.user.firstname}`} </h1>
-                <p>
+                <div>
                     {
                         props.user.isAdmin
                         ? adminPage(props.user)
                         : memberPage(props.user)
                     }
-                </p>
+                </div>
                 <p>Welcome to birds!</p>
                 <p>The content is currently under construction. Check back in a few days to get started!</p>
             </div>
