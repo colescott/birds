@@ -255,7 +255,9 @@ describe("LOGOUT SAGA", () => {
 describe("REGISTER SAGA", () => {
     const user = {
         email: "test",
-        pass: "pass"
+        password: "pass",
+        firstname: "James",
+        lastname: "Bond"
     };
     it("should call the api register", () => {
         const saga = register(user);

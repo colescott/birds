@@ -24,6 +24,9 @@ const auth = {
 export const handleNetworkError = (e) => {
     try {
         const res = JSON.parse(e.response);
+        if (typeof res.error.message.message === "string") {
+            res.error.message = res.error.message.message;
+        }
         return res;
     } catch (parseError) {
         return {
