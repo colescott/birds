@@ -16,7 +16,7 @@ const createTeam = (name, teamnumber, adminUser, cb) => {
     });
     team.save((err) => {
         if (err)
-            return cb(err);
+            return cb(err.message);
         Team.addUser(teamnumber, adminUser, true, (err) => {
             if (err)
                 return cb(err);

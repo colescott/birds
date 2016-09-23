@@ -27,13 +27,13 @@ const getLessonData = (lesson, cb) => {
 const getLesson = (req, res) => {
     Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
         if (err)
-            return util.error(res, err);
+            return util.error(res, err.message);
         if (!lesson)
             return util.error(res, "That lesson does not exist!", 400);
 
         getLessonData({ id: lesson.id }, (err, data) => {
             if (err)
-                return util.error(res, err);
+                return util.error(res, err.message);
             else
                 return util.data(res, util.sterilizeLessonWithData(lesson, data));
         });
@@ -48,7 +48,7 @@ const createLesson = (req, res) => {
 
     Lesson.findOne({ title: req.body.title, branch: req.body.branch }, (err, data) => {
         if (err)
-            return util.error(res, err);
+            return util.error(res, err.message);
         if (data)
             return util.error(res, "That lesson already exists!", 400);
 
@@ -59,13 +59,13 @@ const createLesson = (req, res) => {
         });
         lesson.save((err, lessonModel) => {
             if (err)
-                return util.error(res, err);
+                return util.error(res, err.message);
 
             let lesson = util.sterilizeLesson(lessonModel);
 
             uploadLessonData({ id: lesson.id }, "This is a default lesson", (err) => {
                 if (err)
-                    return util.error(res, err);
+                    return util.error(res, err.message);
                 else
                     return util.data(res, lesson);
             });
@@ -78,13 +78,13 @@ const setLessonData = (req, res) => {
         return util.error(res, "Bad data", 400);
     Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
         if (err)
-            return util.error(res, err);
+            return util.error(res, err.message);
         if (!lesson)
             return util.error(res, "That lesson does not exist!", 400);
 
         uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
             if (err)
-                return util.error(res, err);
+                return util.error(res, err.message);
             else
                 return util.data(res, util.sterilizeLesson(lesson));
         });
@@ -94,7 +94,7 @@ const setLessonData = (req, res) => {
 const getLessons = (req, res) => {
     Lesson.find({}, (err, lessons) => {
         if (err)
-            return util.error(res, err);
+            return util.error(res, err.message);
         if (!lessons)
             return util.error(res, "There are no lessons in the database.");
         return util.data(res, lessons.map((lesson) => util.sterilizeLesson(lesson)));
