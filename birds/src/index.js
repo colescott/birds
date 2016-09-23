@@ -13,13 +13,16 @@ injectTapEventPlugin();
 
 // Setup Redux
 import configureStore from "./store/configureStore";
+import { saveState, loadState } from "./store/localState";
+const state = loadState();
 let basicHistory;
 if (process.env.NODE_ENV === "development") {
     basicHistory = hashHistory;
 } else {
     basicHistory = browserHistory;
 }
-const store = configureStore(basicHistory);
+const store = configureStore(basicHistory, state);
+store.subscribe(() => saveState(store.getState()));
 const history = syncHistoryWithStore(basicHistory, store);
 
 // Create and append a div

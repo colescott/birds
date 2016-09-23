@@ -5,21 +5,39 @@ import { routerReducer, routerMiddleware } from "react-router-redux";
 import reducers from "./reducers";
 import rootSaga from "./saga/index.js";
 
-export default function configureStore(basicHistory) {
-  const sagaMiddleware = createSagaMiddleware();
-  const store = createStore(
-    combineReducers({
-        ...reducers,
-        routing: routerReducer
-    }),
-    compose(
-      applyMiddleware(...[
-            routerMiddleware(basicHistory),
-            sagaMiddleware,
-      ]),
-      window.devToolsExtension ? window.devToolsExtension() : f => f
-    )
-  );
+export const reducer = combineReducers({
+    ...reducers,
+    routing: routerReducer
+});
+
+
+export default function configureStore(basicHistory, state) {
+    const sagaMiddleware = createSagaMiddleware();
+    var store;
+    if (state) {
+          store = createStore(
+            reducer,
+            state,
+            compose(
+              applyMiddleware(...[
+                    routerMiddleware(basicHistory),
+                    sagaMiddleware,
+              ]),
+              window.devToolsExtension ? window.devToolsExtension() : f => f
+            )
+          );
+  } else {
+      store = createStore(
+        reducer,
+        compose(
+          applyMiddleware(...[
+                routerMiddleware(basicHistory),
+                sagaMiddleware,
+          ]),
+          window.devToolsExtension ? window.devToolsExtension() : f => f
+        )
+      );
+  }
   sagaMiddleware.run(rootSaga);
   return store;
 }
