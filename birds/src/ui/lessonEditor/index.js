@@ -45,7 +45,7 @@ const LessonEditor = (props) => {
                             floatingLabelText="Markdown"
                             type="text"
                             onChange={props.updatePreview()}
-                            value={props.getEditor}
+                            value={props.getEditor.editor}
                             multiLine={true}
                             rows={10}
                             rowsMax={15}
@@ -58,20 +58,13 @@ const LessonEditor = (props) => {
                         title="Preview"
                     />
                     <CardText>
-                        <ReactMarkdown source={props.getEditor || ""} />
+                        <ReactMarkdown source={props.getEditor.editor || "# Dank Memez 2k16"} />
                     </CardText>
                 </Card>
             </div>
         </Card>
     );
 };
-
-// getEditor: () => {
-//     let editor = s.getLessonEditor(state);
-//     if (editor)
-//         return editor.editor;
-//     return "";
-// }
 
 const mapStateToProps = (state) => ({
     getEditor: s.getLessonEditor(state)
