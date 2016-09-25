@@ -76,7 +76,7 @@ function* auth() {
 }
 
 export function* login(email, password) {
-    const res = yield call(api.auth.login, trim(email), password);
+    const res = yield call(api.auth.login, trim(email || ""), password);
     if (res.error) throw new Error(res.error.message);
     return res.data;
 }
@@ -88,9 +88,9 @@ export function* logout() {
 export function* register(user) {
     const res = yield call(api.auth.register, {
         ...user,
-        email: trim(user.email),
-        firstname: trim(user.firstname),
-        lastname: trim(user.lastname)
+        email: trim(user.email || ""),
+        firstname: trim(user.firstname || ""),
+        lastname: trim(user.lastname || "")
     });
     if (res.error) throw new Error(res.error.message);
     return res.data.user;
