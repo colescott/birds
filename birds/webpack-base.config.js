@@ -10,7 +10,9 @@ const config = {
         filename: "bundle.js"
     },
     plugins: [
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title: "Birds"
+        }),
         new webpack.DefinePlugin({
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),
