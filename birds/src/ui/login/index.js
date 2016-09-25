@@ -54,25 +54,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
-
-/*
-<CardText>
-    <form onSubmit={e => {
-        e.preventDefault();
-        props.login(props.form);
-    }}>
-        <TextField
-            floatingLabelText="Email"
-            onChange={props.updateKey("email")}
-            value={props.form.email || ""}
-        /><br />
-        <TextField
-            floatingLabelText="Password"
-            type="password"
-            onChange={props.updateKey("password")}
-            value={props.form.password || ""}
-        /><br />
-        <FlatButton type="submit" label="Login" onClick={props.login(props.form)}/>
-    </form>
-</CardText>
-*/
