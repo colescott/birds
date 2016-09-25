@@ -9,6 +9,7 @@ import Home from "./home";
 import Login from "./login";
 import Register from "./register";
 import SelectTeam from "./selectTeam";
+import LessonEditor from "./lessonEditor";
 
 const Root = ({ store, history }) => (
     <MuiThemeProvider>
@@ -18,6 +19,7 @@ const Root = ({ store, history }) => (
               <Route path="/register" component={Register} />
               <Route path="/login" component={Login} />
               <Route path="/selectTeam" component={SelectTeam} />
+              <Route path="/lessonEditor" component={LessonEditor} />
               <IndexRoute component={Home} />
             </Route>
           </Router>

@@ -22,6 +22,9 @@ export const resetLoginForm = createAction(c.LOGIN_FORM_RESET);
 export const setTeamForm = createAction(c.TEAM_FORM_SET);
 export const resetTeamForm = createAction(c.TEAM_FORM_RESET);
 
+export const setLessonEditor = createAction(c.LESSON_EDITOR_SET);
+export const resetLessonEditor = createAction(c.LESSON_EDITOR_RESET);
+
 export const setUser = createAction(c.USER_SET);
 export const resetUser = createAction(c.USER_RESET);
 

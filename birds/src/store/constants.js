@@ -23,5 +23,8 @@ export const LOGIN_FORM_RESET = "LOGIN_FORM_RESET";
 export const TEAM_FORM_SET = "TEAM_FORM_SET";
 export const TEAM_FORM_RESET = "TEAM_FORM_RESET";
 
+export const LESSON_EDITOR_SET = "LESSON_EDITOR_SET";
+export const LESSON_EDITOR_RESET = "LESSON_EDITOR_RESET";
+
 export const USER_SET = "USER_SET";
 export const USER_RESET = "USER_RESET";
