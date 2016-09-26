@@ -5,8 +5,8 @@ import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
 import { Card, CardHeader, CardText } from "material-ui/Card";
-import FlatButton from "material-ui/FlatButton";
-import TextField from "material-ui/TextField";
+
+import Form from "../components/form";
 
 const Register = (props) => {
     return (
@@ -22,33 +22,26 @@ const Register = (props) => {
                     title="Register"
                 />
                 <CardText>
-                    <form onSubmit={e => {
-                        e.preventDefault();
-                        props.register();
-                    }}>
-                        <TextField
-                            floatingLabelText="Email"
-                            onChange={props.updateKey("email")}
-                            value={props.form.email || ""}
-                        /><br />
-                        <TextField
-                            floatingLabelText="Password"
-                            type="password"
-                            onChange={props.updateKey("password")}
-                            value={props.form.password || ""}
-                        /><br />
-                        <TextField
-                            floatingLabelText="First Name"
-                            onChange={props.updateKey("firstname")}
-                            value={props.form.firstname || ""}
-                        /><br />
-                        <TextField
-                            floatingLabelText="Last Name"
-                            onChange={props.updateKey("lastname")}
-                            value={props.form.lastname || ""}
-                        /><br />
-                        <FlatButton type="submit" label="Register" onClick={props.register()}/>
-                    </form>
+                    <Form
+                        handleUpdate={props.handleUpdate()}
+                        handleSubmit={props.register()}
+                        items={[
+                            "email",
+                            "password",
+                            "firstname",
+                            "lastname"
+                        ]}
+                        labels={{
+                            email: "Email ",
+                            password: "Password",
+                            firstname: "First Name",
+                            lastname: "Last Name"
+                        }}
+                        types={{
+                            password: "password"
+                        }}
+                        values={props.form}
+                    />
                 </CardText>
             </Card>
         </div>
@@ -60,7 +53,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateKey: (key) => (e, value) => dispatch(a.setRegisterForm({ [ key ]: value })),
+  handleUpdate: () => (obj) => dispatch(a.setRegisterForm({ ...obj })),
   register: () => () => dispatch(a.registerAuth())
 });
 
