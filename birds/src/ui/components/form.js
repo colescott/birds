@@ -13,7 +13,6 @@ const Form = (props) => {
         ? props.validation[ item ](props.values[ item ])
         : basicValidation(props.values[ item ])
     );
-    console.warn(errors);
     const valid = !errors.reduce((a, b) => a || b);
     return (
         <form onSubmit={e => {

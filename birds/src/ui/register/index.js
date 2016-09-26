@@ -8,7 +8,8 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 
 import Form from "../components/form";
 
-const isValidEmail = (text) =>
+const isValidEmail = (text =
+     "") =>
     text.includes("@")
     ? null
     : "Email must include @";
