@@ -10,7 +10,7 @@ const basicValidation = (text) =>
 const Form = (props) => {
     const errors = props.items.map(item =>
         props.validation[ item ]
-        ? props.validation[ item ](props.values[ item ])
+        ? props.validation[ item ](props.values[ item ], props.values || {})
         : basicValidation(props.values[ item ])
     );
     const valid = !errors.reduce((a, b) => a || b);

@@ -8,11 +8,15 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 
 import Form from "../components/form";
 
-const isValidEmail = (text =
-     "") =>
+const isValidEmail = (text = "") =>
     text.includes("@")
     ? null
     : "Email must include @";
+
+const passWordsMustMatch = (text, form) =>
+    form.password == form.password2 && form.password != null
+    ? null
+    : "Passwords must match"
 
 const Register = (props) => {
     return (
@@ -33,21 +37,25 @@ const Register = (props) => {
                         handleSubmit={props.register()}
                         items={[
                             "email",
-                            "password",
                             "firstname",
-                            "lastname"
+                            "lastname",
+                            "password",
+                            "password2"
                         ]}
                         labels={{
                             email: "Email ",
                             password: "Password",
+                            password2: "Password Again",
                             firstname: "First Name",
-                            lastname: "Last Name"
+                            lastname: "Last Name",
                         }}
                         types={{
-                            password: "password"
+                            password: "password",
+                            password2: "password"
                         }}
                         validation={{
-                            email: isValidEmail
+                            email: isValidEmail,
+                            password2: passWordsMustMatch
                         }}
                         values={props.form}
                     />
