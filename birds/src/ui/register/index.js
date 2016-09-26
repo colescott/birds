@@ -8,6 +8,11 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 
 import Form from "../components/form";
 
+const isValidEmail = (text) =>
+    text.includes("@")
+    ? null
+    : "Email must include @";
+
 const Register = (props) => {
     return (
         <div
@@ -39,6 +44,9 @@ const Register = (props) => {
                         }}
                         types={{
                             password: "password"
+                        }}
+                        validation={{
+                            email: isValidEmail
                         }}
                         values={props.form}
                     />

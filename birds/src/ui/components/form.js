@@ -2,31 +2,47 @@ import React, { PropTypes } from "react";
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 
-const Form = (props) =>
-    <form onSubmit={e => {
-        e.preventDefault();
-        props.handleSubmit();
-    }}
-    >
-        {
-            props.items
-                .map(item =>
-                    <FormField
-                        handleUpdate={props.handleUpdate}
-                        type={props.types[ item ]}
-                        label={props.labels[ item ]}
-                        item={item}
-                        value={props.values[ item ]}
-                    />
-                )
-                .map((item, i) =>
-                    <div key={i}>
-                        { item }
-                    </div>
-                )
-        }
-        <Submit handleSubmit={props.handleSubmit} label={props.submitLabel}/>
-    </form>;
+const basicValidation = (text) =>
+    text == ""  || text == null
+    ? "You must fill in this field."
+    : null;
+
+const Form = (props) => {
+    const errors = props.items.map(item =>
+        props.validation[ item ]
+        ? props.validation[ item ](props.values[ item ])
+        : basicValidation(props.values[ item ])
+    );
+    console.warn(errors);
+    const valid = !errors.reduce((a, b) => a || b);
+    return (
+        <form onSubmit={e => {
+            e.preventDefault();
+            props.handleSubmit();
+        }}
+        >
+            {
+                props.items
+                    .map((item, i) =>
+                        <FormField
+                            handleUpdate={props.handleUpdate}
+                            type={props.types[ item ]}
+                            label={props.labels[ item ]}
+                            item={item}
+                            value={props.values[ item ]}
+                            error={errors[ i ]}
+                        />
+                    )
+                    .map((item, i) =>
+                        <div key={i}>
+                            { item }
+                        </div>
+                    )
+            }
+            <Submit handleSubmit={props.handleSubmit} disabled={!valid} label={props.submitLabel}/>
+        </form>
+    );
+};
 
 Form.propTypes = {
     handleUpdate: PropTypes.func,
@@ -35,13 +51,18 @@ Form.propTypes = {
     labels: PropTypes.object.isRequired,
     submitLabel: PropTypes.string,
     values: PropTypes.object.isRequired,
-    items: PropTypes.array.isRequired
+    items: PropTypes.array.isRequired,
+    validation: PropTypes.object
 };
 
-const Submit = ({ handleSubmit, label = "Submit" }) =>
-    <FlatButton type="submit" label={label} onClick={handleSubmit}/>;
+Form.defaultProps = {
+    validation: {}
+};
 
-const FormField = ({ handleUpdate, type, label, item, value }) =>
+const Submit = ({ handleSubmit, label = "Submit", disabled }) =>
+    <FlatButton disabled={disabled} type="submit" label={label} onClick={handleSubmit}/>;
+
+const FormField = ({ handleUpdate, type, label, item, value, error }) =>
     <TextField
         floatingLabelText={label}
         type={type}
@@ -49,6 +70,7 @@ const FormField = ({ handleUpdate, type, label, item, value }) =>
             [ item ]: v
         })}
         value={value || ""}
+        errorText={error}
     />;
 
 export default Form;
