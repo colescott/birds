@@ -12,8 +12,11 @@ const basicValidation = (text) => {
 };
 
 const Form = (props) => {
-    const errors = props.items.map(item =>
-        checker(
+    const errors =
+    props.items.map(item =>
+        item === null
+        ? null
+        : checker(
             props.values,
             basicValidation,
             props.validation[ item ] || (() => null),
