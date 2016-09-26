@@ -2,16 +2,22 @@ import React, { PropTypes } from "react";
 import TextField from "material-ui/TextField";
 import FlatButton from "material-ui/FlatButton";
 
-const basicValidation = (text) =>
-    text == ""  || text == null
+import { checker } from "../../util.js";
+
+const basicValidation = (text) => {
+    console.log(text);
+    return text == ""
     ? "You must fill in this field."
     : null;
+};
 
 const Form = (props) => {
     const errors = props.items.map(item =>
-        props.validation[ item ]
-        ? props.validation[ item ](props.values[ item ], props.values || {})
-        : basicValidation(props.values[ item ])
+        checker(
+            props.values,
+            basicValidation,
+            props.validation[ item ] || (() => null),
+        )(props.values[ item ])
     );
     const valid = !errors.reduce((a, b) => a || b);
     return (
