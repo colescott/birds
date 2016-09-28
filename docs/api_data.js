@@ -164,6 +164,13 @@ define({ "api": [
             "optional": false,
             "field": "branch",
             "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "data",
+            "description": "<p>Lesson data</p>"
           }
         ]
       }
@@ -223,8 +230,8 @@ define({ "api": [
   {
     "type": "get",
     "url": "/lessons",
-    "title": "Get lesson by id",
-    "name": "Get_lesson_by_id",
+    "title": "Get all lessons",
+    "name": "Get_all_lessons",
     "group": "Lessons",
     "success": {
       "fields": {
@@ -453,7 +460,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Object",
-            "optional": true,
+            "optional": false,
             "field": "user",
             "description": "<p>User to add as admin</p>"
           }
@@ -655,6 +662,13 @@ define({ "api": [
             "optional": false,
             "field": "data.team.teamnumber",
             "description": "<p>Team number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "data.team.password",
+            "description": "<p>Team password (Only if user is admin)</p>"
           }
         ]
       },
@@ -746,7 +760,7 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "Object",
-            "optional": true,
+            "optional": false,
             "field": "user",
             "description": "<p>User to remove as admin</p>"
           }
@@ -1025,6 +1039,26 @@ define({ "api": [
         ]
       }
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "teamnumber",
+            "description": "<p>Number of team</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "password",
+            "description": "<p>Password for team</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1188,26 +1222,6 @@ define({ "api": [
         ]
       }
     },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "teamnumber",
-            "description": "<p>Number of team</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>Password for team</p>"
-          }
-        ]
-      }
-    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1264,14 +1278,14 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "id",
             "description": "<p>Id for lesson</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "state",
             "description": "<p>State for lesson</p>"
           }

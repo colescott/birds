@@ -9,6 +9,8 @@ import * as c from "../constants.js";
 import * as s from "../selectors.js";
 import * as a from "../actions.js";
 
+import clonedeep from "lodash/clonedeep";
+
 describe("AUTH SAGA", () => {
     it("should wait for LOGIN, LOGOUT, or REGISTER actions", () => {
         const saga = auth();
@@ -34,17 +36,7 @@ describe("AUTH SAGA", () => {
         }
     });
     describe("LOGIN", () => {
-        it("should call the login saga", () => {
-            const saga = auth();
-            const userData = { email: "test", password: "pass" };
-            saga.next();
-            const { value: out } = saga.next(a.loginAuth(userData));
-            assert.deepEqual(
-                out,
-                call(authWrapper, login, userData.email, userData.password)
-            );
-        });
-        it("should update the user data", () => {
+        describe("Has joined team", () => {
             const saga = auth();
             const loginData = {
                 token: "test",
@@ -55,61 +47,85 @@ describe("AUTH SAGA", () => {
                 }
             };
             saga.next();
-            saga.next(a.loginAuth(loginData.user));
-            const { value: out } = saga.next(loginData);
-            assert.deepEqual(
-                out,
-                put(a.setUser({
-                    token: loginData.token,
-                    ...loginData.user
-                }))
-            );
+            it("should call the login saga", () => {
+                const { value: out } = saga.next(a.loginAuth(loginData.user));
+                assert.deepEqual(
+                    out,
+                    call(authWrapper, login, loginData.user.email, loginData.user.password)
+                );
+            });
+            it("should update the user data", () => {
+                const { value: out } = saga.next(loginData);
+                assert.deepEqual(
+                    out,
+                    put(a.setUser({
+                        token: loginData.token,
+                        ...loginData.user
+                    }))
+                );
+            });
+            it("should call auth login reset", () => {
+                const { value: out } = saga.next();
+                assert.deepEqual(
+                    out,
+                    put(a.resetLoginForm())
+                );
+            });
+            it("should redirect to the home page if teamnumber is set", () => {
+                const { value: out } = saga.next();
+                assert.deepEqual(
+                    out,
+                    put(push("/"))
+                );
+            });
         });
-        it("should redirect to the home page if teamnumber is set", () => {
+        describe("Has not joined team", () => {
             const saga = auth();
             const loginData = {
                 token: "test",
                 user: {
                     email: "test",
                     password: "pass",
-                    teamnumber: 1337
                 }
             };
             saga.next();
-            saga.next(a.loginAuth(loginData.user));
-            saga.next(loginData);
-            saga.next();
-            const { value: out } = saga.next();
-            assert.deepEqual(
-                out,
-                put(push("/"))
-            );
-        });
-        it("should redirect to the select team if teamnumber is not", () => {
-            const saga = auth();
-            const loginData = {
-                token: "test",
-                user: {
-                    email: "test",
-                    password: "pass",
-                    teamnumber: false
-                }
-            };
-            saga.next();
-            saga.next(a.loginAuth(loginData.user));
-            saga.next(loginData);
-            saga.next();
-            const { value: out } = saga.next();
-            assert.deepEqual(
-                out,
-                put(push("/selectTeam"))
-            );
+            it("should call the login saga", () => {
+                const { value: out } = saga.next(a.loginAuth(loginData.user));
+                assert.deepEqual(
+                    out,
+                    call(authWrapper, login, loginData.user.email, loginData.user.password)
+                );
+            });
+            it("should update the user data", () => {
+                const { value: out } = saga.next(loginData);
+                assert.deepEqual(
+                    out,
+                    put(a.setUser({
+                        token: loginData.token,
+                        ...loginData.user
+                    }))
+                );
+            });
+            it("should call auth login reset", () => {
+                const { value: out } = saga.next();
+                assert.deepEqual(
+                    out,
+                    put(a.resetLoginForm())
+                );
+            });
+            it("should redirect to the home page if teamnumber is not set", () => {
+                const { value: out } = saga.next();
+                assert.deepEqual(
+                    out,
+                    put(push("/selectTeam"))
+                );
+            });
         });
     });
     describe("LOGOUT", () => {
+        const saga = auth();
+        saga.next();
         it("should clear the user reducer", () => {
-            const saga = auth();
-            saga.next();
             const { value: out } = saga.next(a.logoutAuth());
             assert.deepEqual(
                 out,
@@ -117,9 +133,6 @@ describe("AUTH SAGA", () => {
             );
         });
         it("should redirect back to the home page", () => {
-            const saga = auth();
-            saga.next();
-            saga.next(a.logoutAuth());
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -128,9 +141,11 @@ describe("AUTH SAGA", () => {
         });
     });
     describe("REGISTER", () => {
+        const saga = auth();
+        saga.next();
+        const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
+        const token = "meh";
         it("should select the register form", () => {
-            const saga = auth();
-            saga.next();
             const { value: out } = saga.next(a.registerAuth());
             assert.deepEqual(
                 out,
@@ -138,23 +153,20 @@ describe("AUTH SAGA", () => {
             );
         });
         it("should register", () => {
-            const saga = auth();
-            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
-            saga.next();
-            saga.next(a.registerAuth());
             const { value: out } = saga.next(userData);
             assert.deepEqual(
                 out,
                 call(authWrapper, register, userData)
             );
         });
+        it("should reset the register form", () => {
+            const { value: out } = saga.next();
+            assert.deepEqual(
+                out,
+                put(a.resetRegisterForm())
+            );
+        });
         it("should login", () => {
-            const saga = auth();
-            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
-            saga.next();
-            saga.next(a.registerAuth());
-            saga.next(userData);
-            saga.next();
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
@@ -162,14 +174,6 @@ describe("AUTH SAGA", () => {
             );
         });
         it("it should update the user data", () => {
-            const saga = auth();
-            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
-            const token = "meh";
-            saga.next();
-            saga.next(a.registerAuth());
-            saga.next(userData);
-            saga.next();
-            saga.next();
             const { value: out } = saga.next({ user: userData, token: "meh" });
             assert.deepEqual(
                 out,
@@ -180,14 +184,6 @@ describe("AUTH SAGA", () => {
             );
         });
         it("it should go to the select team page", () => {
-            const saga = auth();
-            const userData = { email: "email", pass: "pass", firstname: "fname", lastname: "lname" };
-            saga.next();
-            saga.next(a.registerAuth());
-            saga.next(userData);
-            saga.next();
-            saga.next();
-            saga.next({ user: userData, token: "meh" });
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,

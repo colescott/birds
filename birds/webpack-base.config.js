@@ -7,10 +7,13 @@ const config = {
     entry: ["babel-polyfill", path.join(__dirname, "./src/index.js")],
     output: {
         path: path.join(__dirname, "./static"),
-        filename: "bundle.js"
+        filename: "bundle.js",
+        publicPath: "/"
     },
     plugins: [
-        new HtmlWebpackPlugin(),
+        new HtmlWebpackPlugin({
+            title: "Birds"
+        }),
         new webpack.DefinePlugin({
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),

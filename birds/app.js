@@ -13,7 +13,21 @@ mongoose.connect(dbConfig.url);
 
 const api = require("./api");
 
+const forceSSL = function(req, res, next) {
+    // This code checks the protocol from heroku proxy
+    if (req.headers[ "x-forwarded-proto" ] !== "https") {
+        // Redirect with a 301
+        return res.redirect(301, ["https://", req.get("Host"), req.url].join(""));
+    }
+    return next();
+ };
+
+if (process.env.NODE_ENV == "PROD") {
+    app.use(forceSSL);
+}
+
 app.use(cors());
+
 if (process.env.NODE_ENV !== "TEST") {
     app.use(morgan("dev"));
 }
@@ -26,9 +40,7 @@ app.get("/ping", (req, res) => {
 
 app.use("/api", api);
 
-// This should be the last app.get() in this file. Elias learned this the hard way
-app.get("*", (req, res) => {
-     res.status(404).send("Error 404");
-});
+// Returns main page on all others... used when calling "/login" or others
+app.use("*", express.static(path.join(__dirname, "static")));
 
 module.exports = app;

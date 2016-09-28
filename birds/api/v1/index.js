@@ -239,8 +239,8 @@ router.put("/users/:id", authenticate, users.updateUserById);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {String} [id] Id for lesson
- * @apiParam {String} [state] State for lesson
+ * @apiParam {String} id Id for lesson
+ * @apiParam {String} state State for lesson
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -261,6 +261,9 @@ router.put("/users/:id", authenticate, users.updateUserById);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
+ * @apiParam {String} [teamnumber] Number of team
+ * @apiParam {String} [password] Password for team
+ *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
  *
@@ -279,9 +282,6 @@ router.put("/users/:id", authenticate, users.updateUserById);
  * @apiGroup Users
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {String} [teamnumber] Number of team
- * @apiParam {String} [password] Password for team
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -362,6 +362,7 @@ router.get("/teams", teams.getTeams);
  * @apiSuccess {Object} data.team Array of teams
  * @apiSuccess {String} data.team.name Team name
  * @apiSuccess {Number} data.team.teamnumber Team number
+ * @apiSuccess {String} [data.team.password] Team password (Only if user is admin)
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -375,7 +376,7 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.get("/teams/:num", teams.getTeam);
+router.get("/teams/:num", authenticate, teams.getTeam);
 
 /**
  * @api {put} /teams/:id/delete Delete team
@@ -403,7 +404,7 @@ router.get("/teams/:num", teams.getTeam);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {Object} [user] User to add as admin
+ * @apiParam {Object} user User to add as admin
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -424,7 +425,7 @@ router.get("/teams/:num", teams.getTeam);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {Object} [user] User to remove as admin
+ * @apiParam {Object} user User to remove as admin
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -480,7 +481,7 @@ router.post("/auth/login", function(req, res, next) {
     }, function(err, user) {
         if (err) return util.error(res, err);
         if (!user) {
-            return util.unauthorized(res);
+            return util.error(res, "Incorrect username or password.", 401);
         } else {
             const response = {
                 token: jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 }),
@@ -520,6 +521,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  *
  * @apiParam {String} title Lesson title
  * @apiParam {String} branch Lesson branch
+ * @apiParam {String} [data] Lesson data
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id
@@ -597,8 +599,8 @@ router.get("/lessons/:id", lessons.getLesson);
 router.put("/lessons/:id", lessons.setLessonData);
 
 /**
- * @api {get} /lessons Get lesson by id
- * @apiName Get lesson by id
+ * @api {get} /lessons Get all lessons
+ * @apiName Get all lessons
  * @apiGroup Lessons
  *
  * @apiSuccess {Object} data Data object containing info
