@@ -164,6 +164,13 @@
             "optional": false,
             "field": "branch",
             "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "data",
+            "description": "<p>Lesson data</p>"
           }
         ]
       }
@@ -453,7 +460,7 @@
           {
             "group": "Parameter",
             "type": "Object",
-            "optional": true,
+            "optional": false,
             "field": "user",
             "description": "<p>User to add as admin</p>"
           }
@@ -655,6 +662,13 @@
             "optional": false,
             "field": "data.team.teamnumber",
             "description": "<p>Team number</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": true,
+            "field": "data.team.password",
+            "description": "<p>Team password (Only if user is admin)</p>"
           }
         ]
       },
@@ -746,7 +760,7 @@
           {
             "group": "Parameter",
             "type": "Object",
-            "optional": true,
+            "optional": false,
             "field": "user",
             "description": "<p>User to remove as admin</p>"
           }
@@ -1025,6 +1039,26 @@
         ]
       }
     },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "teamnumber",
+            "description": "<p>Number of team</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "password",
+            "description": "<p>Password for team</p>"
+          }
+        ]
+      }
+    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1188,26 +1222,6 @@
         ]
       }
     },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "teamnumber",
-            "description": "<p>Number of team</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>Password for team</p>"
-          }
-        ]
-      }
-    },
     "success": {
       "fields": {
         "Success 200": [
@@ -1264,14 +1278,14 @@
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "id",
             "description": "<p>Id for lesson</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": true,
+            "optional": false,
             "field": "state",
             "description": "<p>State for lesson</p>"
           }
