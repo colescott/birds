@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
+const forceSSL = require("express-force-ssl");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
@@ -13,7 +14,12 @@ mongoose.connect(dbConfig.url);
 
 const api = require("./api");
 
+if (process.env.NODE_ENV !== "DEV") {
+    app.use(forceSSL);
+}
+
 app.use(cors());
+
 if (process.env.NODE_ENV !== "TEST") {
     app.use(morgan("dev"));
 }

@@ -5,8 +5,8 @@
   "main": "app.js",
   "readme": "README.md",
   "scripts": {
-    "start": "node start.js",
-    "start:dev": "JWT_SECRET='correcthorsebatterystaple' MONGODB_URI='mongodb://localhost/passport' nodemon start.js",
+    "start": "NODE_ENV=PROD node start.js",
+    "start:dev": "NODE_ENV=DEV JWT_SECRET='correcthorsebatterystaple' MONGODB_URI='mongodb://localhost/passport' nodemon start.js",
     "serve": "URL_PREFIX='http://localhost:8000' webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
@@ -49,6 +49,7 @@
     "eslint-plugin-promise": "2.0.1",
     "eslint-plugin-standard": "2.0.1",
     "express": "4.14.0",
+    "express-force-ssl": "0.3.2",
     "express-jwt": "5.0.0",
     "express-session": "1.14.1",
     "html-webpack-plugin": "2.22.0",
