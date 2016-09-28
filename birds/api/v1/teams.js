@@ -32,6 +32,9 @@ const createTeam = (name, teamnumber, adminUser, cb) => {
 
 const getTeams = (req, res) => {
     Team.find({}, function(err, teams) {
+        if (err)
+            return util.error(res, err);
+            
         const tems = teams.map(team => (util.sterilizeTeam(team)));
         const val = { teams: tems };
         return util.data(res, val);
@@ -40,10 +43,16 @@ const getTeams = (req, res) => {
 
 const getTeam = (req, res) => {
     Team.find({ teamnumber: req.params.num }, function(err, teams) {
+        if (err)
+            return util.error(res, err);
+
+        if (teams.length < 1)
+            return util.error(res, "That team does not exist.", 400);
+
         const team = util.sterilizeTeam(teams[ 0 ]);
         Team.userIsAdmin(req.params.num, req.user, (err, isAdmin) => {
             if (err)
-                util.error(res, err);
+                return util.error(res, err);
             if (isAdmin)
                 team.password = teams[ 0 ].password;
             const val = { team: team };
