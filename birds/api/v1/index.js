@@ -480,7 +480,7 @@ router.post("/auth/login", function(req, res, next) {
     }, function(err, user) {
         if (err) return util.error(res, err);
         if (!user) {
-            return util.unauthorized(res);
+            return util.error(res, "Incorrect username or password.", 401);
         } else {
             const response = {
                 token: jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 }),
