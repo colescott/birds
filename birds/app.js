@@ -14,8 +14,8 @@ mongoose.connect(dbConfig.url);
 const api = require("./api");
 
 const forceSSL = function(req, res, next) {
-    if (301, req.headers[ "x-forwarded-proto" ] !== "https") {
-        return res.redirect(["https://", req.get("Host"), req.url].join(""));
+    if (req.headers[ "x-forwarded-proto" ] !== "https") {
+        return res.redirect(301, ["https://", req.get("Host"), req.url].join(""));
     }
     return next();
  };
