@@ -375,7 +375,7 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.get("/teams/:num", teams.getTeam);
+router.get("/teams/:num", authenticate, teams.getTeam);
 
 /**
  * @api {put} /teams/:id/delete Delete team
