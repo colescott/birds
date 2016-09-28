@@ -597,8 +597,8 @@ router.get("/lessons/:id", lessons.getLesson);
 router.put("/lessons/:id", lessons.setLessonData);
 
 /**
- * @api {get} /lessons Get lesson by id
- * @apiName Get lesson by id
+ * @api {get} /lessons Get all lessons
+ * @apiName Get all lessons
  * @apiGroup Lessons
  *
  * @apiSuccess {Object} data Data object containing info

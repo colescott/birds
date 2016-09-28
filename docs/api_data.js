@@ -223,8 +223,8 @@ define({ "api": [
   {
     "type": "get",
     "url": "/lessons",
-    "title": "Get lesson by id",
-    "name": "Get_lesson_by_id",
+    "title": "Get all lessons",
+    "name": "Get_all_lessons",
     "group": "Lessons",
     "success": {
       "fields": {
