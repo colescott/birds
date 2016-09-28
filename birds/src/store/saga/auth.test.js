@@ -123,9 +123,9 @@ describe("AUTH SAGA", () => {
         });
     });
     describe("LOGOUT", () => {
+        const saga = auth();
+        saga.next();
         it("should clear the user reducer", () => {
-            const saga = auth();
-            saga.next();
             const { value: out } = saga.next(a.logoutAuth());
             assert.deepEqual(
                 out,
@@ -133,9 +133,6 @@ describe("AUTH SAGA", () => {
             );
         });
         it("should redirect back to the home page", () => {
-            const saga = auth();
-            saga.next();
-            saga.next(a.logoutAuth());
             const { value: out } = saga.next();
             assert.deepEqual(
                 out,
