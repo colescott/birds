@@ -27,6 +27,6 @@ app.get("/ping", (req, res) => {
 app.use("/api", api);
 
 // Returns main page on all others... used when calling "/login" or others
-app.get("*", express.static(path.join(__dirname, "static")));
+app.use("*", express.static(path.join(__dirname, "static")));
 
 module.exports = app;
