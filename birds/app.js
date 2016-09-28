@@ -14,7 +14,7 @@ mongoose.connect(dbConfig.url);
 
 const api = require("./api");
 
-if (process.env.NODE_ENV !== "DEV") {
+if (process.env.NODE_ENV !== "DEV" && process.env.NODE_ENV !== "TEST") {
     app.use(forceSSL);
 }
 
