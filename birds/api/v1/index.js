@@ -239,8 +239,8 @@ router.put("/users/:id", authenticate, users.updateUserById);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {String} [id] Id for lesson
- * @apiParam {String} [state] State for lesson
+ * @apiParam {String} id Id for lesson
+ * @apiParam {String} state State for lesson
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -261,6 +261,9 @@ router.put("/users/:id", authenticate, users.updateUserById);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
+ * @apiParam {String} [teamnumber] Number of team
+ * @apiParam {String} [password] Password for team
+ *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
  *
@@ -279,9 +282,6 @@ router.put("/users/:id", authenticate, users.updateUserById);
  * @apiGroup Users
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {String} [teamnumber] Number of team
- * @apiParam {String} [password] Password for team
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -403,7 +403,7 @@ router.get("/teams/:num", teams.getTeam);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {Object} [user] User to add as admin
+ * @apiParam {Object} user User to add as admin
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -424,7 +424,7 @@ router.get("/teams/:num", teams.getTeam);
  *
  * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
  *
- * @apiParam {Object} [user] User to remove as admin
+ * @apiParam {Object} user User to remove as admin
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {Object} data.message Message
@@ -520,6 +520,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  *
  * @apiParam {String} title Lesson title
  * @apiParam {String} branch Lesson branch
+ * @apiParam {String} [data] Lesson data
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id

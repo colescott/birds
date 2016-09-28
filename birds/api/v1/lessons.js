@@ -63,7 +63,7 @@ const createLesson = (req, res) => {
 
             let lesson = util.sterilizeLesson(lessonModel);
 
-            uploadLessonData({ id: lesson.id }, "This is a default lesson", (err) => {
+            uploadLessonData({ id: lesson.id }, req.body.data || "This is a default lesson", (err) => {
                 if (err)
                     return util.error(res, err);
                 else

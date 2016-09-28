@@ -26,9 +26,7 @@ app.get("/ping", (req, res) => {
 
 app.use("/api", api);
 
-// This should be the last app.get() in this file. Elias learned this the hard way
-app.get("*", (req, res) => {
-     res.status(404).send("Error 404");
-});
+// Returns main page on all others... used when calling "/login" or others
+app.use("*", express.static(path.join(__dirname, "static")));
 
 module.exports = app;
