@@ -1,6 +1,12 @@
 export const saveState = (state) => {
     try {
-        const stringifiedState = JSON.stringify(state);
+        const stringifiedState = JSON.stringify({
+            ...state,
+            auth: {
+                ...state.auth,
+                status: {},
+            }
+        });
         localStorage.setItem("state", stringifiedState);
     } catch (e) {
         console.error(e);
