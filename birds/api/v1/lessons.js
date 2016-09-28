@@ -33,7 +33,7 @@ const getLesson = (req, res) => {
 
         getLessonData({ id: lesson.id }, (err, data) => {
             if (err)
-                return util.error(res, err);
+                return util.error(res, "There was a error when loading this lesson. Retry in a bit.");
             else
                 return util.data(res, util.sterilizeLessonWithData(lesson, data));
         });
