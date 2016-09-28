@@ -8,6 +8,8 @@ import { Card, CardHeader, CardText } from "material-ui/Card";
 
 import Form from "../components/form";
 
+import { isValidEmail } from "../../util";
+
 const Login = (props) => {
     return (
         <div
@@ -36,6 +38,9 @@ const Login = (props) => {
                             }}
                             types={{
                                 password: "password"
+                            }}
+                            validation={{
+                                email: isValidEmail
                             }}
                         />
                     </CardText>
