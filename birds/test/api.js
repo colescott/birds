@@ -28,13 +28,6 @@ describe("Base Server", () => {
             .expect(200)
             .expect("Pong!", done);
     });
-    it("should return 404 on random path", (done) => {
-        request(app)
-            .get("/kafbsjkfbjsfkdjsflhsdfk")
-            .set("Accept", "text")
-            .expect("Content-Type", "text/html; charset=utf-8")
-            .expect(404, done);
-    });
 });
 
 describe("APIv1", () => {
