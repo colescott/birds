@@ -362,6 +362,7 @@ router.get("/teams", teams.getTeams);
  * @apiSuccess {Object} data.team Array of teams
  * @apiSuccess {String} data.team.name Team name
  * @apiSuccess {Number} data.team.teamnumber Team number
+ * @apiSuccess {String} [data.team.password] Team password (Only if user is admin)
  *
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
@@ -375,7 +376,7 @@ router.get("/teams", teams.getTeams);
  *     }
  *
  */
-router.get("/teams/:num", teams.getTeam);
+router.get("/teams/:num", authenticate, teams.getTeam);
 
 /**
  * @api {put} /teams/:id/delete Delete team
