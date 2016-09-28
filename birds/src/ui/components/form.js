@@ -5,7 +5,6 @@ import FlatButton from "material-ui/FlatButton";
 import { checker } from "../../util.js";
 
 const basicValidation = (text) => {
-    console.log(text);
     return text == ""
     ? "You must fill in this field."
     : null;
