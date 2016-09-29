@@ -28,6 +28,8 @@ export const resetLessonEditor = createAction(c.LESSON_EDITOR_RESET);
 export const setUser = createAction(c.USER_SET);
 export const resetUser = createAction(c.USER_RESET);
 
+export const createLesson = createAction(c.LESSON_CREATE);
+
 // Team Saga Controllers
 export const createTeam = createAction(c.TEAM_CREATE, (name, number) => ({
     name,

@@ -28,3 +28,5 @@ export const LESSON_EDITOR_RESET = "LESSON_EDITOR_RESET";
 
 export const USER_SET = "USER_SET";
 export const USER_RESET = "USER_RESET";
+
+export const LESSON_CREATE = "LESSON_CREATE";
