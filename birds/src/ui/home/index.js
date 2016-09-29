@@ -9,7 +9,7 @@ const adminPage = (user) => {
             <p> { `You are an admin of team ${user.teamnumber}`} </p>
             {
                 user.teamPass
-                ? <p> { `Your teams passsord is ${user.teamPass}`} </p>
+                ? <p> { `Your teams passsword is ${user.teamPass}`} </p>
                 : null
             }
         </div>
