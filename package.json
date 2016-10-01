@@ -56,7 +56,7 @@
     "jsonwebtoken": "7.1.9",
     "lodash": "4.16.1",
     "material-ui": "0.15.4",
-    "moment": "2.15.0",
+    "moment": "2.15.1",
     "mongoose": "4.6.2",
     "morgan": "1.7.0",
     "node-sass": "3.10.1",
