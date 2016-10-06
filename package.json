@@ -105,7 +105,7 @@
     "on-build-webpack": "0.1.0",
     "randomstring": "1.1.5",
     "supertest": "2.0.0",
-    "webpack-dev-server": "1.16.1",
+    "webpack-dev-server": "1.16.2",
     "webpack-hot-middleware": "2.12.2"
   },
   "engines": {
