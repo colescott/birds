@@ -57,7 +57,7 @@
     "lodash": "4.16.4",
     "material-ui": "0.16.0",
     "moment": "2.15.1",
-    "mongoose": "4.6.2",
+    "mongoose": "4.6.3",
     "morgan": "1.7.0",
     "node-sass": "3.10.1",
     "passport": "0.3.2",
