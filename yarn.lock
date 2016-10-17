@@ -510,6 +510,10 @@ babel-plugin-syntax-async-generators@^6.5.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-async-generators/-/babel-plugin-syntax-async-generators-6.13.0.tgz#6bc963ebb16eccbae6b92b596eb7f35c342a8b9a"
 
+babel-plugin-syntax-class-constructor-call@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-class-constructor-call/-/babel-plugin-syntax-class-constructor-call-6.13.0.tgz#96fb2e9f177dca22824065de4392f2fe3486b765"
+
 babel-plugin-syntax-class-properties@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-class-properties/-/babel-plugin-syntax-class-properties-6.13.0.tgz#d7eb23b79a317f8543962c505b827c7d6cac27de"
@@ -518,13 +522,25 @@ babel-plugin-syntax-decorators@^6.13.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-decorators/-/babel-plugin-syntax-decorators-6.13.0.tgz#312563b4dbde3cc806cee3e416cceeaddd11ac0b"
 
+babel-plugin-syntax-do-expressions@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-do-expressions/-/babel-plugin-syntax-do-expressions-6.13.0.tgz#5747756139aa26d390d09410b03744ba07e4796d"
+
 babel-plugin-syntax-exponentiation-operator@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-exponentiation-operator/-/babel-plugin-syntax-exponentiation-operator-6.13.0.tgz#9ee7e8337290da95288201a6a57f4170317830de"
 
+babel-plugin-syntax-export-extensions@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-export-extensions/-/babel-plugin-syntax-export-extensions-6.13.0.tgz#70a1484f0f9089a4e84ad44bac353c95b9b12721"
+
 babel-plugin-syntax-flow@^6.3.13, babel-plugin-syntax-flow@^6.8.0:
   version "6.13.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-flow/-/babel-plugin-syntax-flow-6.13.0.tgz#9af0cd396087bf7677053e1afa52f206c0416f17"
+
+babel-plugin-syntax-function-bind@^6.8.0:
+  version "6.13.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-syntax-function-bind/-/babel-plugin-syntax-function-bind-6.13.0.tgz#48c495f177bdf31a981e732f55adc0bdd2601f46"
 
 babel-plugin-syntax-jsx@^6.3.13, babel-plugin-syntax-jsx@^6.8.0:
   version "6.13.0"
@@ -554,6 +570,14 @@ babel-plugin-transform-async-to-generator@^6.16.0:
     babel-plugin-syntax-async-functions "^6.8.0"
     babel-runtime "^6.0.0"
 
+babel-plugin-transform-class-constructor-call@^6.3.13:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-class-constructor-call/-/babel-plugin-transform-class-constructor-call-6.8.0.tgz#6e740bc80f16d295fa598d92518666020a906192"
+  dependencies:
+    babel-plugin-syntax-class-constructor-call "^6.8.0"
+    babel-runtime "^6.0.0"
+    babel-template "^6.8.0"
+
 babel-plugin-transform-class-properties@^6.16.0:
   version "6.16.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-class-properties/-/babel-plugin-transform-class-properties-6.16.0.tgz#969bca24d34e401d214f36b8af5c1346859bc904"
@@ -572,6 +596,13 @@ babel-plugin-transform-decorators@^6.13.0:
     babel-runtime "^6.0.0"
     babel-template "^6.8.0"
     babel-types "^6.13.0"
+
+babel-plugin-transform-do-expressions@^6.3.13:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-do-expressions/-/babel-plugin-transform-do-expressions-6.8.0.tgz#fda692af339835cc255bb7544efb8f7c1306c273"
+  dependencies:
+    babel-plugin-syntax-do-expressions "^6.8.0"
+    babel-runtime "^6.0.0"
 
 babel-plugin-transform-es2015-arrow-functions@^6.3.13:
   version "6.8.0"
@@ -750,11 +781,25 @@ babel-plugin-transform-exponentiation-operator@^6.3.13:
     babel-plugin-syntax-exponentiation-operator "^6.8.0"
     babel-runtime "^6.0.0"
 
+babel-plugin-transform-export-extensions@^6.3.13:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-export-extensions/-/babel-plugin-transform-export-extensions-6.8.0.tgz#fa80ff655b636549431bfd38f6b817bd82e47f5b"
+  dependencies:
+    babel-plugin-syntax-export-extensions "^6.8.0"
+    babel-runtime "^6.0.0"
+
 babel-plugin-transform-flow-strip-types@^6.3.13:
   version "6.14.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-flow-strip-types/-/babel-plugin-transform-flow-strip-types-6.14.0.tgz#35ceb03f8770934044bab1a76f7e4ee0aa9220f9"
   dependencies:
     babel-plugin-syntax-flow "^6.8.0"
+    babel-runtime "^6.0.0"
+
+babel-plugin-transform-function-bind@^6.3.13:
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-function-bind/-/babel-plugin-transform-function-bind-6.8.0.tgz#e7f334ce69f50d28fe850a822eaaab9fa4f4d821"
+  dependencies:
+    babel-plugin-syntax-function-bind "^6.8.0"
     babel-runtime "^6.0.0"
 
 babel-plugin-transform-object-rest-spread@^6.16.0:
@@ -856,7 +901,23 @@ babel-preset-react@6.16.0:
     babel-plugin-transform-react-jsx-self "^6.11.0"
     babel-plugin-transform-react-jsx-source "^6.3.13"
 
-babel-preset-stage-2@6.17.0:
+babel-preset-stage-0@6.16.0:
+  version "6.16.0"
+  resolved "https://registry.yarnpkg.com/babel-preset-stage-0/-/babel-preset-stage-0-6.16.0.tgz#f5a263c420532fd57491f1a7315b3036e428f823"
+  dependencies:
+    babel-plugin-transform-do-expressions "^6.3.13"
+    babel-plugin-transform-function-bind "^6.3.13"
+    babel-preset-stage-1 "^6.16.0"
+
+babel-preset-stage-1@^6.16.0:
+  version "6.16.0"
+  resolved "https://registry.yarnpkg.com/babel-preset-stage-1/-/babel-preset-stage-1-6.16.0.tgz#9d31fbbdae7b17c549fd3ac93e3cf6902695e479"
+  dependencies:
+    babel-plugin-transform-class-constructor-call "^6.3.13"
+    babel-plugin-transform-export-extensions "^6.3.13"
+    babel-preset-stage-2 "^6.16.0"
+
+babel-preset-stage-2@^6.16.0, babel-preset-stage-2@6.17.0:
   version "6.17.0"
   resolved "https://registry.yarnpkg.com/babel-preset-stage-2/-/babel-preset-stage-2-6.17.0.tgz#dc4f84582781353cef36c41247eae5e36c4cae0d"
   dependencies:
@@ -4992,9 +5053,9 @@ react-event-listener@^0.3.0:
   dependencies:
     react-addons-shallow-compare "^0.14.0 || ^15.0.0"
 
-react-omniform@0.7.4:
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/react-omniform/-/react-omniform-0.7.4.tgz#d9926cb3f9ba2102b708d938e331c44664f04830"
+react-omniform@0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/react-omniform/-/react-omniform-0.7.5.tgz#53bf75cb17f2d18ff12fbb47a61eb405a8e82d2d"
 
 react-redux@4.4.5:
   version "4.4.5"

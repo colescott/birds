@@ -2,6 +2,7 @@ const path = require("path");
 const validator = require("webpack-validator");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Visualizer = require('webpack-visualizer-plugin');
 
 const config = {
     entry: ["babel-polyfill", path.join(__dirname, "./src/index.js")],
@@ -19,7 +20,8 @@ const config = {
         }),
         new webpack.ProvidePlugin({
             React: "react"
-        })
+        }),
+        new Visualizer()
     ],
     module: {
         loaders: [

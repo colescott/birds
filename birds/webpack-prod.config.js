@@ -9,6 +9,7 @@ const baseConfig = require("./webpack-base.config.js");
 const config = merge.smart(baseConfig, {
     devtool: "cheap-module-source-map",
     plugins: [
+        /*
         new webpackUglifyJsPlugin({
             cacheFolder: path.resolve(__dirname, "public/cached_uglify/"),
             debug: true,
@@ -21,6 +22,7 @@ const config = merge.smart(baseConfig, {
                 warnings: false
             }
         }),
+        */
         new webpack.DefinePlugin({
             "process.env": {
                 "NODE_ENV": JSON.stringify("production")

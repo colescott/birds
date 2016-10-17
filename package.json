@@ -19,7 +19,8 @@
     "lint:fix": "better-npm-run --fix",
     "docs": "better-npm-run docs",
     "cover": "better-npm-run cover",
-    "db": "better-npm-run db"
+    "db": "better-npm-run db",
+    "analyze": "better-npm-run build:prod --json | webpack-bundle-size-analyzer"
   },
   "betterScripts": {
     "start:prod": {
@@ -64,7 +65,7 @@
       "command": "webpack --progress --config birds/webpack-dev.config.js"
     },
     "build:prod": {
-      "command": "webpack --progress --config birds/webpack-prod.config.js"
+      "command": "webpack --progress --config birds/webpack-prod.config.js -p"
     },
     "lint": {
       "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
@@ -130,7 +131,7 @@
     "randomstring": "1.1.5",
     "react": "15.3.2",
     "react-dom": "15.3.1",
-    "react-omniform": "0.7.4",
+    "react-omniform": "0.7.5",
     "react-redux": "4.4.5",
     "react-router": "2.8.1",
     "react-router-redux": "4.0.6",
@@ -156,6 +157,7 @@
   "devDependencies": {
     "apidoc": "0.16.1",
     "babel-eslint": "7.0.0",
+    "babel-preset-es2015-native-modules": "6.9.4",
     "babel-preset-stage-0": "6.16.0",
     "chai": "3.5.0",
     "eslint": "3.8.0",
@@ -169,9 +171,10 @@
     "on-build-webpack": "0.1.0",
     "randomstring": "1.1.5",
     "supertest": "2.0.0",
-    "webpack": "1.13.2",
+    "webpack": "2.1.0-beta.25",
     "webpack-dev-server": "1.16.2",
-    "webpack-hot-middleware": "2.13.0"
+    "webpack-hot-middleware": "2.13.0",
+    "webpack-visualizer-plugin": "0.1.5"
   },
   "engines": {
     "node": "6.0.0"

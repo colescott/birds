@@ -7,6 +7,7 @@ import * as s from "../../store/selectors.js";
 
 import { Card, CardHeader, CardText } from "material-ui/Card";
 
+import { FormItem, ButtonItem } from "../components/form.js";
 import { isValidEmail } from "../../util";
 
 const passWordsMustMatch = (text, form) => {
@@ -42,6 +43,8 @@ const Register = (props) => {
                             email: isValidEmail,
                             password2: passWordsMustMatch,
                         }}
+                        FormItem={FormItem}
+                        ButtonItem={ButtonItem}
                     />
                 </CardText>
             </Card>
