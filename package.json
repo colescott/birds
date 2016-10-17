@@ -23,65 +23,65 @@
   },
   "betterScripts": {
     "start:prod": {
-        "command": "node start.js",
-        "env": {
-            "NODE_ENV": "PROD"
-        }
+      "command": "node start.js",
+      "env": {
+        "NODE_ENV": "PROD"
+      }
     },
     "start:dev": {
-        "command": "nodemon start.js",
-        "env": {
-            "NODE_ENV": "DEV",
-            "JWT_SECRET": "correcthorsebatterystaple",
-            "MONGODB_URI": "mongodb://localhost/passport"
-        }
+      "command": "nodemon start.js",
+      "env": {
+        "NODE_ENV": "DEV",
+        "JWT_SECRET": "correcthorsebatterystaple",
+        "MONGODB_URI": "mongodb://localhost/passport"
+      }
     },
     "serve": {
-        "command": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
-        "env": {
-            "URL_PREFIX": "http://localhost:8000"
-        }
+      "command": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
+      "env": {
+        "URL_PREFIX": "http://localhost:8000"
+      }
     },
     "test": {
-        "command": "better-npm-run test:fe && better-npm-run test:api"
+      "command": "better-npm-run test:fe && better-npm-run test:api"
     },
     "test:api": {
-        "command": "mocha birds/test/*.js",
-        "env": {
-            "NODE_ENV": "TEST",
-            "JWT_SECRET": "TEST",
-            "MONGODB_URI": "mongodb://localhost/passport"
-        }
+      "command": "mocha birds/test/*.js",
+      "env": {
+        "NODE_ENV": "TEST",
+        "JWT_SECRET": "TEST",
+        "MONGODB_URI": "mongodb://localhost/passport"
+      }
     },
     "test:fe": {
-        "command": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts",
-        "env": {
-            "NODE_ENV": "TEST",
-            "URL_PREFIX": ""
-        }
+      "command": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts",
+      "env": {
+        "NODE_ENV": "TEST",
+        "URL_PREFIX": ""
+      }
     },
     "build:dev": {
-        "command": "webpack --progress --config birds/webpack-dev.config.js"
+      "command": "webpack --progress --config birds/webpack-dev.config.js"
     },
     "build:prod": {
-        "command": "webpack --progress --config birds/webpack-prod.config.js"
+      "command": "webpack --progress --config birds/webpack-prod.config.js"
     },
     "lint": {
-        "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
+      "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
     },
     "docs": {
-        "command": "apidoc -i birds/api -o docs"
+      "command": "apidoc -i birds/api -o docs"
     },
     "cover": {
-        "command": "istanbul cover _mocha ./birds/**/*.test.js ./birds/test/*.js -- --opts unit.mocha.opts -R spec",
-        "env": {
-            "NODE_ENV": "TEST",
-            "JWT_SECRET": "meh",
-            "MONGODB_URI": "mongodb://localhost/passport"
-        }
+      "command": "istanbul cover _mocha ./birds/**/*.test.js ./birds/test/*.js -- --opts unit.mocha.opts -R spec",
+      "env": {
+        "NODE_ENV": "TEST",
+        "JWT_SECRET": "meh",
+        "MONGODB_URI": "mongodb://localhost/passport"
+      }
     },
     "db": {
-        "command": "mongod --dbpath ./data"
+      "command": "mongod --dbpath ./data"
     }
   },
   "repository": {
@@ -130,6 +130,7 @@
     "randomstring": "1.1.5",
     "react": "15.3.2",
     "react-dom": "15.3.1",
+    "react-omniform": "0.7.4",
     "react-redux": "4.4.5",
     "react-router": "2.8.1",
     "react-router-redux": "4.0.6",
@@ -155,6 +156,7 @@
   "devDependencies": {
     "apidoc": "0.16.1",
     "babel-eslint": "7.0.0",
+    "babel-preset-stage-0": "6.16.0",
     "chai": "3.5.0",
     "eslint": "3.8.0",
     "eslint-config-airbnb": "12.0.0",

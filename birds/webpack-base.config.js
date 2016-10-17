@@ -25,8 +25,7 @@ const config = {
         loaders: [
             {
                 loaders: ["babel"],
-                test: /\.js$/,
-                exclude: /node_modules/
+                test: /\.js$/
             },
             {
                 test: /\.scss$/,

@@ -1,19 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
+import OmniForm from "react-omniform/src";
 
 import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
 import { Card, CardHeader, CardText } from "material-ui/Card";
 
-import Form from "../components/form";
-
 import { isValidEmail } from "../../util";
 
-const passWordsMustMatch = (text, form) =>
-    form.password == form.password2 && form.password != null
-    ? null
-    : "Passwords must match";
+const passWordsMustMatch = (text, form) => {
+    if (form.password2 != form.password) throw Error("Passwords must match");
+};
 
 const Register = (props) => {
     return (
@@ -29,32 +27,21 @@ const Register = (props) => {
                     title="Register"
                 />
                 <CardText>
-                    <Form
-                        handleUpdate={props.handleUpdate()}
-                        handleSubmit={props.register()}
-                        items={[
-                            "email",
-                            "password",
-                            "password2",
-                            "firstname",
-                            "lastname",
-                        ]}
-                        labels={{
-                            email: "Email ",
+                    <OmniForm
+                        items={{
+                            email: "Email",
                             password: "Password",
                             password2: "Password Again",
                             firstname: "First Name",
-                            lastname: "Last Name",
+                            lastname: "Last Name"
                         }}
-                        types={{
-                            password: "password",
-                            password2: "password"
-                        }}
-                        validation={{
-                            email: isValidEmail,
-                            password2: passWordsMustMatch
-                        }}
+                        updateValue={props.handleUpdate}
                         values={props.form}
+                        submitForm={props.register}
+                        customValidation={{
+                            email: isValidEmail,
+                            password2: passWordsMustMatch,
+                        }}
                     />
                 </CardText>
             </Card>
@@ -67,8 +54,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdate: () => (obj) => dispatch(a.setRegisterForm({ ...obj })),
-  register: () => () => dispatch(a.registerAuth())
+  handleUpdate: (key, value) => dispatch(a.setRegisterForm({ [ key ]: value })),
+  register: () => dispatch(a.registerAuth())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
