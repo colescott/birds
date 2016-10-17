@@ -157,7 +157,6 @@
   "devDependencies": {
     "apidoc": "0.16.1",
     "babel-eslint": "7.0.0",
-    "babel-preset-es2015-native-modules": "6.9.4",
     "babel-preset-stage-0": "6.16.0",
     "chai": "3.5.0",
     "eslint": "3.8.0",
@@ -173,7 +172,7 @@
     "randomstring": "1.1.5",
     "supertest": "2.0.0",
     "webpack": "2.1.0-beta.25",
-    "webpack-dev-server": "1.16.2",
+    "webpack-dev-server": "2.1.0-beta.9",
     "webpack-hot-middleware": "2.13.0",
     "webpack-visualizer-plugin": "0.1.5"
   },
