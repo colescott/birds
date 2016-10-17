@@ -2,6 +2,7 @@ const path = require("path");
 const validator = require("webpack-validator");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Visualizer = require('webpack-visualizer-plugin');
 
 const config = {
     entry: {
