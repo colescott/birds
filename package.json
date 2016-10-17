@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/Team4159/BIRDS#readme",
   "dependencies": {
-    "aws-sdk": "2.6.7",
+    "aws-sdk": "2.6.9",
     "babel-core": "6.16.0",
     "babel-loader": "6.2.5",
     "babel-polyfill": "6.16.0",
