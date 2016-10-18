@@ -109,7 +109,7 @@
     "cors": "2.8.1",
     "css-loader": "0.25.0",
     "eslint-config-standard": "6.2.0",
-    "eslint-plugin-promise": "3.0.0",
+    "eslint-plugin-promise": "3.2.0",
     "eslint-plugin-standard": "2.0.1",
     "express": "4.14.0",
     "express-jwt": "5.1.0",
