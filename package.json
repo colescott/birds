@@ -145,7 +145,7 @@
     "sass-loader": "4.0.2",
     "sass-material-colors": "0.0.5",
     "style-loader": "0.13.1",
-    "supertest": "2.0.0",
+    "supertest": "2.0.1",
     "trim": "0.0.1",
     "webpack-dev-middleware": "1.8.4",
     "webpack-merge": "0.15.0",
