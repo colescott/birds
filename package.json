@@ -151,9 +151,7 @@
     "webpack-merge": "0.15.0",
     "webpack-uglify-js-plugin": "1.1.9",
     "webpack-validator": "2.2.9",
-    "xr": "0.2.0"
-  },
-  "devDependencies": {
+    "xr": "0.2.0",
     "apidoc": "0.16.1",
     "babel-eslint": "7.0.0",
     "babel-plugin-transform-runtime": "6.15.0",
