@@ -65,7 +65,7 @@
       "command": "webpack --progress --config birds/webpack-dev.config.js"
     },
     "build:prod": {
-      "command": "webpack --progress --config birds/webpack-prod.config.js -p"
+      "command": "webpack --progress --config birds/webpack-prod.config.js"
     },
     "lint": {
       "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
@@ -162,6 +162,7 @@
     "chai": "3.5.0",
     "eslint": "3.8.0",
     "eslint-config-airbnb": "12.0.0",
+    "eslint-loader": "1.6.0",
     "eslint-plugin-import": "2.0.1",
     "eslint-plugin-jsx-a11y": "2.2.3",
     "eslint-plugin-react": "6.4.1",
