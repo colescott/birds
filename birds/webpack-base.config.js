@@ -19,7 +19,7 @@ const config = {
         }),
         new webpack.DefinePlugin({
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
-        })
+        }),
         new webpack.optimize.CommonsChunkPlugin({
             name: "common",
         })
