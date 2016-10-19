@@ -29,11 +29,6 @@ const history = syncHistoryWithStore(basicHistory, store);
 const appDiv = document.createElement("div");
 document.body.appendChild(appDiv);
 
-// HMR
-if (module.hot) {
-  module.hot.accept();
-}
-
 // Render the page
 import Root from "./ui/root";
 ReactDOM.render(
