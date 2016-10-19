@@ -1,29 +1,32 @@
 const validator = require("webpack-validator");
 const merge = require("webpack-merge");
 const webpack = require("webpack");
+const path = require("path");
+const WebpackMd5Hash = require("webpack-md5-hash");
 
 const baseConfig = require("./webpack-base.config.js");
 
 const config = merge.smart(baseConfig, {
     devtool: "cheap-module-source-map",
+    output: {
+        path: path.join(__dirname, "./static"),
+        filename: "[name].[chunkhash].bundle.js",
+        publicPath: "/"
+    },
     plugins: [
-<<<<<<< dd1e266e8472835e42a4b66f64cdcedbc864bad3
         new webpack.optimize.UglifyJsPlugin({
             beautify: false,
             comments: false,
             compress: {
                 warnings: false,
                 drop_console: true
-=======
-        /*
-        new webpackUglifyJsPlugin({
+            },
             cacheFolder: path.resolve(__dirname, "public/cached_uglify/"),
             debug: true,
             minimize: true,
             sourceMap: false,
             output: {
                 comments: false
->>>>>>> add form validation
             },
             mangle: {
                 except: ["$"],
@@ -31,12 +34,12 @@ const config = merge.smart(baseConfig, {
                 keep_fnames: false
             }
         }),
-        */
         new webpack.DefinePlugin({
             "process.env": {
                 "NODE_ENV": JSON.stringify("production")
             }
         }),
+        new WebpackMd5Hash()
     ]
 });
 

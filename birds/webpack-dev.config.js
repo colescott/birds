@@ -3,6 +3,7 @@ const merge = require("webpack-merge");
 const WebpackOnBuildPlugin = require("on-build-webpack");
 const notifier = require("node-notifier");
 const webpack = require("webpack");
+const path = require("path");
 
 const baseConfig = require("./webpack-base.config.js");
 
@@ -10,6 +11,11 @@ const config = merge.smart(baseConfig, {
     devtool: "eval-source-map",
     devServer: {
         inline: true
+    },
+    output: {
+        path: path.join(__dirname, "./static"),
+        filename: "[name].[hash].bundle.js",
+        publicPath: "/"
     },
     plugins: [
         new WebpackOnBuildPlugin((stats) => {

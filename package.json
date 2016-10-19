@@ -65,7 +65,7 @@
       "command": "webpack --progress --config birds/webpack-dev.config.js"
     },
     "build:prod": {
-      "command": "webpack --progress --config birds/webpack-prod.config.js -p"
+      "command": "webpack --progress --config birds/webpack-prod.config.js"
     },
     "lint": {
       "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
@@ -157,6 +157,7 @@
   "devDependencies": {
     "apidoc": "0.16.1",
     "babel-eslint": "7.0.0",
+    "babel-plugin-transform-runtime": "6.15.0",
     "babel-preset-es2015-native-modules": "6.9.4",
     "babel-preset-stage-0": "6.16.0",
     "chai": "3.5.0",
@@ -175,6 +176,7 @@
     "webpack": "2.1.0-beta.25",
     "webpack-dev-server": "2.1.0-beta.9",
     "webpack-hot-middleware": "2.13.0",
+    "webpack-md5-hash": "0.0.5",
     "webpack-visualizer-plugin": "0.1.5"
   },
   "engines": {

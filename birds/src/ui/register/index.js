@@ -33,7 +33,7 @@ const Register = (props) => {
                         items={{
                             email: "Email",
                             password: "Password",
-                            password2: "Password Again",
+                            password2: "Password Verification",
                             firstname: "First Name",
                             lastname: "Last Name"
                         }}
