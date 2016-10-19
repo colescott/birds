@@ -31,7 +31,8 @@ function* lessons() {
                     const { title, branch, editor } = yield select(s.getLessonEditor);
 
                     // Create The lesson
-                    yield call(createLesson, title, branches[ branch ], editor, token);
+                    const lesson = yield call(createLesson, title, branches[ branch ], editor, token);
+                    yield put(a.setLessonEditor({ id: lesson.id }));
 
                     break;
                 }
@@ -39,8 +40,7 @@ function* lessons() {
                     break;
             }
         } catch (e) {
-            // If there is an error, dispatch an error action
-            yield put(a.setUser(e));
+            console.log(e);
         }
     }
 }
@@ -48,8 +48,7 @@ function* lessons() {
 export function* createLesson(title, branch, data, token) {
     const res = yield call(api.lessons.create, title, branch, data, token);
     if (res.error) throw new Error(res.error.message);
-    const { data_ } = res;
-    return data_.team;
+    return res.data;
 }
 
 export default lessons;
