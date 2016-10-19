@@ -8,6 +8,7 @@ import * as s from "../../store/selectors.js";
 import { Card, CardHeader, CardText } from "material-ui/Card";
 
 import { FormItem, ButtonItem } from "../components/form.js";
+
 import { isValidEmail } from "../../util";
 
 const passWordsMustMatch = (text, form) => {
@@ -32,7 +33,7 @@ const Register = (props) => {
                         items={{
                             email: "Email",
                             password: "Password",
-                            password2: "Password Again",
+                            password2: "Password Verification",
                             firstname: "First Name",
                             lastname: "Last Name"
                         }}

@@ -8,11 +8,6 @@ const config = {
         app: ["babel-polyfill", path.join(__dirname, "./src/index.js")],
         vendor: ["react", "react-dom"]
     },
-    output: {
-        path: path.join(__dirname, "./static"),
-        filename: "[name].[hash].js",
-        publicPath: "/"
-    },
     plugins: [
         new HtmlWebpackPlugin({
             title: "Birds"
