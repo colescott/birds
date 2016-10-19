@@ -119,7 +119,7 @@
     "istanbul": "1.0.0-alpha.2",
     "jsonwebtoken": "7.1.9",
     "lodash": "4.16.4",
-    "material-ui": "0.16.0",
+    "material-ui": "0.16.1",
     "moment": "2.15.1",
     "mongoose": "4.6.4",
     "morgan": "1.7.0",
