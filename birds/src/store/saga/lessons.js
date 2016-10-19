@@ -18,7 +18,7 @@ const branches = [
 function* lessons() {
     for (;;) {
         try {
-            // Wait for team related actions
+            // Wait for lesson related actions
             const action = yield take([
                 c.LESSON_CREATE
             ]);
@@ -30,13 +30,8 @@ function* lessons() {
                     // Get Needed Params
                     const { title, branch, editor } = yield select(s.getLessonEditor);
 
-                    // Create The Team
-                    const team = yield call(createLesson, title, branches[ branch ], editor, token);
-                    yield put(a.setUser({ teamPass: team.password }));
-
-                    // Refetch the User
-                    const user = yield call(getUser, uid, token);
-                    yield put(a.setUser(user));
+                    // Create The lesson
+                    yield call(createLesson, title, branches[ branch ], editor, token);
 
                     break;
                 }
