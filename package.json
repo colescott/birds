@@ -16,7 +16,7 @@
     "test:fe-watch": "better-npm-run test:fe --watch --reporter min",
     "postinstall": "npm run build:prod",
     "lint": "better-npm-run lint",
-    "lint:fix": "better-npm-run --fix",
+    "lint:fix": "better-npm-run lint --fix",
     "docs": "better-npm-run docs",
     "cover": "better-npm-run cover",
     "db": "better-npm-run db",
@@ -38,7 +38,7 @@
       }
     },
     "serve": {
-      "command": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --hot",
+      "command": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --watch",
       "env": {
         "URL_PREFIX": "http://localhost:8000"
       }
@@ -168,8 +168,6 @@
     "node-notifier": "4.6.1",
     "nodemon": "1.11.0",
     "on-build-webpack": "0.1.0",
-    "randomstring": "1.1.5",
-    "supertest": "2.0.0",
     "webpack": "2.1.0-beta.25",
     "webpack-dev-server": "2.1.0-beta.9",
     "webpack-hot-middleware": "2.13.0",
@@ -178,5 +176,8 @@
   },
   "engines": {
     "node": "6.0.0"
+  },
+  "devDependencies": {
+    "babel-preset-react-hmre": "1.1.1"
   }
 }

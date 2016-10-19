@@ -13,12 +13,11 @@ const config = {
             title: "Birds"
         }),
         new webpack.DefinePlugin({
-            URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || JSON.stringify(""))
+            URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),
         new webpack.optimize.CommonsChunkPlugin({
             name: "common",
-        }),
-        new webpack.optimize.DedupePlugin()
+        })
     ],
     module: {
         loaders: [

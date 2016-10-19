@@ -171,17 +171,17 @@ describe("APIv1", () => {
     describe("GET /users/:id", () => {
         it("respond with json", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect("Content-Type", /json/)
             .expect(200, done);
         });
         it("responds with user", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(function(res) {
                 delete res.body.data.user.progress;
                 if (!util.equal(res.body.data.user, testUserWithIdNoProgress))
@@ -191,7 +191,7 @@ describe("APIv1", () => {
         });
         it("responds with 401 when not logged in", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
             .expect(401, done);
         });
@@ -200,17 +200,17 @@ describe("APIv1", () => {
     describe("PUT /users/:id/setprogress", () => {
         it("set progress of lesson 1", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/setprogress")
+            .put(`/api/v1/users/${  testUserWithId.id  }/setprogress`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send({ id: 1, state: "complete" })
             .expect(200, done);
         });
         it("test user has progress in lesson 1", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(function(res) {
                 if (res.body.data.user.progress.length < 1)
                     throw new Error("lesson progress was not set :()");
@@ -219,16 +219,16 @@ describe("APIv1", () => {
         });
         it("reset progress of lesson 1", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/resetprogress")
+            .put(`/api/v1/users/${  testUserWithId.id  }/resetprogress`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(200, done);
         });
         it("test user has no progress in lesson 1", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUserWithId.id)
+            .get(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(function(res) {
                 if (res.body.data.user.progress.length > 0)
                     throw new Error("lesson progress was still set :()");
@@ -240,9 +240,9 @@ describe("APIv1", () => {
     describe("PUT /users/:id", () => {
         it("respond with json", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id)
+            .put(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send({})
             .expect("Content-Type", /json/)
             .expect(200, done);
@@ -254,9 +254,9 @@ describe("APIv1", () => {
                 teamnumber: util.randomInRange(1, 6237)
             };
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id)
+            .put(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send(newUser)
             .expect(function(res) {
                 if (util.equal(res.body.data.user, testUserWithId))
@@ -272,7 +272,7 @@ describe("APIv1", () => {
         });
         it("responds error on no token", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id)
+            .put(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
             .send({})
             .expect(function(res) {
@@ -283,7 +283,7 @@ describe("APIv1", () => {
         });
         it("responds error on bad token", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id)
+            .put(`/api/v1/users/${  testUserWithId.id}`)
             .set("Accept", "application/json")
             .set("Authorization", "Bearer correcthorsebatterystaple")
             .send({})
@@ -300,7 +300,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/teams")
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send(testTeamReqest)
             .expect("Content-Type", /json/)
             .expect(function(res) {
@@ -312,7 +312,7 @@ describe("APIv1", () => {
             request(app)
             .get("/api/v1/teams/4159")
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect("Content-Type", /json/)
             .expect(200, done);
         });
@@ -368,17 +368,17 @@ describe("APIv1", () => {
         });
         it("join team", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUser2WithId.id + "/jointeam")
+            .put(`/api/v1/users/${  testUser2WithId.id  }/jointeam`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken2)
+            .set("Authorization", `Bearer ${  loginToken2}`)
             .send({ teamnumber: 4159, password: teamPassword })
             .expect(200, done);
         });
         it("user has teamnumber=4159", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUser2WithId.id)
+            .get(`/api/v1/users/${  testUser2WithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken2)
+            .set("Authorization", `Bearer ${  loginToken2}`)
             .expect(function(res) {
                 if (res.body.data.user.teamnumber != 4159)
                     throw new Error("user.teamnumber is not 4159 :(");
@@ -390,17 +390,17 @@ describe("APIv1", () => {
     describe("PUT /users/:id/addadmin", () => {
         it("add test user 2 as admin", (done) => {
             request(app)
-            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/addadmin")
+            .put(`/api/v1/teams/${  testTeamReqest.teamnumber  }/addadmin`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send({ user: testUser2WithId })
             .expect(200, done);
         });
         it("test user 2 is admin", (done) => {
             request(app)
-            .get("/api/v1/users/" + testUser2WithId.id)
+            .get(`/api/v1/users/${  testUser2WithId.id}`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken2)
+            .set("Authorization", `Bearer ${  loginToken2}`)
             .expect(function(res) {
                 if (res.body.data.user.isAdmin)
                     throw new Error("user.teamnumber is not 4159 :(");
@@ -409,9 +409,9 @@ describe("APIv1", () => {
         });
         it("remove test user 2 as admin", (done) => {
             request(app)
-            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/removeadmin")
+            .put(`/api/v1/teams/${  testTeamReqest.teamnumber  }/removeadmin`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .send({ user: testUser2WithId })
             .expect(200, done);
         });
@@ -420,9 +420,9 @@ describe("APIv1", () => {
     describe("PUT /teams/:num/delete", () => {
         it("responds team deleted", (done) => {
             request(app)
-            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .put(`/api/v1/teams/${  testTeamReqest.teamnumber  }/delete`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(200, done);
         });
         it("test team deleted from database", (done) => {
@@ -443,7 +443,7 @@ describe("APIv1", () => {
         });
         it("responds error on no token", (done) => {
             request(app)
-            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .put(`/api/v1/teams/${  testTeamReqest.teamnumber  }/delete`)
             .set("Accept", "application/json")
             .send({})
             .expect(function(res) {
@@ -454,7 +454,7 @@ describe("APIv1", () => {
         });
         it("responds error on bad token", (done) => {
             request(app)
-            .put("/api/v1/teams/" + testTeamReqest.teamnumber + "/delete")
+            .put(`/api/v1/teams/${  testTeamReqest.teamnumber  }/delete`)
             .set("Accept", "application/json")
             .set("Authorization", "Bearer correcthorsebatterystaple")
             .send({})
@@ -471,7 +471,7 @@ describe("APIv1", () => {
             request(app)
             .post("/api/v1/auth/logout")
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect(200, done);
         });
         it("logs in with token", (done) => {
@@ -491,9 +491,9 @@ describe("APIv1", () => {
     describe("PUT /users/:id/delete", () => {
         it("responds user deleted", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/delete")
+            .put(`/api/v1/users/${  testUserWithId.id  }/delete`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken)
+            .set("Authorization", `Bearer ${  loginToken}`)
             .expect({
                 data: {
                     message: "successfully deleted user."
@@ -502,9 +502,9 @@ describe("APIv1", () => {
         });
         it("responds user 2 deleted", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUser2WithId.id + "/delete")
+            .put(`/api/v1/users/${  testUser2WithId.id  }/delete`)
             .set("Accept", "application/json")
-            .set("Authorization", "Bearer " + loginToken2)
+            .set("Authorization", `Bearer ${  loginToken2}`)
             .expect({
                 data: {
                     message: "successfully deleted user."
@@ -531,7 +531,7 @@ describe("APIv1", () => {
         });
         it("responds error on no token", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/delete")
+            .put(`/api/v1/users/${  testUserWithId.id  }/delete`)
             .set("Accept", "application/json")
             .send({})
             .expect(function(res) {
@@ -542,7 +542,7 @@ describe("APIv1", () => {
         });
         it("responds error on bad token", (done) => {
             request(app)
-            .put("/api/v1/users/" + testUserWithId.id + "/delete")
+            .put(`/api/v1/users/${  testUserWithId.id  }/delete`)
             .set("Accept", "application/json")
             .set("Authorization", "Bearer correcthorsebatterystaple")
             .send({})

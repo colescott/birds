@@ -30,10 +30,11 @@ const config = merge.smart(baseConfig, {
             },
             mangle: {
                 except: ["$"],
-                screw_ie8 : true,
+                screw_ie8: true,
                 keep_fnames: false
             }
         }),
+        new webpack.optimize.DedupePlugin(),
         new webpack.DefinePlugin({
             "process.env": {
                 "NODE_ENV": JSON.stringify("production")
