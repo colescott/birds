@@ -4,10 +4,13 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const config = {
-    entry: ["babel-polyfill", path.join(__dirname, "./src/index.js")],
+    entry: {
+        app: ["babel-polyfill", path.join(__dirname, "./src/index.js")],
+        vendor: ["react", "react-dom"]
+    },
     output: {
         path: path.join(__dirname, "./static"),
-        filename: "bundle.js",
+        filename: "[name].[hash].js",
         publicPath: "/"
     },
     plugins: [
@@ -17,16 +20,19 @@ const config = {
         new webpack.DefinePlugin({
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),
-        new webpack.ProvidePlugin({
-            React: "react"
+        new webpack.optimize.CommonsChunkPlugin({
+            name: "common",
         })
     ],
     module: {
         loaders: [
             {
-                loaders: ["babel"],
+                loader: "babel",
                 test: /\.js$/,
-                exclude: /node_modules/
+                query: {
+                    presets: [["es2015", { modules: false }], "react", "stage-2"],
+                    babelrc: false
+                },
             },
             {
                 test: /\.scss$/,

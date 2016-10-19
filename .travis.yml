@@ -9,6 +9,7 @@ env:
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
 script:
+    - npm run build:prod
     - npm run cover
 after_success:
     - bash <(curl -s https://codecov.io/bash)

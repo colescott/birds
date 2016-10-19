@@ -8,7 +8,6 @@ export const checker = (extra, ...args) => (value) =>
         map(f => f(value, extra))
     )(args);
 
-export const isValidEmail = (text = "") =>
-    text.includes("@")
-    ? null
-    : "Email must include @";
+export const isValidEmail = (text = "") => {
+    if (!text.includes("@")) throw Error("Email must include @");
+};

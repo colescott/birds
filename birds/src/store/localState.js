@@ -1,11 +1,11 @@
 export const saveState = (state) => {
     try {
         const stringifiedState = JSON.stringify({
-            ...state,
             auth: {
                 ...state.auth,
-                status: {},
-            }
+                status: {}
+            },
+            user: state.user
         });
         localStorage.setItem("state", stringifiedState);
     } catch (e) {
