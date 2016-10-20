@@ -68,14 +68,14 @@ const LessonEditor = (props) => {
                                 value={props.getEditor.id || ""}
                             />
                             <DropDownMenu
-                                value={props.getEditor.branch || -1}
+                                value={props.getEditor.branch || 0}
                                 onChange={props.updateBranch()}
                             >
-                                <MenuItem value={-1} primaryText="Choose a branch" />
-                                <MenuItem value={0} primaryText="Design" />
-                                <MenuItem value={1} primaryText="Manufacturing" />
-                                <MenuItem value={2} primaryText="Programming" />
-                                <MenuItem value={3} primaryText="Social/Business" />
+                                <MenuItem value={0} primaryText="Choose a branch" />
+                                <MenuItem value={1} primaryText="Design" />
+                                <MenuItem value={2} primaryText="Manufacturing" />
+                                <MenuItem value={3} primaryText="Programming" />
+                                <MenuItem value={4} primaryText="Social/Business" />
                             </DropDownMenu>
                             <br />
                             <br />
