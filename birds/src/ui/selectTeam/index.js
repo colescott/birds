@@ -1,12 +1,17 @@
 import React from "react";
 import { connect } from "react-redux";
+import OmniForm from "react-omniform/src";
 
-import * as s from "../../store/selectors.js";
+//import * as s from "../../store/selectors.js";
 import * as a from "../../store/actions.js";
 
 import { Card, CardHeader, CardText } from "material-ui/Card";
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
+import { FormItem, ButtonItem } from "../components/form.js";
+
+import withState from "recompose/withState";
+
+const addJoinForm = withState("joinForm", "updateJoinForm", {});
+const addCreateForm = withState("createForm", "updateCreateForm", {});
 
 const selectTeam = (props) => {
     return (
@@ -23,43 +28,62 @@ const selectTeam = (props) => {
                 />
                 <CardText>
                     <h2> Join a Team </h2>
-                    <TextField
-                        hintText="Team Number"
-                        onChange={props.updateKey("number")}
-                        value={props.form.number || ""}
-                    /><br />
-                    <TextField
-                        hintText="Team Password"
-                        onChange={props.updateKey("pass")}
-                        value={props.form.pass || ""}
-                    /><br />
-                    <FlatButton label="Join" onClick={props.joinTeam(props.form.number, props.form.pass)}/>
-                    <h2> Make a Team </h2>
-                    <TextField
-                        hintText="Team Name"
-                        onChange={props.updateKey("nName")}
-                        value={props.form.nName || ""}
-                    /><br />
-                    <TextField
-                        hintText="Team Number"
-                        onChange={props.updateKey("nNumber")}
-                        value={props.form.nNumber || ""}
-                    /><br />
-                    <FlatButton label="Create" onClick={props.createTeam(props.form.nName, props.form.nNumber)} />
+                    <OmniForm
+                        items={{
+                            number: "Team Number",
+                            pass: "Team Password"
+                        }}
+                        types={{
+                            number: "number",
+                            password: "password"
+                        }}
+                        values={props.joinForm}
+                        updateValue={props.updateJoinForm}
+                        FormItem={FormItem}
+                        ButtonItem={ButtonItem}
+                        submitForm={props.joinTeam(props.joinForm)}
+                    />
+                    <h2> Create a Team </h2>
+                    <OmniForm
+                        items={{
+                            name: "Team Name",
+                            number: "Team Number"
+                        }}
+                        types={{
+                            number: "number"
+                        }}
+                        values={props.createForm}
+                        updateValue={props.updateCreateForm}
+                        FormItem={FormItem}
+                        ButtonItem={ButtonItem}
+                        submitForm={props.createTeam(props.createForm)}
+                    />
                 </CardText>
             </Card>
         </div>
     );
 };
 
-const mapStateToProps = (state) => ({
-    form: s.getTeamForm(state)
+const mapStateToProps = (state, { joinForm, createForm }) => ({
+    joinForm,
+    createForm
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    updateKey: (key) => (e, value) => dispatch(a.setTeamForm({ [ key ]: value })),
-    createTeam: (name, number) => () => dispatch(a.createTeam(name, number)),
-    joinTeam: (number, pass) => () => dispatch(a.joinTeam(number, pass))
+const mapDispatchToProps = (dispatch, { updateJoinForm, updateCreateForm }) => ({
+    updateJoinForm: (key, value) => updateJoinForm(form => ({
+        ...form,
+        [ key ]: value
+    })),
+    updateCreateForm: (key, value) => updateCreateForm(form => ({
+        ...form,
+        [ key ]: value
+    })),
+    createTeam: ({ name, number }) => () => dispatch(a.createTeam(name, number)),
+    joinTeam: ({ number, password }) => () => dispatch(a.joinTeam(number, password))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(selectTeam);
+export default addCreateForm(
+    addJoinForm(
+        connect(mapStateToProps, mapDispatchToProps)(selectTeam)
+    )
+);
