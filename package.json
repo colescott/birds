@@ -83,7 +83,7 @@
       "env": {
         "NODE_ENV": "TEST",
         "JWT_SECRET": "meh",
-        "MONGODB_URI": "mongodb://localhost/passport"
+        "MONGODB_URI": "mongodb://localhost/test"
       }
     },
     "db": {
