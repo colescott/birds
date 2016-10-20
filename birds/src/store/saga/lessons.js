@@ -19,7 +19,7 @@ function* lessons() {
             // Wait for lesson related actions
             const action = yield take([
                 c.LESSON_EDITOR_CREATE,
-                c.LESSON_EDITOR_LOAD,
+                c.LESSON_EDITOR_LOAD_LESSON,
                 c.LESSON_EDITOR_UPDATE
             ]);
 

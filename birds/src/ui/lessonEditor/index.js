@@ -26,77 +26,99 @@ const styles = {
 
 const LessonEditor = (props) => {
     return (
-        <Card>
+        <div>
+            {props.error && (
+                <div>
+                    <Card>
+                        <CardHeader
+                            title="Error"
+                        />
+                        <CardText>
+                            <p
+                                style={{
+                                    color: "red"
+                                }}
+                            >
+                                { props.error || ""}
+                            </p>
+                        </CardText>
+                    </Card>
+                    <br/>
+                </div>
+            )}
             <Card>
-                <CardHeader
-                    title="Details"
-                />
+                <Card>
+                    <CardHeader
+                        title="Details"
+                    />
+                    <div style={styles.div}>
+                        <CardText>
+                            <TextField
+                                style={styles.flex}
+                                floatingLabelText="Lesson Title"
+                                type="text"
+                                onChange={props.updateTitle()}
+                                value={props.getEditor.title || ""}
+                            />
+                            <TextField
+                                style={styles.flex}
+                                floatingLabelText="Lesson ID (Leave blank if new)"
+                                type="text"
+                                onChange={props.updateId()}
+                                value={props.getEditor.id || ""}
+                            />
+                            <DropDownMenu
+                                value={props.getEditor.branch || 0}
+                                onChange={props.updateBranch()}
+                            >
+                                <MenuItem value={0} primaryText="Design" />
+                                <MenuItem value={1} primaryText="Manufacturing" />
+                                <MenuItem value={2} primaryText="Programming" />
+                                <MenuItem value={3} primaryText="Social/Business" />
+                            </DropDownMenu>
+                            <br />
+                            <br />
+                            <FlatButton label="Create" onClick={props.createLesson()}/>
+                            <FlatButton label="Update" onClick={props.updateLesson()}/>
+                            <FlatButton label="Load from Remote" onClick={props.loadLesson()}/>
+                        </CardText>
+                    </div>
+                </Card>
                 <div style={styles.div}>
-                    <CardText>
-                        <TextField
-                            style={styles.flex}
-                            floatingLabelText="Lesson Title"
-                            type="text"
-                            onChange={props.updateTitle()}
-                            value={props.getEditor.title || ""}
+                    <Card zDepth={1} style={styles.flex}>
+                        <CardHeader
+                            title="Editor"
                         />
-                        <TextField
-                            style={styles.flex}
-                            floatingLabelText="Lesson ID (Leave blank if new)"
-                            type="text"
-                            onChange={props.updateId()}
-                            value={props.getEditor.id || ""}
+                        <CardText>
+                            <TextField
+                                floatingLabelText="Markdown"
+                                type="text"
+                                onChange={props.updatePreview()}
+                                value={props.getEditor.editor || ""}
+                                multiLine={true}
+                                rows={10}
+                                rowsMax={15}
+                                fullWidth={true}
+                            />
+                        </CardText>
+                    </Card>
+                    <Card zDepth={1} style={styles.flex}>
+                        <CardHeader
+                            title="Preview"
                         />
-                        <DropDownMenu
-                            value={props.getEditor.branch || 0}
-                            onChange={props.updateBranch()}
-                        >
-                            <MenuItem value={0} primaryText="Design" />
-                            <MenuItem value={1} primaryText="Manufacturing" />
-                            <MenuItem value={2} primaryText="Programming" />
-                            <MenuItem value={3} primaryText="Social/Business" />
-                        </DropDownMenu>
-                        <br />
-                        <br />
-                        <FlatButton label="Create" onClick={props.createLesson()}/>
-                        <FlatButton label="Update" onClick={props.updateLesson()}/>
-                        <FlatButton label="Load from Remote" onClick={props.loadLesson()}/>
-                    </CardText>
+                        <CardText>
+                            <ReactMarkdown source={props.getEditor.editor || ""} />
+                        </CardText>
+                    </Card>
                 </div>
             </Card>
-            <div style={styles.div}>
-                <Card zDepth={1} style={styles.flex}>
-                    <CardHeader
-                        title="Editor"
-                    />
-                    <CardText>
-                        <TextField
-                            floatingLabelText="Markdown"
-                            type="text"
-                            onChange={props.updatePreview()}
-                            value={props.getEditor.editor || ""}
-                            multiLine={true}
-                            rows={10}
-                            rowsMax={15}
-                            fullWidth={true}
-                        />
-                    </CardText>
-                </Card>
-                <Card zDepth={1} style={styles.flex}>
-                    <CardHeader
-                        title="Preview"
-                    />
-                    <CardText>
-                        <ReactMarkdown source={props.getEditor.editor || ""} />
-                    </CardText>
-                </Card>
-            </div>
-        </Card>
+        </div>
     );
 };
 
 const mapStateToProps = (state) => ({
-    getEditor: s.getLessonEditor(state)
+    getEditor: s.getLessonEditor(state),
+    error: s.getLessonEditorStatus(state).error
 });
 
 const mapDispatchToProps = (dispatch) => ({

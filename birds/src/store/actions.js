@@ -28,9 +28,9 @@ export const createLesson = createAction(c.LESSON_EDITOR_CREATE);
 export const updateLesson = createAction(c.LESSON_EDITOR_UPDATE);
 export const loadLesson = createAction(c.LESSON_EDITOR_LOAD_LESSON);
 
-export const lessonEditorSuccess = createAction(c.LESSON_EDITOR_SUCCESS);
-export const lessonEditorFailure = createAction(c.LESSON_EDITOR_FAILURE);
-export const lessonEditorLoad = createAction(c.LESSON_EDITOR_LOAD);
+export const lessonEditorSuccess = createAction(c.LESSON_EDITOR_STATUS_SUCCESS);
+export const lessonEditorFailure = createAction(c.LESSON_EDITOR_STATUS_FAILURE);
+export const lessonEditorLoad = createAction(c.LESSON_EDITOR_STATUS_LOAD);
 
 export const setUser = createAction(c.USER_SET);
 export const resetUser = createAction(c.USER_RESET);

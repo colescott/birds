@@ -16,7 +16,7 @@ const Error = ({ error }) => (
 );
 
 const mapStateToProps = (state) => ({
-    error: s.getAuthStatus(state).error || s.getLessonEditor(state).error
+    error: s.getAuthStatus(state).error
 });
 
 export default connect(mapStateToProps)(Error);
