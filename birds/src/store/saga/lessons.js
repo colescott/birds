@@ -31,19 +31,23 @@ function* lessons() {
                     const { title, branch, editor } = yield select(s.getLessonEditor);
 
                     // Create The lesson
-                    const lesson = yield call(createLesson, title, branches[ branch ], editor, token);
+                    const lesson = yield call(lessonEditorWrapper, createLesson, title, branches[ branch ], editor, token);
                     yield put(a.setLessonEditor({ id: lesson.id }));
+
+                    yield put(a.lessonEditorSuccess());
 
                     break;
                 }
-                case c.LESSON_EDITOR_LOAD: {
+                case c.LESSON_EDITOR_LOAD_LESSON: {
 
                     // Get Needed Params
                     const { id } = yield select(s.getLessonEditor);
 
                     // Get The lesson
-                    const lesson = yield call(getLesson, id);
+                    const lesson = yield call(lessonEditorWrapper, getLesson, id);
                     yield put(a.setLessonEditor({ title: lesson.title, branch: branches.indexOf(lesson.branch), editor: lesson.data }));
+
+                    yield put(a.lessonEditorSuccess());
 
                     break;
                 }
@@ -53,7 +57,9 @@ function* lessons() {
                     const { id, title, branch, editor } = yield select(s.getLessonEditor);
 
                     // Get The lesson
-                    yield call(updateLesson, id, title, branches[ branch ], editor, token);
+                    yield call(lessonEditorWrapper, updateLesson, id, title, branches[ branch ], editor, token);
+
+                    yield put(a.lessonEditorSuccess());
 
                     break;
                 }
@@ -61,7 +67,7 @@ function* lessons() {
                     break;
             }
         } catch (e) {
-            //console.log(e);
+            yield put(a.lessonEditorFailure(e.message));
         }
     }
 }
@@ -82,6 +88,13 @@ export function* getLesson(id) {
     const res = yield call(api.lessons.get, id);
     if (res.error) throw new Error(res.error.message);
     return res.data;
+}
+
+export function* lessonEditorWrapper(func, ...args) {
+    yield put(a.lessonEditorLoad());
+    const res = yield call(func, ...args);
+    yield put(a.lessonEditorSuccess());
+    return res;
 }
 
 export default lessons;

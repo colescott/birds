@@ -10,7 +10,8 @@ const lessons = {
                 "Content-Type": "application/json"
             }
         })
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(handleNetworkError);
     },
     get: (id) => {
         return xr.get(`${urlPrefix}/api/v1/lessons/${id}`, { }, {
@@ -18,7 +19,8 @@ const lessons = {
                 "Content-Type": "application/json"
             }
         })
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(handleNetworkError);
     },
     update: (id, title, branch, data, token) => {
         return xr.put(`${urlPrefix}/api/v1/lessons/${id}`, { title, branch, data }, {
@@ -27,7 +29,24 @@ const lessons = {
                 "Content-Type": "application/json"
             }
         })
-            .then(res => res.data);
+            .then(res => res.data)
+            .catch(handleNetworkError);
+    }
+};
+
+export const handleNetworkError = (e) => {
+    try {
+        const res = JSON.parse(e.response);
+        if (typeof res.error.message.message === "string") {
+            res.error.message = res.error.message.message;
+        }
+        return res;
+    } catch (parseError) {
+        return {
+            error: {
+                message: "Network Error"
+            }
+        };
     }
 };
 
