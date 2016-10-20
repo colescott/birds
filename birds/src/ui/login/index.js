@@ -1,14 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
+import OmniForm from "react-omniform/src";
 
 import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
 import { Card, CardHeader, CardText } from "material-ui/Card";
 
-import Form from "../components/form";
-
-import { isValidEmail } from "../../util";
+import { FormItem, ButtonItem } from "../components/form.js";
 
 const Login = (props) => {
     return (
@@ -24,24 +23,19 @@ const Login = (props) => {
                     title="Login"
                 />
                     <CardText>
-                        <Form
-                            handleUpdate={props.handleUpdate()}
-                            handleSubmit={props.login(props.form)}
-                            items={[
-                                "email",
-                                "password"
-                            ]}
-                            values={props.form}
-                            labels={{
+                        <OmniForm
+                            items={{
                                 email: "Email",
-                                password: "Password"
+                                password: "Password",
                             }}
                             types={{
                                 password: "password"
                             }}
-                            validation={{
-                                email: isValidEmail
-                            }}
+                            updateValue={props.handleUpdate}
+                            values={props.form}
+                            submitForm={props.login(props.form)}
+                            FormItem={FormItem}
+                            ButtonItem={ButtonItem}
                         />
                     </CardText>
             </Card>
@@ -54,7 +48,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  handleUpdate: () => (obj) => dispatch(a.setLoginForm({ ...obj })),
+  handleUpdate: (key, value) => dispatch(a.setLoginForm({ [ key ]: value })),
   login: (data) => () => dispatch(a.loginAuth(data))
 });
 

@@ -9,8 +9,6 @@ import * as c from "../constants.js";
 import * as s from "../selectors.js";
 import * as a from "../actions.js";
 
-import clonedeep from "lodash/clonedeep";
-
 describe("AUTH SAGA", () => {
     it("should wait for LOGIN, LOGOUT, or REGISTER actions", () => {
         const saga = auth();

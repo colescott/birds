@@ -1,9 +1,5 @@
 import { assert } from "chai";
-import { combineReducers } from "redux";
-
-import { createSelector } from "reselect";
-import { getStore } from "./reducers/kvs.js";
-import { createStore } from "redux";
+import { combineReducers, createStore } from "redux";
 
 import reducers from "./reducers";
 
