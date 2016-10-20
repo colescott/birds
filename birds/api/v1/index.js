@@ -519,6 +519,8 @@ router.post("/auth/logout", authenticate, (req, res) => {
  * @apiName Create lesson
  * @apiGroup Lessons
  *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
  * @apiParam {String} title Lesson title
  * @apiParam {String} branch Lesson branch
  * @apiParam {String} [data] Lesson data
@@ -542,7 +544,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  *     }
  *
  */
-router.post("/lessons", lessons.createLesson);
+router.post("/lessons", authenticate, lessons.createLesson);
 
 /**
  * @api {get} /lessons/:id Get lesson by id
@@ -576,6 +578,8 @@ router.get("/lessons/:id", lessons.getLesson);
  * @apiName Upload lesson data
  * @apiGroup Lessons
  *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
  * @apiParam {String} [title] Lesson title
  * @apiParam {String} [branch] Lesson branch
  * @apiParam {String} [data] Lesson data
@@ -599,7 +603,7 @@ router.get("/lessons/:id", lessons.getLesson);
  *     }
  *
  */
-router.put("/lessons/:id", lessons.setLessonData);
+router.put("/lessons/:id", authenticate, lessons.setLessonData);
 
 /**
  * @api {get} /lessons Get all lessons
