@@ -522,6 +522,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  * @apiParam {String} title Lesson title
  * @apiParam {String} branch Lesson branch
  * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [data.prerequisites] Lesson prerequisites
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id
@@ -571,12 +572,14 @@ router.post("/lessons", lessons.createLesson);
 router.get("/lessons/:id", lessons.getLesson);
 
 /**
- * @api {put} /lessons Upload lesson data
+ * @api {put} /lessons/:id Update lesson
  * @apiName Upload lesson data
  * @apiGroup Lessons
  *
- * @apiParam {String} id Lesson id
- * @apiParam {String} data Lesson data
+ * @apiParam {String} [title] Lesson title
+ * @apiParam {String} [branch] Lesson branch
+ * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [prerequisites] Lesson prerequisites
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id

@@ -82,12 +82,29 @@ const setLessonData = (req, res) => {
         if (!lesson)
             return util.error(res, "That lesson does not exist!", 400);
 
-        uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
-            if (err)
-                return util.error(res, err);
-            else
-                return util.data(res, util.sterilizeLesson(lesson));
-        });
+        if (req.body.title || req.body.branch || req.body.prerequisites) {
+            let set = {};
+
+            if (req.body.title)
+                set.title = req.body.title;
+            if (req.body.branch)
+                set.branch = req.body.branch;
+            if (req.body.prerequisites)
+                set.prerequisites = req.body.prerequisites;
+
+            Lesson.findOneAndUpdate({ _id: req.params.id }, { $set: set }, (err) => {
+                if (err)
+                    return util.error(res, err);
+            });
+        }
+
+        if (req.body.data)
+            uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
+                if (err)
+                    return util.error(res, err);
+                else
+                    return util.data(res, util.sterilizeLesson(lesson));
+            });
     });
 };
 
