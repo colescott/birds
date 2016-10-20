@@ -24,11 +24,12 @@ export const resetTeamForm = createAction(c.TEAM_FORM_RESET);
 
 export const setLessonEditor = createAction(c.LESSON_EDITOR_SET);
 export const resetLessonEditor = createAction(c.LESSON_EDITOR_RESET);
+export const createLesson = createAction(c.LESSON_EDITOR_CREATE);
+export const updateLesson = createAction(c.LESSON_EDITOR_UPDATE);
+export const loadLesson = createAction(c.LESSON_EDITOR_LOAD);
 
 export const setUser = createAction(c.USER_SET);
 export const resetUser = createAction(c.USER_RESET);
-
-export const createLesson = createAction(c.LESSON_CREATE);
 
 // Team Saga Controllers
 export const createTeam = createAction(c.TEAM_CREATE, (name, number) => ({

@@ -104,9 +104,9 @@ const mapDispatchToProps = (dispatch) => ({
     updateId: () => (e, value) => dispatch(a.setLessonEditor({ id: value })),
     updateTitle: () => (e, value) => dispatch(a.setLessonEditor({ title: value })),
     updateBranch: () => (e, value) => dispatch(a.setLessonEditor({ branch: value })),
-    updateLesson: () => {},
+    updateLesson: () => (e, value) => dispatch(a.updateLesson()),
     createLesson: () => (e, value) => dispatch(a.createLesson()),
-    loadLesson: () => {}
+    loadLesson: () => (e, value) => dispatch(a.loadLesson())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LessonEditor);
