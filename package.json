@@ -12,6 +12,7 @@
     "build:prod": "better-npm-run build:prod",
     "test": "better-npm-run test",
     "test:api": "better-npm-run run test:api",
+    "test:api-watch": "better-npm-run test:api --watch --reporter min",
     "test:fe": "better-npm-run test:fe",
     "test:fe-watch": "better-npm-run test:fe --watch --reporter min",
     "postinstall": "npm run build:prod",
@@ -22,6 +23,10 @@
     "db": "better-npm-run db",
     "analyze": "better-npm-run build:prod --json | webpack-bundle-size-analyzer"
   },
+  "precommit": [
+      "lint",
+      "cover"
+  ]
   "betterScripts": {
     "start:prod": {
       "command": "node start.js",
