@@ -6,8 +6,6 @@ import * as c from "../constants.js";
 import * as a from "../actions.js";
 import * as s from "../selectors.js";
 
-import { getUser } from "./auth.js";
-
 const branches = [
     "design",
     "manufacturing",
@@ -26,7 +24,7 @@ function* lessons() {
             ]);
 
             // Read the token
-            const { token, id: uid } = yield select(s.getUser);
+            const { token } = yield select(s.getUser);
             switch (action.type) {
                 case c.LESSON_EDITOR_CREATE: {
                     // Get Needed Params
@@ -63,7 +61,7 @@ function* lessons() {
                     break;
             }
         } catch (e) {
-            console.log(e);
+            //console.log(e);
         }
     }
 }
