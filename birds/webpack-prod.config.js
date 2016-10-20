@@ -19,7 +19,7 @@ const config = merge.smart(baseConfig, {
             comments: false,
             compress: {
                 warnings: false,
-                drop_console: true
+                [ "drop_console" ]: true
             },
             cacheFolder: path.resolve(__dirname, "public/cached_uglify/"),
             debug: true,
@@ -30,8 +30,8 @@ const config = merge.smart(baseConfig, {
             },
             mangle: {
                 except: ["$"],
-                screw_ie8: true,
-                keep_fnames: false
+                [ "screw_ie8" ]: true,
+                [ "keep_fnames" ]: false
             }
         }),
         new webpack.optimize.DedupePlugin(),

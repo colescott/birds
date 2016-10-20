@@ -1,7 +1,5 @@
 import xr from "xr";
 
-const urlPrefix = (typeof URL_PREFIX !== "undefined" && URL_PREFIX) || "";
-
 const teams = {
     create: (name, number, token) => {
         return xr.post(`${URL_PREFIX}/api/v1/teams`, { name, teamnumber: parseInt(number) }, {

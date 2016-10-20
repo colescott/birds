@@ -72,10 +72,8 @@ exports.updateUserById = (req, res) => {
     if (req.body.teamnumber)
         changes.teamnumber = req.body.teamnumber;
 
-    if (req.body.password)
-    {
-        User.findById(req.params.id, (err, user) =>
-        {
+    if (req.body.password) {
+        User.findById(req.params.id, (err, user) => {
             if (err)
                 return util.error(res, err);
             user.setPassword(req.body.password, (err, thisModel, passwordErr) => {

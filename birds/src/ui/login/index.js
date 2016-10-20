@@ -28,6 +28,9 @@ const Login = (props) => {
                                 email: "Email",
                                 password: "Password",
                             }}
+                            types={{
+                                password: "password"
+                            }}
                             updateValue={props.handleUpdate}
                             values={props.form}
                             submitForm={props.login(props.form)}

@@ -86,8 +86,7 @@ describe("APIv1", () => {
             .expect(function(res) {
                 var found = false;
                 res.body.data.users.forEach((user) => {
-                    if (user.email == testUser.email)
-                    {
+                    if (user.email == testUser.email) {
                         testUserWithIdNoProgress = util.clone(user);
                         found = true;
                     }
@@ -518,8 +517,7 @@ describe("APIv1", () => {
             .expect(function(res) {
                 var found = false;
                 res.body.data.users.forEach((user) => {
-                    if (user.email == testUser.email)
-                    {
+                    if (user.email == testUser.email) {
                         testUserWithId = util.clone(user);
                         found = true;
                     }

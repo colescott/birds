@@ -37,6 +37,10 @@ const Register = (props) => {
                             firstname: "First Name",
                             lastname: "Last Name"
                         }}
+                        types={{
+                            password: "password",
+                            password2: "password"
+                        }}
                         updateValue={props.handleUpdate}
                         values={props.form}
                         submitForm={props.register}
