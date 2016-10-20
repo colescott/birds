@@ -39,7 +39,7 @@
       "env": {
         "NODE_ENV": "DEV",
         "JWT_SECRET": "correcthorsebatterystaple",
-        "MONGODB_URI": "mongodb://localhost/passport"
+        "MONGODB_URI": "mongodb://localhost/birds"
       }
     },
     "serve": {
@@ -56,7 +56,7 @@
       "env": {
         "NODE_ENV": "TEST",
         "JWT_SECRET": "TEST",
-        "MONGODB_URI": "mongodb://localhost/passport"
+        "MONGODB_URI": "mongodb://localhost/test"
       }
     },
     "test:fe": {
