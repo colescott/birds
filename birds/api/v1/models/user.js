@@ -8,6 +8,9 @@ const User = new Schema({
     lastname: String,
     teamnumber: Number,
     isAdmin: Boolean,
+    permissions: {
+        editLessons: Boolean
+    },
     progress: [{
         id: String,
         state: String

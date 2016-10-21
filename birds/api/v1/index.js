@@ -519,9 +519,12 @@ router.post("/auth/logout", authenticate, (req, res) => {
  * @apiName Create lesson
  * @apiGroup Lessons
  *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
  * @apiParam {String} title Lesson title
  * @apiParam {String} branch Lesson branch
  * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [data.prerequisites] Lesson prerequisites
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id
@@ -541,7 +544,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  *     }
  *
  */
-router.post("/lessons", lessons.createLesson);
+router.post("/lessons", authenticate, lessons.createLesson);
 
 /**
  * @api {get} /lessons/:id Get lesson by id
@@ -571,12 +574,16 @@ router.post("/lessons", lessons.createLesson);
 router.get("/lessons/:id", lessons.getLesson);
 
 /**
- * @api {put} /lessons Upload lesson data
+ * @api {put} /lessons/:id Update lesson
  * @apiName Upload lesson data
  * @apiGroup Lessons
  *
- * @apiParam {String} id Lesson id
- * @apiParam {String} data Lesson data
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [title] Lesson title
+ * @apiParam {String} [branch] Lesson branch
+ * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [prerequisites] Lesson prerequisites
  *
  * @apiSuccess {Object} data Data object containing info
  * @apiSuccess {String} data.id Lesson id
@@ -596,7 +603,7 @@ router.get("/lessons/:id", lessons.getLesson);
  *     }
  *
  */
-router.put("/lessons/:id", lessons.setLessonData);
+router.put("/lessons/:id", authenticate, lessons.setLessonData);
 
 /**
  * @api {get} /lessons Get all lessons

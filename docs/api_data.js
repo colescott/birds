@@ -171,6 +171,13 @@ define({ "api": [
             "optional": true,
             "field": "data",
             "description": "<p>Lesson data</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "data.prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
           }
         ]
       }
@@ -359,8 +366,8 @@ define({ "api": [
   },
   {
     "type": "put",
-    "url": "/lessons",
-    "title": "Upload lesson data",
+    "url": "/lessons/:id",
+    "title": "Update lesson",
     "name": "Upload_lesson_data",
     "group": "Lessons",
     "parameter": {
@@ -369,16 +376,30 @@ define({ "api": [
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Lesson id</p>"
+            "optional": true,
+            "field": "title",
+            "description": "<p>Lesson title</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
-            "optional": false,
+            "optional": true,
+            "field": "branch",
+            "description": "<p>Lesson branch</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
             "field": "data",
             "description": "<p>Lesson data</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "prerequisites",
+            "description": "<p>Lesson prerequisites</p>"
           }
         ]
       }
