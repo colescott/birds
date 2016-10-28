@@ -22,6 +22,16 @@ export const resetLoginForm = createAction(c.LOGIN_FORM_RESET);
 export const setTeamForm = createAction(c.TEAM_FORM_SET);
 export const resetTeamForm = createAction(c.TEAM_FORM_RESET);
 
+export const setLessonEditor = createAction(c.LESSON_EDITOR_SET);
+export const resetLessonEditor = createAction(c.LESSON_EDITOR_RESET);
+export const createLesson = createAction(c.LESSON_EDITOR_CREATE);
+export const updateLesson = createAction(c.LESSON_EDITOR_UPDATE);
+export const loadLesson = createAction(c.LESSON_EDITOR_LOAD_LESSON);
+
+export const lessonEditorSuccess = createAction(c.LESSON_EDITOR_STATUS_SUCCESS);
+export const lessonEditorFailure = createAction(c.LESSON_EDITOR_STATUS_FAILURE);
+export const lessonEditorLoad = createAction(c.LESSON_EDITOR_STATUS_LOAD);
+
 export const setUser = createAction(c.USER_SET);
 export const resetUser = createAction(c.USER_RESET);
 

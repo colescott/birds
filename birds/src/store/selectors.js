@@ -23,6 +23,11 @@ export const getTeamForm = createSelector(
     getStore
 );
 
+export const getLessonEditor = createSelector(
+    (state) => state.lessonEditor,
+    getStore
+);
+
 export const getAuthStatus = createSelector(
     (state) => state.auth,
     getStatus
@@ -31,4 +36,9 @@ export const getAuthStatus = createSelector(
 export const getAuthData = createSelector(
     (state) => state.auth,
     getData
+);
+
+export const getLessonEditorStatus = createSelector(
+    (state) => state.lessonEditorStatus,
+    getStatus
 );

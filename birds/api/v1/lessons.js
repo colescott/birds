@@ -2,6 +2,7 @@ var exports = module.exports = {};
 
 const util = require("./util.js");
 const Lesson = require("./models/lesson");
+const User = require("./models/user");
 
 const aws = require("aws-sdk");
 
@@ -41,52 +42,79 @@ const getLesson = (req, res) => {
 };
 
 const createLesson = (req, res) => {
-    if (!req.body.title)
-        return util.error(res, "title required.", 400);
-    if (!req.body.branch)
-        return util.error(res, "branch required", 400);
+    User.findById(req.user.id, (err, user) => {
 
-    Lesson.findOne({ title: req.body.title, branch: req.body.branch }, (err, data) => {
-        if (err)
-            return util.error(res, err);
-        if (data)
-            return util.error(res, "That lesson already exists!", 400);
+        if (!user.permissions.editLessons)
+            return util.error(res, "You do not have permissions.editLessons permission.", 401);
 
-        let lesson = new Lesson({
-            title: req.body.title,
-            branch: req.body.branch,
-            prerequisites: req.body.prerequisites || []
-        });
-        lesson.save((err, lessonModel) => {
+        if (!req.body.title)
+            return util.error(res, "title required.", 400);
+        if (!req.body.branch)
+            return util.error(res, "branch required", 400);
+
+        Lesson.findOne({ title: req.body.title, branch: req.body.branch }, (err, data) => {
             if (err)
                 return util.error(res, err);
+            if (data)
+                return util.error(res, "That lesson already exists!", 400);
 
-            let lesson = util.sterilizeLesson(lessonModel);
-
-            uploadLessonData({ id: lesson.id }, req.body.data || "This is a default lesson", (err) => {
+            let lesson = new Lesson({
+                title: req.body.title,
+                branch: req.body.branch,
+                prerequisites: req.body.prerequisites || []
+            });
+            lesson.save((err, lessonModel) => {
                 if (err)
                     return util.error(res, err);
-                else
-                    return util.data(res, lesson);
+
+                let lesson = util.sterilizeLesson(lessonModel);
+
+                uploadLessonData({ id: lesson.id }, req.body.data || "This is a default lesson", (err) => {
+                    if (err)
+                        return util.error(res, err);
+                    else
+                        return util.data(res, lesson);
+                });
             });
         });
     });
 };
 
 const setLessonData = (req, res) => {
-    if (!req.body.data)
-        return util.error(res, "Bad data", 400);
-    Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
-        if (err)
-            return util.error(res, err);
-        if (!lesson)
-            return util.error(res, "That lesson does not exist!", 400);
+    User.findById(req.user.id, (err, user) => {
 
-        uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
+        if (!user.permissions.editLessons)
+            return util.error(res, "You do not have permissions.editLessons permission.", 401);
+
+        Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
             if (err)
                 return util.error(res, err);
-            else
-                return util.data(res, util.sterilizeLesson(lesson));
+            if (!lesson)
+                return util.error(res, "That lesson does not exist!", 400);
+
+            if (req.body.title || req.body.branch || req.body.prerequisites) {
+                let set = {};
+
+                if (req.body.title)
+                    set.title = req.body.title;
+                if (req.body.branch)
+                    set.branch = req.body.branch;
+                if (req.body.prerequisites)
+                    set.prerequisites = req.body.prerequisites;
+
+                Lesson.findOneAndUpdate({ _id: req.params.id }, { $set: set }, (err) => {
+                    if (err)
+                        return util.error(res, err);
+                });
+            }
+
+            if (req.body.data)
+                uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
+                    if (err)
+                        return util.error(res, err);
+                    else
+                        return util.data(res, util.sterilizeLesson(lesson));
+                });
         });
     });
 };

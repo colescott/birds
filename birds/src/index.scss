@@ -14,6 +14,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100%;
+    font-family: Roboto, sans-serif;
 }
 
 .wrapper {
@@ -26,4 +27,25 @@ body {
     min-width: 700px;
     margin-left: auto;
     margin-right: auto;
+}
+
+// No link formatting
+a:link {
+    text-decoration: none;
+    color: #525564;
+}
+
+a:visited {
+    text-decoration: none;
+    color: #525564;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: #96C0CE;
+}
+
+a:active {
+    text-decoration: underline;
+    color: #74828F;
 }
