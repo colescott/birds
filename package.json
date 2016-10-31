@@ -131,7 +131,7 @@
     "eslint-plugin-standard": "2.0.1",
     "express": "4.14.0",
     "express-jwt": "5.1.0",
-    "express-session": "1.14.1",
+    "express-session": "1.14.2",
     "html-webpack-plugin": "2.24.0",
     "istanbul": "1.0.0-alpha.2",
     "json-loader": "0.5.4",
