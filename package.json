@@ -102,7 +102,7 @@
   "homepage": "https://github.com/Team4159/BIRDS#readme",
   "dependencies": {
     "apidoc": "0.16.1",
-    "aws-sdk": "2.6.9",
+    "aws-sdk": "2.6.12",
     "babel-core": "6.16.0",
     "babel-eslint": "7.0.0",
     "babel-loader": "6.2.7",
