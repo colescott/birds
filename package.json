@@ -137,7 +137,7 @@
     "json-loader": "0.5.4",
     "jsonwebtoken": "7.1.9",
     "lodash": "4.16.6",
-    "material-ui": "0.16.1",
+    "material-ui": "0.16.2",
     "mocha": "3.1.2",
     "moment": "2.15.2",
     "mongoose": "4.6.5",
