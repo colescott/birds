@@ -178,7 +178,7 @@
     "webpack-md5-hash": "0.0.5",
     "webpack-merge": "0.15.0",
     "webpack-uglify-js-plugin": "1.1.9",
-    "webpack-validator": "2.2.9",
+    "webpack-validator": "2.2.10",
     "webpack-visualizer-plugin": "0.1.5",
     "xr": "0.2.0"
   },
