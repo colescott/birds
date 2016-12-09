@@ -10,6 +10,7 @@ import Login from "./login";
 import Register from "./register";
 import SelectTeam from "./selectTeam";
 import LessonEditor from "./lessonEditor";
+import Error404 from "./error404";
 
 const Root = ({ store, history }) => (
     <MuiThemeProvider>
@@ -20,6 +21,7 @@ const Root = ({ store, history }) => (
               <Route path="/login" component={Login} />
               <Route path="/selectTeam" component={SelectTeam} />
               <Route path="/lessonEditor" component={LessonEditor} />
+              <Route path="/*" component={Error404} />
               <IndexRoute component={Home} />
             </Route>
           </Router>
