@@ -5,7 +5,7 @@ node_js:
 services:
     - mongodb
 env:
-    - MONGODB_URI=mongodb://localhost/passport
+    - MONGODB_URI=mongodb://localhost/test
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
 install:
