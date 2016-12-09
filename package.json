@@ -52,7 +52,7 @@
       "command": "better-npm-run test:fe && better-npm-run test:api"
     },
     "test:api": {
-      "command": "mocha birds/test/*.js",
+      "command": "mocha birds/test/*.js --timeout 5000",
       "env": {
         "NODE_ENV": "TEST",
         "JWT_SECRET": "TEST",
@@ -60,7 +60,7 @@
       }
     },
     "test:fe": {
-      "command": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts",
+      "command": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts --timeout 5000",
       "env": {
         "NODE_ENV": "TEST",
         "URL_PREFIX": ""
@@ -79,7 +79,7 @@
       "command": "apidoc -i birds/api -o docs"
     },
     "cover": {
-      "command": "istanbul cover _mocha ./birds/**/*.test.js ./birds/test/*.js -- --opts unit.mocha.opts -R spec",
+      "command": "istanbul cover _mocha ./birds/**/*.test.js ./birds/test/*.js -- --opts unit.mocha.opts -R spec --timeout 5000",
       "env": {
         "NODE_ENV": "TEST",
         "JWT_SECRET": "meh",
