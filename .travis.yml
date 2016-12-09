@@ -8,6 +8,9 @@ env:
     - MONGODB_URI=mongodb://localhost/passport
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
+install:
+    - npm install -g yarn
+    - yarn
 script:
     - npm run cover
 after_success:
