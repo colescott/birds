@@ -10,6 +10,7 @@ notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
 install:
     - npm install -g yarn
+    - yarn config set cache ~/.yarn-cache
     - yarn
 script:
     - npm run cover
