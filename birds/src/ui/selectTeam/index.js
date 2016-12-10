@@ -79,7 +79,7 @@ const mapDispatchToProps = (dispatch, { updateJoinForm, updateCreateForm }) => (
         [ key ]: value
     })),
     createTeam: ({ name, number }) => () => dispatch(a.createTeam(name, number)),
-    joinTeam: ({ number, password }) => () => dispatch(a.joinTeam(number, password))
+    joinTeam: ({ number, pass }) => () => dispatch(a.joinTeam(number, pass))
 });
 
 export default addCreateForm(
