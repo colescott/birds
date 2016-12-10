@@ -19,48 +19,29 @@ function* lessons() {
         try {
             // Wait for lesson related actions
             const action = yield take([
-                c.LESSON_EDITOR_CREATE,
-                c.LESSON_EDITOR_LOAD_LESSON,
-                c.LESSON_EDITOR_UPDATE
+                c.LESSON_LIST_LOAD,
+                c.LESSON_LOAD
             ]);
 
-            // Read the token
-            const { token } = yield select(s.getUser);
             switch (action.type) {
-                case c.LESSON_EDITOR_CREATE: {
-                    // Get Needed Params
-                    const { title, branch, editor } = yield select(s.getLessonEditor);
+                case c.LESSON_LIST_LOAD: {
+                    // Load the lesson list
+                    const lessonList = yield call(lessonListWrapper, getLessonList);
+                    yield put(a.setLessonList(lessonList));
 
-                    // Create The lesson
-                    const lesson = yield call(lessonEditorWrapper, createLesson, title, branches[ branch ], editor, token);
-                    yield put(a.setLessonEditor({ id: lesson.id }));
-
-                    yield put(a.lessonEditorSuccess());
+                    yield put(a.lessonListSuccess);
 
                     break;
                 }
-                case c.LESSON_EDITOR_LOAD_LESSON: {
+                case c.LESSON_LOAD: {
+                    // Get id to load
+                    const { id } = action.payload;
 
-                    // Get Needed Params
-                    const { id } = yield select(s.getLessonEditor);
+                    // Load the lesson
+                    const lesson = yield call(lessonWrapper, getLesson, id);
+                    yield put(a.setLesson(lesson));
 
-                    // Get The lesson
-                    const lesson = yield call(lessonEditorWrapper, getLesson, id);
-                    yield put(a.setLessonEditor({ title: lesson.title, branch: branches.indexOf(lesson.branch), editor: lesson.data }));
-
-                    yield put(a.lessonEditorSuccess());
-
-                    break;
-                }
-                case c.LESSON_EDITOR_UPDATE: {
-
-                    // Get Needed Params
-                    const { id, title, branch, editor } = yield select(s.getLessonEditor);
-
-                    // Get The lesson
-                    yield call(lessonEditorWrapper, updateLesson, id, title, branches[ branch ], editor, token);
-
-                    yield put(a.lessonEditorSuccess());
+                    yield put(a.lessonSuccess);
 
                     break;
                 }
@@ -73,28 +54,29 @@ function* lessons() {
     }
 }
 
-export function* createLesson(title, branch, data, token) {
-    const res = yield call(api.lessons.create, title, branch, data, token);
-    if (res.error) throw new Error(res.error.message);
-    return res.data;
-}
-
-export function* updateLesson(id, title, branch, data, token) {
-    const res = yield call(api.lessons.update, id, title, branch, data, token);
-    if (res.error) throw new Error(res.error.message);
-    return res.data;
-}
-
 export function* getLesson(id) {
     const res = yield call(api.lessons.get, id);
     if (res.error) throw new Error(res.error.message);
     return res.data;
 }
 
-export function* lessonEditorWrapper(func, ...args) {
-    yield put(a.lessonEditorLoad());
+export function* getLessonList() {
+    const res = yield call(api.lessons.getList);
+    if (res.error) throw new Error(res.error.message);
+    return res.data;
+}
+
+export function* lessonWrapper(func, ...args) {
+    yield put(a.lessonLoad());
     const res = yield call(func, ...args);
-    yield put(a.lessonEditorSuccess());
+    yield put(a.lessonSuccess());
+    return res;
+}
+
+export function* lessonListWrapper(func, ...args) {
+    yield put(a.lessonListLoad());
+    const res = yield call(func, ...args);
+    yield put(a.lessonListSuccess());
     return res;
 }
 
