@@ -4,6 +4,8 @@ const app = require("../app.js");
 
 const util = require("./util.js");
 
+const apiUtil = require("../api/v1/util.js");
+
 const testTeamReqest = { name: "CardinalBotics", teamnumber: 4159 };
 const testUser = { email: "test@team4159.org", password: "password", firstname: "Test", lastname: "Account", progress: [] };
 const testUserNoPass = { email: testUser.email, firstname: testUser.firstname, lastname: testUser.lastname };
@@ -17,6 +19,15 @@ var testUserWithIdNoProgress;
 var loginToken;
 
 var loginToken2;
+
+describe("Api Util functions", () => {
+    it("validId of valid id should return true", () => {
+        return apiUtil.validId("NotValid33fab9") == false;
+    });
+    it("validId of invalid id should return false", () => {
+        return apiUtil.validId("584b67b84f935651cae1780d") == false;
+    });
+});
 
 describe("Base Server", () => {
     it("should return pong on ping", (done) => {
