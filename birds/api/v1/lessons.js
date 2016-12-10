@@ -26,7 +26,11 @@ const getLessonData = (lesson, cb) => {
 };
 
 const getLesson = (req, res) => {
-    Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
+    if (!util.validId(req.params.id)) {
+        return util.error(res, "That lesson does not exist!", 400);
+    }
+
+    Lesson.findById(req.params.id, (err, lesson) => {
         if (err)
             return util.error(res, err);
         if (!lesson)

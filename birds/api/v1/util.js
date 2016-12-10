@@ -75,6 +75,10 @@ const sterilizeLessonWithData = (lesson, data) => {
     return sterilized;
 };
 
+const validId = (id) => {
+    return id.match(/^[0-9a-fA-F]{24}$/);
+};
+
 exports.noSession = noSession;
 exports.invalidToken = invalidToken;
 exports.unauthorized = unauthorized;
@@ -86,3 +90,4 @@ exports.sterilizeUserAsUser = sterilizeUserAsUser;
 exports.sterilizeTeam = sterilizeTeam;
 exports.sterilizeLesson = sterilizeLesson;
 exports.sterilizeLessonWithData = sterilizeLessonWithData;
+exports.validId = validId;
