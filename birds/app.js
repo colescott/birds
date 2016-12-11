@@ -4,6 +4,9 @@ const path = require("path");
 const cors = require("cors");
 const morgan = require("morgan");
 
+const favicon = require("serve-favicon");
+app.use(favicon(path.join(__dirname, "favicon.ico")));
+
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 
