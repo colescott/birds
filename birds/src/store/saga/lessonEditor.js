@@ -14,7 +14,7 @@ const branches = [
     "social"
 ];
 
-function* lessons() {
+function* lessonEditor() {
     for (;;) {
         try {
             // Wait for lesson related actions
@@ -96,4 +96,4 @@ export function* lessonEditorWrapper(func, ...args) {
     return res;
 }
 
-export default lessons;
+export default lessonEditor;
