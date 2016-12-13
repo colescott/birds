@@ -30,6 +30,23 @@ const listLessonsInBranch = (props, branch) => {
     });
 };
 
+const displayBranch = (props, branch) => {
+    return (<div style={styles.div}>
+        <Card style={styles.flex} >
+            <CardHeader
+                title={branch.name}
+                subtitle={branch.length}
+                actAsExpander={true}
+                showExpandableButton={true}
+            />
+            <CardText
+            expandable={true} >
+            {listLessonsInBranch(props, branch)}
+            </CardText>
+        </Card>
+    </div>);
+};
+
 const LessonList = (props) => {
     return (
         <div
@@ -39,62 +56,10 @@ const LessonList = (props) => {
                 marginTop: 15
             }}
         >
-            <div style={styles.div}>
-                <Card style={styles.flex} >
-                    <CardHeader
-                        title="Design"
-                        subtitle={props.designBranch.length}
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText
-                    expandable={true} >
-                    {listLessonsInBranch(props, props.designBranch)}
-                    </CardText>
-                </Card>
-            </div>
-            <div style={styles.div}>
-                <Card style={styles.flex} >
-                    <CardHeader
-                        title="Manufacturing"
-                        subtitle={props.manufacturingBranch.length}
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText
-                    expandable={true} >
-                    {listLessonsInBranch(props, props.manufacturingBranch)}
-                    </CardText>
-                </Card>
-            </div>
-            <div style={styles.div}>
-                <Card style={styles.flex} >
-                    <CardHeader
-                        title="Programming"
-                        subtitle={props.programmingBranch.length}
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText
-                    expandable={true} >
-                    {listLessonsInBranch(props, props.programmingBranch)}
-                    </CardText>
-                </Card>
-            </div>
-            <div style={styles.div}>
-                <Card style={styles.flex} >
-                    <CardHeader
-                        title="Social"
-                        subtitle={props.socialBranch.length}
-                        actAsExpander={true}
-                        showExpandableButton={true}
-                    />
-                    <CardText
-                    expandable={true} >
-                    {listLessonsInBranch(props, props.socialBranch)}
-                    </CardText>
-                </Card>
-            </div>
+            {displayBranch(props, props.designBranch)}
+            {displayBranch(props, props.manufacturingBranch)}
+            {displayBranch(props, props.programmingBranch)}
+            {displayBranch(props, props.socialBranch)}
         </div>
     );
 };
@@ -108,18 +73,22 @@ const mapStateToProps = (state) => ({
     },
     get designBranch() {
         var branch = this.list.filter((lesson) => lesson.branch == "design");
+        branch.name = "Design";
         return branch.sort();
     },
     get manufacturingBranch() {
         var branch = this.list.filter((lesson) => lesson.branch == "manufacturing");
+        branch.name = "Manufacturing";
         return branch.sort();
     },
     get programmingBranch() {
         var branch = this.list.filter((lesson) => lesson.branch == "programming");
+        branch.name = "Programming";
         return branch.sort();
     },
     get socialBranch() {
         var branch = this.list.filter((lesson) => lesson.branch == "social");
+        branch.name = "Social";
         return branch.sort();
     },
 });
