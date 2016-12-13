@@ -4,15 +4,7 @@ import api from "../../api";
 
 import * as c from "../constants.js";
 import * as a from "../actions.js";
-import * as s from "../selectors.js";
-
-const branches = [
-    null,
-    "design",
-    "manufacturing",
-    "programming",
-    "social"
-];
+import * as s from "../selectors.js"
 
 function* lessons() {
     for (;;) {
