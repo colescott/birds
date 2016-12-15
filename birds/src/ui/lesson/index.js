@@ -5,7 +5,7 @@ import { Link } from "react-router";
 import * as a from "../../store/actions.js";
 import * as s from "../../store/selectors.js";
 
-import { Card, CardHeader, CardText } from "material-ui/Card";
+import { Card, CardTitle, CardText } from "material-ui/Card";
 
 import ReactMarkdown from "react-markdown";
 
@@ -48,7 +48,7 @@ const Lesson = (props) => {
         >
             <div style={styles.div}>
                 <Card style={styles.flex} >
-                    <CardHeader
+                    <CardTitle
                         title={props.lesson.title || "Loading..."}
                         subtitle={props.lesson.title ? lessonProgressNames[ progress ] : ""}
                         subtitleColor={lessonProgressColors[ progress ]}
