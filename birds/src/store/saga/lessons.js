@@ -19,8 +19,10 @@ function* lessons() {
                     // Load the lesson list
                     const lessonList = yield call(lessonListWrapper, getLessonList);
 
-                    const lessonListObj = Object.keys(lessonList).map((key) => {
-                        return lessonList[ key ];
+                    const lessonListObj = {};
+
+                    Object.keys(lessonList).forEach((key) => {
+                        return lessonListObj[ lessonList[ key ].id ] = lessonList[ key ];
                     });
 
                     yield put(a.setLessonList(lessonListObj));
