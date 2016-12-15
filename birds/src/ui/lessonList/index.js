@@ -96,14 +96,9 @@ const LessonList = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-    get list() {
-        var lessonList = s.getLessonList(state);
-        return Object.keys(lessonList).map((key) => {
-            return lessonList[ key ];
-        });
-    },
+    list: s.getLessonList(state),
     get designBranch() {
-        var branch = this.list.filter((lesson) => lesson.branch == "design");
+        var branch = Object.values(this.list).filter((lesson) => lesson.branch == "design");
         branch.name = "Design";
         branch.map((lesson) => {
             lesson.progress = this.lessonProgress[ lesson.id ] || "unstarted";
@@ -112,7 +107,7 @@ const mapStateToProps = (state) => ({
         return branch.sort();
     },
     get manufacturingBranch() {
-        var branch = this.list.filter((lesson) => lesson.branch == "manufacturing");
+        var branch = Object.values(this.list).filter((lesson) => lesson.branch == "manufacturing");
         branch.name = "Manufacturing";
         branch.map((lesson) => {
             lesson.progress = this.lessonProgress[ lesson.id ] || "unstarted";
@@ -121,7 +116,7 @@ const mapStateToProps = (state) => ({
         return branch.sort();
     },
     get programmingBranch() {
-        var branch = this.list.filter((lesson) => lesson.branch == "programming");
+        var branch = Object.values(this.list).filter((lesson) => lesson.branch == "programming");
         branch.name = "Programming";
         branch.map((lesson) => {
             lesson.progress = this.lessonProgress[ lesson.id ] || "unstarted";
@@ -130,7 +125,7 @@ const mapStateToProps = (state) => ({
         return branch.sort();
     },
     get socialBranch() {
-        var branch = this.list.filter((lesson) => lesson.branch == "social");
+        var branch = Object.values(this.list).filter((lesson) => lesson.branch == "social");
         branch.name = "Social";
         branch.map((lesson) => {
             lesson.progress = this.lessonProgress[ lesson.id ] || "unstarted";
@@ -144,7 +139,7 @@ const mapStateToProps = (state) => ({
         for (const item in progressArr) {
             progressObj[ progressArr[ item ].id ] = progressArr[ item ].state;
         }
-        this.list.forEach((lesson) => {
+        Object.values(this.list).forEach((lesson) => {
             for (const prereq in lesson.prerequisites) {
                 if (progressObj[ prereq.id ] != "complete") {
                     progressObj[ lesson.id ] = "missingPrereqs";

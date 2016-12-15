@@ -3,7 +3,7 @@ import { fork } from "redux-saga/effects";
 import auth from "./auth";
 import teams from "./teams";
 import lessons from "./lessons";
-import lessonEditor from "./lessonEditor"
+import lessonEditor from "./lessonEditor";
 
 function* rootSaga() {
     yield fork(auth);

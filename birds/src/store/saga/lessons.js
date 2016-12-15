@@ -1,10 +1,9 @@
-import { take, call, put, select } from "redux-saga/effects";
+import { take, call, put } from "redux-saga/effects";
 
 import api from "../../api";
 
 import * as c from "../constants.js";
 import * as a from "../actions.js";
-import * as s from "../selectors.js"
 
 function* lessons() {
     for (;;) {
@@ -19,7 +18,12 @@ function* lessons() {
                 case c.LESSON_LIST_LOAD: {
                     // Load the lesson list
                     const lessonList = yield call(lessonListWrapper, getLessonList);
-                    yield put(a.setLessonList(lessonList));
+
+                    const lessonListObj = Object.keys(lessonList).map((key) => {
+                        return lessonList[ key ];
+                    });
+
+                    yield put(a.setLessonList(lessonListObj));
 
                     yield put(a.lessonListSuccess);
 
