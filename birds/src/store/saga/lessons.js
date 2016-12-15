@@ -25,7 +25,7 @@ function* lessons() {
 
                     yield put(a.setLessonList(lessonListObj));
 
-                    yield put(a.lessonListSuccess);
+                    yield put(a.lessonListSuccess());
 
                     break;
                 }
@@ -37,7 +37,7 @@ function* lessons() {
                     const lesson = yield call(lessonWrapper, getLesson, id);
                     yield put(a.setLesson(lesson));
 
-                    yield put(a.lessonSuccess);
+                    yield put(a.lessonSuccess());
 
                     break;
                 }
@@ -45,7 +45,7 @@ function* lessons() {
                     break;
             }
         } catch (e) {
-            yield put(a.lessonEditorFailure(e.message));
+            yield put(a.lessonFailure(e.message));
         }
     }
 }
