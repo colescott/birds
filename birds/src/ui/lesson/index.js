@@ -67,22 +67,22 @@ const Lesson = (props) => {
 const mapStateToProps = (state) => ({
     lesson: s.getLesson(state),
     list: s.getLessonList(state),
-    // get lessonProgress() {
-    //     var progressArr = s.getUser(state).progress;
-    //     var progressObj = {};
-    //     for (const item in progressArr) {
-    //         progressObj[ progressArr[ item ].id ] = progressArr[ item ].state;
-    //     }
-    //     Object.values(this.list).forEach((lesson) => {
-    //         for (const prereq in lesson.prerequisites) {
-    //             if (progressObj[ prereq.id ] != "complete") {
-    //                 progressObj[ lesson.id ] = "missingPrereqs";
-    //                 return;
-    //             }
-    //         }
-    //     });
-    //     return progressObj;
-    // },
+    get lessonProgress() {
+        var progressArr = s.getUser(state).progress;
+        var progressObj = {};
+        for (const item in progressArr) {
+            progressObj[ progressArr[ item ].id ] = progressArr[ item ].state;
+        }
+        Object.values(this.list).forEach((lesson) => {
+            for (const prereq in lesson.prerequisites) {
+                if (progressObj[ prereq.id ] != "complete") {
+                    progressObj[ lesson.id ] = "missingPrereqs";
+                    return;
+                }
+            }
+        });
+        return progressObj;
+    },
 });
 
 const mapDispatchToProps = (dispatch) => ({
