@@ -10,27 +10,10 @@ function* lessons() {
         try {
             // Wait for lesson related actions
             const action = yield take([
-                c.LESSON_LIST_LOAD,
                 c.LESSON_LOAD
             ]);
 
             switch (action.type) {
-                case c.LESSON_LIST_LOAD: {
-                    // Load the lesson list
-                    const lessonList = yield call(lessonListWrapper, getLessonList);
-
-                    const lessonListObj = {};
-
-                    Object.keys(lessonList).forEach((key) => {
-                        return lessonListObj[ lessonList[ key ].id ] = lessonList[ key ];
-                    });
-
-                    yield put(a.setLessonList(lessonListObj));
-
-                    yield put(a.lessonListSuccess());
-
-                    break;
-                }
                 case c.LESSON_LOAD: {
                     // Get id to load
                     const { id } = action.payload;
@@ -58,23 +41,10 @@ export function* getLesson(id) {
     return res.data;
 }
 
-export function* getLessonList() {
-    const res = yield call(api.lessons.getList);
-    if (res.error) throw new Error(res.error.message);
-    return res.data;
-}
-
 export function* lessonWrapper(func, ...args) {
     yield put(a.lessonLoad());
     const res = yield call(func, ...args);
     yield put(a.lessonSuccess());
-    return res;
-}
-
-export function* lessonListWrapper(func, ...args) {
-    yield put(a.lessonListLoad());
-    const res = yield call(func, ...args);
-    yield put(a.lessonListSuccess());
     return res;
 }
 

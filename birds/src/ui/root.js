@@ -25,7 +25,10 @@ const Root = ({ store, history }) => (
                 <Route path="/selectTeam" component={SelectTeam} />
                 <Route path="/lessonEditor" component={LessonEditor} />
                 <Route path="/lessons" component={LessonList} onEnter={() => store.dispatch(a.getLessonList())} />
-                <Route path="/lesson/:id" component={Lesson} onEnter={(props) => store.dispatch(a.getLesson(props.params.id))} onLeave={() => store.dispatch(a.resetLesson())} />
+                <Route path="/lesson/:id" component={Lesson} onEnter={(props) => {
+                    store.dispatch(a.getLessonList());
+                    store.dispatch(a.getLesson(props.params.id));
+                }} onLeave={() => store.dispatch(a.resetLesson())} />
                 <Route path='/404' component={NotFound} />
                 <IndexRoute component={Home} />
                 <Redirect from='*' to='/404' />

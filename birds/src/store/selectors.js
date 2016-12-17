@@ -39,7 +39,7 @@ export const getAuthData = createSelector(
 );
 
 export const getLessonStatus = createSelector(
-    (state) => state.lesson,
+    (state) => state.lessonStatus,
     getStatus
 );
 
@@ -49,7 +49,7 @@ export const getLesson = createSelector(
 );
 
 export const getLessonListStatus = createSelector(
-    (state) => state.lessonList,
+    (state) => state.lessonListStatus,
     getStatus
 );
 

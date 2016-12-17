@@ -87,6 +87,25 @@ const LessonList = (props) => {
                 marginTop: 15
             }}
         >
+            {props.error && (
+                <div style={styles.div}>
+                    <Card>
+                        <CardHeader
+                            title="Error"
+                        />
+                        <CardText>
+                            <p
+                                style={{
+                                    color: "red"
+                                }}
+                            >
+                                { props.error || ""}
+                            </p>
+                        </CardText>
+                    </Card>
+                    <br/>
+                </div>
+            )}
             {displayBranch(props, props.designBranch)}
             {displayBranch(props, props.manufacturingBranch)}
             {displayBranch(props, props.programmingBranch)}
@@ -96,6 +115,7 @@ const LessonList = (props) => {
 };
 
 const mapStateToProps = (state) => ({
+    error: s.getLessonListStatus(state).error,
     list: s.getLessonList(state),
     get designBranch() {
         var branch = Object.values(this.list).filter((lesson) => lesson.branch == "design");
