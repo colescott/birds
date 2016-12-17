@@ -51,8 +51,8 @@ const listPrerequisites = (props) => {
                 <CardText>
                     <div style={{ lineHeight: 0 }}>
                         {props.list[ lesson.id ].title}
-                        <div style={{ align: "right" }} color={lessonProgressColors[ props.list[ lesson.id ].progress ]}>
-                            {lessonProgressNames[ props.list[ lesson.id ].progress ]}
+                        <div style={{ textAlign: "right", color: lessonProgressColors[ props.lessonProgress[ lesson.id ] ] }}>
+                            {lessonProgressNames[ props.lessonProgress[ lesson.id ] ]}
                         </div>
                     </div>
                 </CardText>
@@ -104,7 +104,7 @@ const Lesson = (props) => {
                     <CardText
                         expandable={true}
                         >
-                        { listPrerequisites(props) }
+                        { props.lesson.title && listPrerequisites(props) }
                     </CardText>
                     <Card zDepth={1} style={styles.flex}>
                         <CardText>
@@ -126,6 +126,12 @@ const mapStateToProps = (state) => ({
         var progressObj = {};
         for (const item in progressArr) {
             progressObj[ progressArr[ item ].id ] = progressArr[ item ].state;
+        }
+        const prereqs = this.lesson.prerequisites;
+        for (const prereq in prereqs) {
+            if (!progressObj[ prereqs[ prereq ].id ]) {
+                progressObj[ prereqs[ prereq ].id ] = "unstarted";
+            }
         }
         Object.values(this.list).forEach((lesson) => {
             for (const prereq in lesson.prerequisites) {
