@@ -61,7 +61,7 @@ Team.statics.userIsAdmin = async function(teamnumber, user) {
     });
 };
 
-Team.statics.numberOfAdmins = function(teamnumber) {
+Team.statics.numberOfAdmins = async function(teamnumber) {
     return new Promise( (resolve, reject) => {
         this.findOne().byNumber(teamnumber).exec((err, data) => {
             if (err)
@@ -79,7 +79,7 @@ Team.statics.numberOfAdmins = function(teamnumber) {
 };
 
 // cb is (err)
-Team.statics.setAdmin = function(teamnumber, user, isAdmin) {
+Team.statics.setAdmin = async function(teamnumber, user, isAdmin) {
     return new Promise( (resolve, reject) => {
         this.findOne().byNumber(teamnumber).update({ "users.id": user.id }, { "$set": {
             "users.$.isAdmin": isAdmin
