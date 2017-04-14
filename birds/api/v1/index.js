@@ -3,35 +3,19 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
-const expressJwt = require("express-jwt");
 const router = express.Router();
 
 const users = require("./users.js");
 const teams = require("./teams.js");
 const lessons = require("./lessons.js");
 const util = require("./util.js");
+const { authenticate, errorHandler } = require("./middleware.js");
 
 const User = require("./models/user");
-
-const jwtSecret = process.env.JWT_SECRET;
 
 mongoose.Promise = global.Promise;
 
 router.use(passport.initialize());
-
-const ejwt = expressJwt({ secret: jwtSecret });
-
-const authenticate = (req, res, next) => {
-    ejwt(req, res, (err) => {
-        if (err && err.code && err.code == "invalid_token")
-            return util.invalidToken(res);
-        if (err && err.code && err.code == "credentials_required")
-            return util.noSession(res);
-        if (err)
-            return util.console.error(res, "Unknown server error when logging in");
-        next();
-    });
-};
 
 passport.use(new LocalStrategy({
         usernameField: "email"
@@ -49,6 +33,8 @@ passport.use(new LocalStrategy({
 router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
 });
+
+router.use("/teams", teams);
 
 // TODO: add errors to all apidocs
 
@@ -297,150 +283,6 @@ router.put("/users/:id", authenticate, users.updateUserById);
 router.put("/users/:id/:action", authenticate, users.performActionOnUser);
 
 /**
- * @api {post} /teams Create new team
- * @apiName Create new team
- * @apiGroup Teams
- *
- * @apiParam {String} name Teams name.
- * @apiParam {Number} teamnumber Teams number.
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.team Team object
- * @apiSuccess {String} data.team.name Team name
- * @apiSuccess {Number} data.team.teamnumber Team number
- * @apiSuccess {String} data.team.password Team password, 6 char long
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "team": {
- *           "name": "CardinalBotics",
- *           "teamnumber": 4159,
- *           "password": "Iluvme"
- *         }
- *       }
- *     }
- *
- */
-router.post("/teams", authenticate, teams.postCreateTeam);
-
-/**
- * @api {get} /teams Get list of teams
- * @apiName Get teams
- * @apiGroup Teams
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object[]} data.teams Array of teams
- * @apiSuccess {String} data.teams.name Team name
- * @apiSuccess {Number} data.teams.teamnumber Team number
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "teams": [{
- *           "name": "CardinalBotics",
- *           "teamnumber": 4159
- *         },
- *         {
- *           "name": "FireHawk Robotics",
- *           "teamnumber": 6000
- *         }]
- *       }
- *     }
- *
- */
-router.get("/teams", teams.getTeams);
-
-/**
- * @api {get} /teams/:num Get team by number
- * @apiName Get team by number
- * @apiGroup Teams
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.team Array of teams
- * @apiSuccess {String} data.team.name Team name
- * @apiSuccess {Number} data.team.teamnumber Team number
- * @apiSuccess {String} [data.team.password] Team password (Only if user is admin)
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "team": {
- *           "name": "CardinalBotics",
- *           "teamnumber": 4159
- *         }
- *       }
- *     }
- *
- */
-router.get("/teams/:num", authenticate, teams.getTeam);
-
-/**
- * @api {put} /teams/:id/delete Delete team
- * @apiName Delete team
- * @apiGroup Teams
- *
- * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.message Message
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "message": "Successfully deleted team."
- *     }
- *
- */
-
-/**
- * @api {put} /teams/:num/addadmin Add admin
- * @apiName Add admin
- * @apiGroup Teams
- *
- * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {Object} user User to add as admin
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.message Message
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "message": "Successfully added admin."
- *     }
- *
- */
-
-/**
- * @api {put} /teams/:num/removeadmin Remove admin
- * @apiName Remove admin
- * @apiGroup Teams
- *
- * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {Object} user User to remove as admin
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.message Message
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "message": "Successfully removed admin."
- *     }
- *
- */
-router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
-
-/**
  * @api {post} /auth/login Login
  * @apiName Login
  * @apiGroup Auth
@@ -638,5 +480,8 @@ router.put("/lessons/:id", authenticate, lessons.setLessonData);
  *
  */
 router.get("/lessons", lessons.getLessons);
+
+// Error catch if error was thrown
+router.use(errorHandler);
 
 module.exports = router;
