@@ -1,5 +1,7 @@
 var exports = module.exports = {};
 
+const _ = require("lodash");
+
 const util = require("./util.js");
 const User = require("./models/user");
 const Team = require("./models/team");
@@ -9,9 +11,6 @@ const options = {};
 options.new = true;
 
 exports.register = (req, res) => {
-    //TODO: make all args required
-    if (!req.body.email)
-        return util.error(res, "Email value required.", 400);
     User.find({ email: req.body.email }, (err, users) => {
         if (err)
             return util.error(res, err);
@@ -59,19 +58,13 @@ exports.getUserById = (req, res) => {
 };
 
 exports.updateUserById = (req, res) => {
+
     if (req.user.id != req.params.id)
         return util.unauthorized(res);
 
-    const changes = {};
-    if (req.body.email)
-        changes.email = req.body.email;
-    if (req.body.firstname)
-        changes.firstname = req.body.firstname;
-    if (req.body.lastname)
-        changes.lastname = req.body.lastname;
-    if (req.body.teamnumber)
-        changes.teamnumber = req.body.teamnumber;
+    const changes = _.pick(req.body, ["email", "firstname", "lastname", "teamnumber"]);
 
+    // TODO: just update based on logged in users id
     if (req.body.password) {
         User.findById(req.params.id, (err, user) => {
             if (err)
@@ -86,23 +79,16 @@ exports.updateUserById = (req, res) => {
         });
     }
 
-    if (changes != {})
-        User.findByIdAndUpdate(req.params.id, changes, options, (err, user) => {
-            if (err)
-                return util.error(res, err);
-            const response = { user: util.sterilizeUserAsUser(user) };
-            return util.data(res, response);
-        });
-    else
-        User.findById(req.params.id, (err, user) => {
-            if (err)
-                return util.error(res, err);
-            const response = { user: util.sterilizeUserAsUser(user) };
-            return util.data(res, response);
-        });
+    User.findById(req.params.id, (err, user) => {
+        if (err)
+            return util.error(res, err);
+        const response = { user: util.sterilizeUserAsUser(user) };
+        return util.data(res, response);
+    });
 };
 
 exports.performActionOnUser = (req, res) => {
+    // TODO: This should change like hella
     if (req.user.id != req.params.id)
         return util.unauthorized(res);
 
@@ -112,6 +98,7 @@ exports.performActionOnUser = (req, res) => {
 
         switch (req.params.action) {
         case "delete":
+            // TODO: Should be delete request
             User.findByIdAndRemove(req.params.id, (err) => {
                 if (err)
                     return util.error(res, err);
