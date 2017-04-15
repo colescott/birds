@@ -8,12 +8,13 @@ const ejwt = expressJwt({ secret: module.exports.jwtSecret });
 
 module.exports.authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
-        if (err && err.code && err.code == "invalid_token")
-            return util.invalidToken(res);
-        if (err && err.code && err.code == "credentials_required")
-            return util.noSession(res);
         if (err)
-            return util.console.error(res, "Unknown server error when logging in");
+            return res.status(401).send({
+                code: 401,
+                error: "Not Authorized",
+                message: err.message
+            });
+
         next();
     });
 };
@@ -31,3 +32,18 @@ module.exports.errorHandler = (err, req, res, next) => {
         return res.status(500).send({ error: { message: err.message || "Unknown error." } });
     return next();
 };
+
+module.exports.validator = (args) => async (req, res, next) => {
+    args.forEach(arg => {
+        req.checkBody(arg).notEmpty();
+    });
+    const result = await req.getValidationResult();
+    if (!result.isEmpty()) {
+        return res.status(400).send({
+            code: 400,
+            error: "Bad Request"
+        });
+    } else {
+        next();
+    }
+}

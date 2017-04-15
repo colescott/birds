@@ -1,194 +1,345 @@
-var exports = module.exports = {};
+const express = require("express");
+const router = express.Router();
 
 const util = require("./util.js");
+const { authenticate, errorWrapper, validator } = require("./middleware.js");
 const User = require("./models/user");
 const Team = require("./models/team");
+
+const _ = require("lodash");
 
 //Options for mongoose
 const options = {};
 options.new = true;
 
-exports.register = (req, res) => {
-    //TODO: make all args required
-    if (!req.body.email)
-        return util.error(res, "Email value required.", 400);
-    User.find({ email: req.body.email }, (err, users) => {
-        if (err)
-            return util.error(res, err);
-        if (users.length > 0)
-            return util.error(res, "A user with that email already exists!", 400);
-    });
-    const usr = new User({
+/**
+ * @api {post} /users Register user
+ * @apiName Register
+ * @apiGroup Users
+ *
+ * @apiParam {String} email Users email.
+ * @apiParam {String} password Users password.
+ * @apiParam {String} firstname Users first name.
+ * @apiParam {String} lastname Users last name.
+ * @apiParam {Number} teamnumber Users team number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.post("/", validator(["email", "password", "firstname", "lastname"]), errorWrapper( async (req, res) => {
+    const userQuery = await User.findOne({ email: req.body.email });
+
+    if (userQuery)
+        return util.error(res, "A user with that email already exists!", 400);
+
+    const user = new User({
         email: req.body.email,
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         progress: []
     });
-    User.register(usr, req.body.password, (err, thisModel, passwordErr) => {
+
+    User.register(user, req.body.password, (err, model, passwordErr) => {
         if (err)
-            return util.error(res, err);
+            throw err;
         if (passwordErr)
-            return util.error(res, passwordErr, 400);
-        User.findById(thisModel._id, (err, user) => {
-            if (err)
-                return util.error(res, err);
+            throw passwordErr;
 
-            const response = {
-                user: util.sterilizeUser(user)
-            };
-            return res.send(response);
-        });
-    });
-};
-
-exports.getUsers = (req, res) => {
-    User.find({}, (err, users) => {
-        const usrs = users.map(user => (util.sterilizeUser(user)));
-        const val = { users: usrs };
-        return res.send(val);
-    });
-};
-
-exports.getUserById = (req, res) => {
-    User.findById(req.params.id, (err, user) => {
-        if (err)
-            return res.status(400).send({
-                code: 400,
-                error: "Bad Request",
-                message: "Unable to find a user with that id"
-            });
-        const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
+        const response = {
+            user: util.sterilizeUser(model)
+        };
         return res.send(response);
     });
-};
+}));
 
-exports.updateUserById = (req, res) => {
+/**
+ * @api {get} /users Get list of users
+ * @apiName Get users
+ * @apiGroup Users
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object[]} data.users Array of users
+ * @apiSuccess {String} data.users.id Users id
+ * @apiSuccess {String} data.users.email Users email
+ * @apiSuccess {String} data.users.firstname Users firstname
+ * @apiSuccess {String} data.users.lastname Users lastname
+ * @apiSuccess {Number} data.users.teamnumber Users teamnumber
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "users": [{
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159
+ *         },
+ *         {
+ *           "id": "THISISAFAKEID",
+ *           "email": "admin@team4159.org",
+ *           "firstname": "Admin",
+ *           "lastname": "Account",
+ *           "teamnumber": 4159
+ *         }]
+ *       }
+ *     }
+ *
+ */
+router.get("/", errorWrapper( async (req, res) => {
+    const userList = await User.find({});
+    const users = userList.map(user => util.sterilizeUser(user));
+    return res.send({ users });
+}));
+
+/**
+ * @api {get} /users/:id Get user by id
+ * @apiName Get user
+ * @apiGroup Users
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Boolean} data.user.isAdmin If user is an admin of team NOTE: only returns this if logged in as user trying to get
+ * @apiSuccess {Object[]} [data.user.progress] User progress NOTE: only returns this if logged in as user trying to get
+ * @apiSuccess {String} data.user.progress.id Id of lesson
+ * @apiSuccess {String} data.user.progress.state Progress of lesson
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159,
+ *           "isAdmin": true,
+ *           "progress": [
+ *              {
+ *                "id": "thisisalessonid",
+ *                "state": "complete"
+ *              }
+ *            ]
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.get("/:id", authenticate, errorWrapper( async (req, res) => {
+    let user;
+    try {
+        user = await User.findById(req.params.id);
+    } catch (e) {
+        return res.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "Unable to find a user with that id"
+        });
+    }
+    const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
+    return res.send(response);
+}));
+
+/**
+ * @api {put} /users/:id Set user values
+ * @apiName Set user values
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [email] Users new email.
+ * @apiParam {String} [password] Users new password.
+ * @apiParam {String} [firstname] Users new first name.
+ * @apiParam {String} [lastname] Users new last name.
+ * @apiParam {Number} [teamnumber] Users new team number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User object
+ * @apiSuccess {String} data.user.id Users id
+ * @apiSuccess {String} data.user.email Users email
+ * @apiSuccess {String} data.user.firstname Users firstname
+ * @apiSuccess {String} data.user.lastname Users lastname
+ * @apiSuccess {Number} data.user.teamnumber Users teamnumber
+ * @apiSuccess {Object[]} data.user.progress User progress
+ * @apiSuccess {String} data.user.progress.id Id of lesson
+ * @apiSuccess {String} data.user.progress.state Progress of lesson
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159,
+ *           "progress": [
+ *              {
+ *                "id": "thisisalessonid",
+ *                "state": "complete"
+ *              }
+ *            ]
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.put("/:id", authenticate, errorWrapper( async (req, res) => {
     if (req.user.id != req.params.id)
         return util.unauthorized(res);
 
-    const changes = {};
-    if (req.body.email)
-        changes.email = req.body.email;
-    if (req.body.firstname)
-        changes.firstname = req.body.firstname;
-    if (req.body.lastname)
-        changes.lastname = req.body.lastname;
-    if (req.body.teamnumber)
-        changes.teamnumber = req.body.teamnumber;
+    const changes = _.pick(req.body, ["email", "firstname", "lastname", "teamnumber"]);
 
     if (req.body.password) {
         User.findById(req.params.id, (err, user) => {
             if (err)
-                return util.error(res, err);
+                throw err;
             user.setPassword(req.body.password, (err, thisModel, passwordErr) => {
                 if (err)
-                    return util.error(res, err);
+                    throw err;
                 if (passwordErr)
-                    return util.error(res, passwordErr);
-                // TODO: finish password setting
+                    throw passwordErr;
             });
         });
     }
 
-    if (changes != {})
-        User.findByIdAndUpdate(req.params.id, changes, options, (err, user) => {
-            if (err)
-                return util.error(res, err);
-            const response = { user: util.sterilizeUserAsUser(user) };
-            return util.data(res, response);
-        });
-    else
-        User.findById(req.params.id, (err, user) => {
-            if (err)
-                return util.error(res, err);
-            const response = { user: util.sterilizeUserAsUser(user) };
-            return util.data(res, response);
-        });
-};
+    let user;
 
-exports.performActionOnUser = (req, res) => {
+    if (changes != {})
+        user = await User.findByIdAndUpdate(req.params.id, changes, options);
+    else
+        user = await User.findById(req.params.id);
+
+    const response = { user: util.sterilizeUserAsUser(user) };
+    return res.send(response);
+}));
+
+/**
+ * @api {delete} /users/:id Delete user
+ * @apiName Delete user
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully deleted user"
+ *     }
+ *
+ */
+router.delete("/:id", authenticate, errorWrapper( async (req, res) => {
     if (req.user.id != req.params.id)
         return util.unauthorized(res);
 
-    User.findById(req.params.id, (err, user) => {
-        if (err)
-            return util.error(res, err);
+    await User.findByIdAndRemove(req.params.id);
+    return util.message(res, "successfully deleted user.");
+}));
 
-        switch (req.params.action) {
-        case "delete":
-            User.findByIdAndRemove(req.params.id, (err) => {
-                if (err)
-                    return util.error(res, err);
-                return util.message(res, "successfully deleted user.");
-            });
-            break;
-        case "setprogress":
-            if (!req.body.id)
-                return util.error(res, "Id not set!", 400);
-            if (!req.body.state)
-                return util.error(res, "State not set!", 400);
+/**
+ * @api {put} /users/:id/setprogress Set lesson progress
+ * @apiName Set lesson progress
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} id Id for lesson
+ * @apiParam {String} state State for lesson
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully set progress"
+ *     }
+ *
+ */
+router.put("/:id/setprogress", authenticate, errorWrapper( async (req, res) => {
+    if (req.user.id != req.params.id)
+        return util.unauthorized(res);
 
-            {
-                let found = false;
+    const user = await User.findById(req.params.id);
 
-                user.progress.forEach((obj) => {
-                    if (found)
-                        return;
-                    if (obj.id == req.body.id) {
-                        found = true;
+    if (!req.body.id)
+        return util.error(res, "Id not set!", 400);
+    if (!req.body.state)
+        return util.error(res, "State not set!", 400);
 
-                        User.findById(req.params.id).update({ "progress.id": req.body.id }, { "$set": {
-                            "progress.$.state": req.body.state
-                        } }, options, (err) => {
-                            if (err)
-                                return util.error(res, err);
-                            return util.message(res, "Successfully set progress");
-                        });
-                    }
-                });
-                if (found)
-                    return;
-            }
+    await User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options);
+    return util.message(res, "Successfully set progress");
+}));
 
-            User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options, (err) => {
-                if (err)
-                    return util.error(res, err);
-                return util.message(res, "Successfully set progress");
-            });
-            break;
-        case "resetprogress":
-            User.findByIdAndUpdate(req.user.id, { progress: [] }, options, (err) => {
-                if (err)
-                    return util.error(res, err);
-                return util.message(res, "Successfully reset progress");
-            });
-            break;
-        case "jointeam":
-            Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
-                if (err)
-                    return util.error(res, err);
-                if (data.length <= 0)
-                    return util.error(res, "That team does not exist.", 400);
+/**
+ * @api {put} /users/:id/jointeam Join team
+ * @apiName Join team
+ * @apiGroup Users
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [teamnumber] Number of team
+ * @apiParam {String} [password] Password for team
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully reset progress"
+ *     }
+ *
+ */
+router.put("/:id/jointeam", authenticate, errorWrapper( async (req, res) => {
+    if (req.user.id != req.params.id)
+        return util.unauthorized(res);
 
-                if (req.body.password != data[ 0 ].password)
-                    return util.error(res, "Incorrect password.", 401);
+    const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
 
-                Team.addUser(req.body.teamnumber, user, false, (err) => {
-                    if (err)
-                        return util.error(res, err);
-                    Team.userIsAdmin(req.body.teamnumber, user, (err, isAdmin) => {
-                        User.findByIdAndUpdate(req.user.id, { teamnumber: req.body.teamnumber, isAdmin: isAdmin }, options, (err) => {
-                            if (err)
-                                return util.error(res, err);
-                        });
+    if (data.length <= 0)
+        return util.error(res, "That team does not exist.", 400);
 
-                        return util.message(res, "Successfully joined team");
-                    });
-                });
-            });
-            break;
-        default:
-            return util.error(res, "Action not found", 400);
-        }
-    });
-};
+    if (req.body.password != data[ 0 ].password)
+        return util.error(res, "Incorrect password.", 401);
+
+    await Team.addUser(req.body.teamnumber, user);
+
+    return util.message(res, "Successfully joined team");
+}));
+
+module.exports = router;
