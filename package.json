@@ -187,7 +187,7 @@
     "xr": "0.2.0"
   },
   "engines": {
-    "node": "6.0.0"
+    "node": "7.6.0"
   },
   "devDependencies": {
     "babel-preset-react-hmre": "1.1.1"
