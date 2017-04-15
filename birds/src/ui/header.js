@@ -15,6 +15,7 @@ const Header = ({ auth, logout }) => {
             status={ auth.firstname || "Not Logged In" }
         >
             { link("Home", "/") }
+            { link("Lessons", "/lessons") }
             { authLinks(auth, logout) }
         </ NavBar>
     );

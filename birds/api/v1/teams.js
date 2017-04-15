@@ -1,138 +1,227 @@
-var exports = module.exports = {};
+const express = require("express");
+const router = express.Router();
 
 const randomstring = require("randomstring");
 
 const util = require("./util.js");
+const { authenticate, errorWrapper } = require("./middleware.js");
 const Team = require("./models/team");
 const User = require("./models/user");
 
-const createTeam = (name, teamnumber, adminUser, cb) => {
+/**
+ * @api {post} /teams Create new team
+ * @apiName Create new team
+ * @apiGroup Teams
+ *
+ * @apiParam {String} name Teams name.
+ * @apiParam {Number} teamnumber Teams number.
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.team Team object
+ * @apiSuccess {String} data.team.name Team name
+ * @apiSuccess {Number} data.team.teamnumber Team number
+ * @apiSuccess {String} data.team.password Team password, 6 char long
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159,
+ *           "password": "Iluvme"
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.post("/", authenticate, errorWrapper(async (req, res, next) => {
+    if (await Team.exists(req.body.teamnumber))
+        return util.error(res, "A team with that number already exists!", 400);
+    const user = await User.findById(req.user.id);
 
-    var team = new Team({
-        name: name,
-        teamnumber: teamnumber,
+    const team = new Team({
+        name: req.body.name,
+        teamnumber: req.body.teamnumber,
         password: randomstring.generate(6),
         users: []
     });
-    team.save((err) => {
-        if (err)
-            return cb(err);
-        Team.addUser(teamnumber, adminUser, true, (err) => {
-            if (err)
-                return cb(err);
-            User.findByIdAndUpdate(adminUser.id, { teamnumber: teamnumber, isAdmin: true }, (err) => {
-                if (err)
-                    return cb(err);
 
-                return cb(null, team.password);
-            });
-        });
-    });
-};
+    await team.save();
+    await Team.addUser(team.teamnumber, user, true);
+    await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
 
-const getTeams = (req, res) => {
-    Team.find({}, function(err, teams) {
-        if (err)
-            return util.error(res, err);
-            
-        const tems = teams.map(team => (util.sterilizeTeam(team)));
-        const val = { teams: tems };
-        return util.data(res, val);
-    });
-};
+    const response = {
+        team: util.sterilizeTeam(team)
+    };
 
-const getTeam = (req, res) => {
-    Team.find({ teamnumber: req.params.num }, function(err, teams) {
-        if (err)
-            return util.error(res, err);
+    return util.data(res, response);
+}));
 
-        if (teams.length < 1)
-            return util.error(res, "That team does not exist.", 400);
 
-        const team = util.sterilizeTeam(teams[ 0 ]);
-        Team.userIsAdmin(req.params.num, req.user, (err, isAdmin) => {
-            if (err)
-                return util.error(res, err);
-            if (isAdmin)
-                team.password = teams[ 0 ].password;
-            const val = { team: team };
-            return util.data(res, val);
-        });
-    });
-};
+/**
+ * @api {get} /teams Get list of teams
+ * @apiName Get teams
+ * @apiGroup Teams
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object[]} data.teams Array of teams
+ * @apiSuccess {String} data.teams.name Team name
+ * @apiSuccess {Number} data.teams.teamnumber Team number
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "teams": [{
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         },
+ *         {
+ *           "name": "FireHawk Robotics",
+ *           "teamnumber": 6000
+ *         }]
+ *       }
+ *     }
+ *
+ */
+router.get("/", errorWrapper(async (req, res) => {
+    const teams = await Team.find({});
 
-const postCreateTeam = (req, res) => {
-    Team.exists(req.body.teamnumber, (err, exists) => {
-        if (err)
-            return util.error(res, err);
-        if (exists)
-            return util.error(res, "A team with that number already exists!", 400);
-        User.findById(req.user.id, (err, user) => {
-            if (err)
-                return util.error(res, err);
-            createTeam(req.body.name, req.body.teamnumber, user, (err, password) => {
-                if (err)
-                    return util.error(res, err);
-                Team.findOne().byNumber(req.body.teamnumber).exec((err, data) => {
-                    if (err)
-                        return util.error(res, err);
-                    let team = util.sterilizeTeam(data[ 0 ]);
-                    team.password = password;
-                    const response = {
-                        team: team
-                    };
+    const ret = { teams: teams.map(team => (util.sterilizeTeam(team))) };
+    return util.data(res, ret);
+}));
 
-                    util.data(res, response);
-                });
-            });
-        });
-    });
-};
+/**
+ * @api {get} /teams/:num Get team by number
+ * @apiName Get team by number
+ * @apiGroup Teams
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.team Array of teams
+ * @apiSuccess {String} data.team.name Team name
+ * @apiSuccess {Number} data.team.teamnumber Team number
+ * @apiSuccess {String} [data.team.password] Team password (Only if user is admin)
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.get("/:num", authenticate, errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
 
-const performActionOnTeam = (req, res) => {
-    Team.userIsAdmin(req.params.num, req.user, (err, isAdmin) => {
-        if (err)
-            return util.error(res, err);
-        if (!isAdmin)
-            return util.error(res, "You are not an admin of this team.", 401);
+    if (teams.length < 1)
+        return util.error(res, "That team does not exist.", 400);
 
-        switch (req.params.action) {
-        case "delete":
-            Team.findOneAndRemove({ teamnumber: req.params.num }, (err) => {
-                if (err)
-                    return util.error(res, err);
-                return util.message(res, "Successfully deleted team.");
-            });
-            break;
-        case "addadmin":
-            Team.setAdmin(req.params.num, req.body.user, true, (err) => {
-                if (err)
-                    return util.error(res, err);
-                return util.message(res, "Successfully added admin.");
-            });
-            break;
-        case "removeadmin":
-            Team.numberOfAdmins(req.params.num, (err, num) => {
-                if (err)
-                    return util.error(res, err);
-                if (num <= 1)
-                    return util.error(res, "You cannot remove the only admin.", 400);
+    const team = util.sterilizeTeam(teams[ 0 ]);
 
-                Team.setAdmin(req.params.num, req.body.user, false, (err) => {
-                    if (err)
-                        return util.error(res, err);
-                    return util.message(res, "Successfully removed admin.");
-                });
-            });
-            break;
-        default:
-            return util.error(res, "Action not found", 400);
-        }
-    });
-};
+    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
-exports.createTeam = createTeam;
-exports.getTeams = getTeams;
-exports.getTeam = getTeam;
-exports.postCreateTeam = postCreateTeam;
-exports.performActionOnTeam = performActionOnTeam;
+    if (userIsAdmin)
+        team.password = teams[ 0 ].password;
+
+    const val = { team: team };
+    return util.data(res, val);
+}));
+
+/**
+ * @api {delete} /teams/:id Delete team
+ * @apiName Delete team
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully deleted team."
+ *     }
+ *
+ */
+router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
+    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+
+    if(!userIsAdmin)
+        return util.error(res, "You are not an admin of this team.", 401);
+
+    await Team.findOneAndRemove({ teamnumber: req.params.num });
+    return util.message(res, "Successfully deleted team.");
+}));
+
+/**
+ * @api {put} /teams/:num/addadmin Add admin
+ * @apiName Add admin
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *teams
+ * @apiParam {Object} user User to add as admin
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully added admin."
+ *     }
+ *
+ */
+router.put("/:num/addadmin", authenticate, errorWrapper(async (req, res) => {
+    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+
+    if(!userIsAdmin)
+        return util.error(res, "You are not an admin of this team.", 401);
+
+    await Team.setAdmin(req.params.num, req.body.user, true);
+    return util.message(res, "Successfully added admin.");
+}));
+
+/**
+ * @api {put} /teams/:num/removeadmin Remove admin
+ * @apiName Remove admin
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {Object} user User to remove as admin
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "message": "Successfully removed admin."
+ *     }
+ *
+ */
+router.put("/:num/removeadmin", authenticate, errorWrapper(async (req, res) => {
+    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+
+    if(!userIsAdmin)
+        return util.error(res, "You are not an admin of this team.", 401);
+
+    const adminNum = Team.numberOfAdmins(req.params.num);
+    if (adminNum <= 1)
+        return util.error(res, "You cannot remove the only admin.", 400);
+
+    await Team.setAdmin(req.params.num, req.body.user, false);
+    return util.message(res, "Successfully removed admin.");
+}));
+
+module.exports = router;
