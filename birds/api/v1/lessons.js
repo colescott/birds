@@ -1,140 +1,221 @@
-var exports = module.exports = {};
+const express = require("express");
+const router = express.Router();
 
 const util = require("./util.js");
+const { authenticate, errorWrapper } = require("./middleware.js");
 const Lesson = require("./models/lesson");
 const User = require("./models/user");
 
+const _ = require("lodash");
+
 const aws = require("aws-sdk");
-
 const s3params = { Bucket: process.env.AWS_BUCKET };
-
 const s3bucket = new aws.S3({ params: s3params });
 
-const uploadLessonData = (lesson, data, cb) => {
+const uploadLessonData = async (lesson, data) => {
     let params = Object.assign({}, s3params, {
         Key: `lessons/${lesson.id}`,
         Body: data
     });
-    s3bucket.upload(params, (err) => cb(err));
+    return s3bucket.upload(params);
 };
 
-const getLessonData = (lesson, cb) => {
+const getLessonData = async (lesson) => {
     let params = Object.assign({}, s3params, {
         Key: `lessons/${lesson.id}`
     });
-    s3bucket.getObject(params, function(err, data) {
-        if (err)
-            cb(err);
-        else
-            cb(null, data.Body.toString());
-    });
+    return s3bucket.getObject(params);
 };
 
-const getLesson = (req, res) => {
+/**
+ * @api {post} /lessons Create lesson
+ * @apiName Create lesson
+ * @apiGroup Lessons
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} title Lesson title
+ * @apiParam {String} branch Lesson branch
+ * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [data.prerequisites] Lesson prerequisites
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": []
+ *       }
+ *     }
+ *
+ */
+router.post("/", authenticate, errorWrapper(async (req, res) => {
+    const user = await User.findById(req.user.id);
+
+    if (!user.permissions.editLessons)
+        return util.error(res, "You do not have permissions.editLessons permission.", 401);
+
+    // TODO: require all stuff
+
+    const data = Lesson.findOne({ title: req.body.title, branch: req.body.branch });
+
+    if (data)
+        return util.error(res, "That lesson already exists!", 400);
+
+    const lesson = new Lesson({
+        title: req.body.title,
+        branch: req.body.branch,
+        prerequisites: req.body.prerequisites || []
+    });
+    lessonModel = await lesson.save();
+
+    const sterilizedLesson = util.sterilizeLesson(lessonModel);
+
+    try {
+        await uploadLessonData({ id: sterilizedLesson.id }, req.body.data || "This is a default lesson");
+    } catch (e) {
+        await Lesson.findByIdAndRemove(sterilizedLesson.id);
+        return util.error(res, err);
+    }
+
+    return util.data(res, sterilizedLesson);
+}));
+
+/**
+ * @api {get} /lessons/:id Get lesson by id
+ * @apiName Get lesson by id
+ * @apiGroup Lessons
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ * @apiSuccess {String} data.data Lesson data
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": [],
+ *         "data": "This is a default lesson"
+ *       }
+ *     }
+ *
+ */
+router.get("/:id", errorWrapper(async (req, res) => {
     if (!util.validId(req.params.id)) {
         return util.error(res, "That lesson does not exist!", 400);
     }
 
-    Lesson.findById(req.params.id, (err, lesson) => {
-        if (err)
-            return util.error(res, err);
-        if (!lesson)
-            return util.error(res, "That lesson does not exist!", 400);
+    const lesson = await Lesson.findById(req.params.id);
 
-        getLessonData({ id: lesson.id }, (err, data) => {
-            if (err)
-                return util.error(res, `There was a error when loading this lesson. Retry in a bit. (error code: ${err.code})`);
-            else
-                return util.data(res, util.sterilizeLessonWithData(lesson, data));
-        });
-    });
-};
+    if (!lesson)
+        return util.error(res, "That lesson does not exist!", 400);
 
-const createLesson = (req, res) => {
-    User.findById(req.user.id, (err, user) => {
+    const data = await getLessonData({ id: lesson.id }).Body.toString();
 
-        if (!user.permissions.editLessons)
-            return util.error(res, "You do not have permissions.editLessons permission.", 401);
+    return util.data(res, util.sterilizeLessonWithData(lesson, data));
+}));
 
-        if (!req.body.title)
-            return util.error(res, "title required.", 400);
-        if (!req.body.branch)
-            return util.error(res, "branch required", 400);
+/**
+ * @api {put} /lessons/:id Update lesson
+ * @apiName Upload lesson data
+ * @apiGroup Lessons
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [title] Lesson title
+ * @apiParam {String} [branch] Lesson branch
+ * @apiParam {String} [data] Lesson data
+ * @apiParam {String} [prerequisites] Lesson prerequisites
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "id": "4159<3u",
+ *         "title": "CAD Basics",
+ *         "branch": "design",
+ *         "prerequisites": []
+ *       }
+ *     }
+ *
+ */
+router.put("/:id", authenticate, errorWrapper(async (req, res) => {
+    const user = await User.findById(req.user.id);
 
-        Lesson.findOne({ title: req.body.title, branch: req.body.branch }, (err, data) => {
-            if (err)
-                return util.error(res, err);
-            if (data)
-                return util.error(res, "That lesson already exists!", 400);
+    if (!user.permissions.editLessons)
+        return util.error(res, "You do not have permissions.editLessons permission.", 401);
 
-            let lesson = new Lesson({
-                title: req.body.title,
-                branch: req.body.branch,
-                prerequisites: req.body.prerequisites || []
-            });
-            lesson.save((err, lessonModel) => {
-                if (err)
-                    return util.error(res, err);
+    const lesson = await Lesson.findOne({ _id: req.params.id });
 
-                let lesson = util.sterilizeLesson(lessonModel);
+    if (!lesson)
+        return util.error(res, "That lesson does not exist!", 400);
 
-                uploadLessonData({ id: lesson.id }, req.body.data || "This is a default lesson", (err) => {
-                    if (err)
-                    {
-                        Lesson.findByIdAndRemove(lesson.id, () => {
-                            return util.error(res, err);
-                        });
-                    }
-                    else
-                        return util.data(res, lesson);
-                });
-            });
-        });
-    });
-};
+    let set = _.pick(req.body, ["title", "branch", "prerequisites"]);
 
-const setLessonData = (req, res) => {
-    User.findById(req.user.id, (err, user) => {
+    const lessonUpdated = await Lesson.findOneAndUpdate({ _id: req.params.id }, { $set: set });
 
-        if (!user.permissions.editLessons)
-            return util.error(res, "You do not have permissions.editLessons permission.", 401);
+    return util.data(res, lessonUpdated);
+}));
 
-        Lesson.findOne({ _id: req.params.id }, (err, lesson) => {
-            if (err)
-                return util.error(res, err);
-            if (!lesson)
-                return util.error(res, "That lesson does not exist!", 400);
+/**
+ * @api {get} /lessons Get all lessons
+ * @apiName Get all lessons
+ * @apiGroup Lessons
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {String} data.id Lesson id
+ * @apiSuccess {String} data.title Lesson title
+ * @apiSuccess {String} data.branch Lesson branch
+ * @apiSuccess {String} data.prerequisites Lesson prerequisites
+ * @apiSuccess {String} data.data Lesson data
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": [
+ *         {
+ *           "id": "i<3u",
+ *           "title": "CAD22",
+ *           "branch": "design",
+ *           "prerequisites": []
+ *         },
+ *         {
+ *           "id": "4159<3u",
+ *           "title": "CAD Basics",
+ *           "branch": "design",
+ *           "prerequisites": []
+ *         }
+ *       ]
+ *     }
+ *
+ */
+router.get("/", errorWrapper(async (req, res) => {
+    const lessons = await Lesson.find({});
 
-            if (req.body.title || req.body.branch || req.body.prerequisites) {
-                let set = {};
+    if (!lessons)
+        return util.error(res, "There are no lessons in the database.");
 
-                if (req.body.title)
-                    set.title = req.body.title;
-                if (req.body.branch)
-                    set.branch = req.body.branch;
-                if (req.body.prerequisites)
-                    set.prerequisites = req.body.prerequisites;
+    return util.data(res, lessons.map((lesson) => util.sterilizeLesson(lesson)));
+}));
 
-                Lesson.findOneAndUpdate({ _id: req.params.id }, { $set: set }, (err) => {
-                    if (err)
-                        return util.error(res, err);
-                });
-            }
-        });
-    });
-};
-
-const getLessons = (req, res) => {
-    Lesson.find({}, (err, lessons) => {
-        if (err)
-            return util.error(res, err);
-        if (!lessons)
-            return util.error(res, "There are no lessons in the database.");
-        return util.data(res, lessons.map((lesson) => util.sterilizeLesson(lesson)));
-    });
-};
-
-exports.getLesson = getLesson;
-exports.createLesson = createLesson;
-exports.getLessons = getLessons;
-exports.setLessonData = setLessonData;
+module.exports = router;
