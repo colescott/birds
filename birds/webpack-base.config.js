@@ -30,8 +30,8 @@ const config = {
                 },
             },
             {
-                test: /\.scss$/,
-                loaders: ["style", "css", "sass"]
+                test: /\.css$/,
+                loaders: ["style", "css-loader"]
             },
             {
                 test: /\.json$/,

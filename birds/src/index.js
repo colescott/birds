@@ -5,7 +5,7 @@ import { hashHistory, browserHistory } from "react-router";
 import { syncHistoryWithStore } from "react-router-redux";
 
 // Load Styles
-import "./index.scss";
+import "./index.css";
 
 //Needed for Material Ui
 import injectTapEventPlugin from "react-tap-event-plugin";
