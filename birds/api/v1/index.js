@@ -5,6 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const router = express.Router();
+const expressValidator = require("express-validator");
 
 const users = require("./users.js");
 const teams = require("./teams.js");
@@ -18,6 +19,7 @@ const jwtSecret = process.env.JWT_SECRET;
 mongoose.Promise = global.Promise;
 
 router.use(passport.initialize());
+router.use(expressValidator());
 
 const ejwt = expressJwt({ secret: jwtSecret });
 
@@ -32,6 +34,19 @@ const authenticate = (req, res, next) => {
         next();
     });
 };
+
+const validate = (props, msg) => async (req, res, next) => {
+    props.forEach(prop => req.checkBody(prop).notEmpty());
+    const result = await req.getValidationResult();
+    if (!result.isEmpty()) {
+        return res.status(400).send({
+            error: "Bad Request",
+            code: 400,
+            message: msg
+        });
+    }
+    return next();
+}
 
 passport.use(new LocalStrategy({
         usernameField: "email"
@@ -86,7 +101,7 @@ router.get("/ping", (req, res) => {
  *     }
  *
  */
-router.post("/users", users.register);
+router.post("/users", validate(["email", "firstname", "lastname", "password"]), users.register);
 
 /**
  * @api {get} /users Get list of users
@@ -323,7 +338,7 @@ router.put("/users/:id/:action", authenticate, users.performActionOnUser);
  *     }
  *
  */
-router.post("/teams", authenticate, teams.postCreateTeam);
+router.post("/teams", authenticate, validate(["teamnumber", "name"]), teams.postCreateTeam);
 
 /**
  * @api {get} /teams Get list of teams
@@ -475,7 +490,7 @@ router.put("/teams/:num/:action", authenticate, teams.performActionOnTeam);
  *     }
  *
  */
-router.post("/auth/login", function(req, res, next) {
+router.post("/auth/login", validate(["username", "password"]), function(req, res, next) {
     passport.authenticate("local", {
         session: false
     }, function(err, user) {
@@ -544,7 +559,7 @@ router.post("/auth/logout", authenticate, (req, res) => {
  *     }
  *
  */
-router.post("/lessons", authenticate, lessons.createLesson);
+router.post("/lessons", authenticate, validate(["title", "branch", "prerequisites", "data"]), lessons.createLesson);
 
 /**
  * @api {get} /lessons/:id Get lesson by id
@@ -603,7 +618,7 @@ router.get("/lessons/:id", lessons.getLesson);
  *     }
  *
  */
-router.put("/lessons/:id", authenticate, lessons.setLessonData);
+router.put("/lessons/:id", authenticate, validate(["title", "branch", "prerequisites"]), lessons.setLessonData);
 
 /**
  * @api {get} /lessons Get all lessons

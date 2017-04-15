@@ -90,6 +90,7 @@ const postCreateTeam = (req, res) => {
 };
 
 const performActionOnTeam = (req, res) => {
+    // TODO: Break out
     Team.userIsAdmin(req.params.num, req.user, (err, isAdmin) => {
         if (err)
             return util.error(res, err);
