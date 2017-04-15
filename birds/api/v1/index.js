@@ -10,7 +10,7 @@ const users = require("./users.js");
 const teams = require("./teams.js");
 const lessons = require("./lessons.js");
 const util = require("./util.js");
-const { authenticate, errorHandler } = require("./middleware.js");
+const { authenticate, errorHandler, jwtSecret } = require("./middleware.js");
 
 const User = require("./models/user");
 

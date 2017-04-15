@@ -1,6 +1,8 @@
 const expressJwt = require("express-jwt");
 
-const ejwt = expressJwt({ secret: process.env.JWT_SECRET });
+module.exports.jwtSecret = process.env.JWT_SECRET;
+
+const ejwt = expressJwt({ secret: module.exports.jwtSecret });
 
 module.exports.authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
