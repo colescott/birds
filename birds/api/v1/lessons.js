@@ -6,17 +6,22 @@ const User = require("./models/user");
 
 const aws = require("aws-sdk");
 
-const s3bucket = new aws.S3({ params: { Bucket: process.env.AWS_BUCKET } });
+const s3params = { Bucket: process.env.AWS_BUCKET };
 
-s3bucket.createBucket();
+const s3bucket = new aws.S3({ params: s3params });
 
 const uploadLessonData = (lesson, data, cb) => {
-    let params = { Key: `lessons/${lesson.id}`, Body: data };
+    let params = Object.assign({}, s3params, {
+        Key: `lessons/${lesson.id}`,
+        Body: data
+    });
     s3bucket.upload(params, (err) => cb(err));
 };
 
 const getLessonData = (lesson, cb) => {
-    let params = { Key: `lessons/${lesson.id}` };
+    let params = Object.assign({}, s3params, {
+        Key: `lessons/${lesson.id}`
+    });
     s3bucket.getObject(params, function(err, data) {
         if (err)
             cb(err);
@@ -38,7 +43,7 @@ const getLesson = (req, res) => {
 
         getLessonData({ id: lesson.id }, (err, data) => {
             if (err)
-                return util.error(res, "There was a error when loading this lesson. Retry in a bit.");
+                return util.error(res, `There was a error when loading this lesson. Retry in a bit. (error code: ${err.code})`);
             else
                 return util.data(res, util.sterilizeLessonWithData(lesson, data));
         });
@@ -75,7 +80,11 @@ const createLesson = (req, res) => {
 
                 uploadLessonData({ id: lesson.id }, req.body.data || "This is a default lesson", (err) => {
                     if (err)
-                        return util.error(res, err);
+                    {
+                        Lesson.findByIdAndRemove(lesson.id, () => {
+                            return util.error(res, err);
+                        });
+                    }
                     else
                         return util.data(res, lesson);
                 });
@@ -111,14 +120,6 @@ const setLessonData = (req, res) => {
                         return util.error(res, err);
                 });
             }
-
-            if (req.body.data)
-                uploadLessonData({ id: req.params.id }, req.body.data, (err) => {
-                    if (err)
-                        return util.error(res, err);
-                    else
-                        return util.data(res, util.sterilizeLesson(lesson));
-                });
         });
     });
 };
