@@ -1,5 +1,7 @@
 const expressJwt = require("express-jwt");
 
+const util = require("./util.js");
+
 module.exports.jwtSecret = process.env.JWT_SECRET;
 
 const ejwt = expressJwt({ secret: module.exports.jwtSecret });
