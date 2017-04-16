@@ -5,6 +5,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const expressJwt = require("express-jwt");
 const router = express.Router();
+const expressValidator = require("express-validator");
 
 const users = require("./users.js");
 const teams = require("./teams.js");
@@ -17,18 +18,35 @@ const jwtSecret = process.env.JWT_SECRET;
 
 mongoose.Promise = global.Promise;
 
+const validator = (args) => async (req, res, next) => {
+    args.forEach(arg => {
+        req.checkBody(arg).notEmpty();
+    });
+    const result = await req.getValidationResult();
+    if (!result.isEmpty()) {
+        return res.status(400).send({
+            code: 400,
+            error: "Bad Request"
+        });
+    } else {
+        next();
+    }
+}
+
 router.use(passport.initialize());
+router.use(expressValidator())
 
 const ejwt = expressJwt({ secret: jwtSecret });
 
 const authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
-        if (err && err.code && err.code == "invalid_token")
-            return util.invalidToken(res);
-        if (err && err.code && err.code == "credentials_required")
-            return util.noSession(res);
-        if (err)
-            return util.console.error(res, "Unknown server error when logging in");
+        if (err) {
+            return res.status(401).send({
+                code: 401,
+                error: "Not Authorized",
+                message: err.message
+            });
+        }
         next();
     });
 };
@@ -86,7 +104,7 @@ router.get("/ping", (req, res) => {
  *     }
  *
  */
-router.post("/users", users.register);
+router.post("/users", validator(["email", "password", "firstname", "lastname"]), users.register);
 
 /**
  * @api {get} /users Get list of users
@@ -124,6 +142,8 @@ router.post("/users", users.register);
  *
  */
 router.get("/users", users.getUsers);
+
+router.get("/test", (req, res) => res.send({ data: "test" }));
 
 /**
  * @api {get} /users/:id Get user by id
