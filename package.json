@@ -27,6 +27,9 @@
     "lint",
     "cover"
   ],
+  "jest": {
+    "coverageDirectory": "./coverage"
+  },
   "betterScripts": {
     "start:prod": {
       "command": "node start.js",
@@ -79,7 +82,7 @@
       "command": "apidoc -i birds/api -o docs"
     },
     "cover": {
-      "command": "istanbul cover _mocha ./birds/**/*.test.js ./birds/test/*.js -- --opts unit.mocha.opts -R spec --timeout 5000",
+      "command": "better-npm-run test:api --coverage",
       "env": {
         "NODE_ENV": "TEST",
         "JWT_SECRET": "meh",
