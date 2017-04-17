@@ -20,12 +20,9 @@
     "docs": "better-npm-run docs",
     "cover": "better-npm-run cover",
     "db": "better-npm-run db",
-    "analyze": "better-npm-run build:prod --json | webpack-bundle-size-analyzer"
+    "analyze": "better-npm-run build:prod --json | webpack-bundle-size-analyzer",
+    "heroku-postbuild": "better-npm-run build:prod"
   },
-  "precommit": [
-    "lint",
-    "cover"
-  ],
   "jest": {
     "coverageDirectory": "./coverage"
   },
