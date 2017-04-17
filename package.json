@@ -15,7 +15,6 @@
     "test:api-watch": "better-npm-run test:api --watch",
     "test:fe": "better-npm-run test:fe",
     "test:fe-watch": "better-npm-run test:fe --watch --reporter min",
-    "postinstall": "npm run build:prod",
     "lint": "better-npm-run lint",
     "lint:fix": "better-npm-run lint --fix",
     "docs": "better-npm-run docs",
