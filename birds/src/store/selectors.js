@@ -38,6 +38,26 @@ export const getAuthData = createSelector(
     getData
 );
 
+export const getLessonStatus = createSelector(
+    (state) => state.lessonStatus,
+    getStatus
+);
+
+export const getLesson = createSelector(
+    (state) => state.lesson,
+    getStore
+);
+
+export const getLessonListStatus = createSelector(
+    (state) => state.lessonListStatus,
+    getStatus
+);
+
+export const getLessonList = createSelector(
+    (state) => state.lessonList,
+    getStore
+);
+
 export const getLessonEditorStatus = createSelector(
     (state) => state.lessonEditorStatus,
     getStatus

@@ -22,6 +22,15 @@ const lessons = {
             .then(res => res.data)
             .catch(handleNetworkError);
     },
+    getList: () => {
+        return xr.get(`${urlPrefix}/api/v1/lessons`, { }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => res.data)
+            .catch(handleNetworkError);
+    },
     update: (id, title, branch, data, token) => {
         return xr.put(`${urlPrefix}/api/v1/lessons/${id}`, { title, branch, data }, {
             headers: {
