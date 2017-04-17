@@ -50,7 +50,11 @@ router.post("/", validator(["email", "password", "firstname", "lastname"]), erro
     const userQuery = await User.findOne({ email: req.body.email });
 
     if (userQuery)
-        return util.error(res, "A user with that email already exists!", 400);
+        return res.status(400).send({
+            code: 400,
+            error: "Bad Request",
+            message: "A user with that email already exists"
+        });
 
     const user = new User({
         email: req.body.email,

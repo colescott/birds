@@ -67,7 +67,7 @@ describe("Users", () => {
                 })
         });
     });
-    
+
     describe("Register", () => {
         it("Should allow registration", async () => {
             await request(app)
@@ -114,6 +114,30 @@ describe("Users", () => {
                     expect(res.body).toEqual({
                         code: 400,
                         error: "Bad Request"
+                    });
+                });
+        });
+        it("Should not allow duplicate account", async () => {
+            await request(app)
+                .post("/api/v1/users")
+                .send(testUser)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.user.id).toBeDefined();
+                    res.body.user.id = "id";
+                    expect(res.body).toEqual({
+                        user: Object.assign({ id: "id" }, _.omit(testUser, ["password"]))
+                    });
+                });
+            await request(app)
+                .post("/api/v1/users")
+                .send(testUser)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "A user with that email already exists"
                     });
                 });
         });
