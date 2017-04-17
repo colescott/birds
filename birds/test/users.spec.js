@@ -3,6 +3,7 @@ const testUtil = require("./util.js");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const express = require("express");
 
 describe("Users", () => {
     let app;
@@ -31,14 +32,13 @@ describe("Users", () => {
     };
 
     beforeAll(async () => {
-        // Setup env vars
-        process.env.NODE_ENV = "TEST";
         process.env.JWT_SECRET = "TEST";
-        process.env.MONGODB_URI = "mongodb://localhost/test";
-
-        // TODO: Make this not awful
-        app = require("../app.js");
-        db = app.mongoose.connection.db;
+        process.env.NODE_ENV = "TEST";
+        process.env.MONGODB_URI = "mongodb://localhost/test-users";
+        app = require("../app");
+        db = mongoose.connection.db;
+        const usersRouter = require("../api/v1/users");
+        app.use("/api/v1/users", usersRouter);
     });
     afterEach(async () => {
         // nuke the db

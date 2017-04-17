@@ -1,5 +1,6 @@
 const expressJwt = require("express-jwt");
 
+const User = require("./models/user.js");
 const { error } = require("./util.js");
 
 module.exports.jwtSecret = process.env.JWT_SECRET;
@@ -10,8 +11,17 @@ module.exports.authenticate = (req, res, next) => {
     ejwt(req, res, (err) => {
         if (err)
             return res.status(401).send(error(401, err.message));
-
-        next();
+        try {
+            const userId = req.user._doc._id;
+            User.findById(userId)
+                .then(user => {
+                    req.user = user;
+                    next();
+                });
+        } catch (e) {
+            next();
+        }
+        
     });
 };
 
@@ -19,6 +29,7 @@ module.exports.errorWrapper = f => async (req, res, next) => {
     try {
         await f(req, res, next);
     } catch (e) {
+        console.log(e);
         next(e);
     }
 };
@@ -29,7 +40,7 @@ module.exports.errorHandler = (err, req, res, next) => {
     return next();
 };
 
-module.exports.validator = (args) => async (req, res, next) => {
+module.exports.validator = (args = []) => async (req, res, next) => {
     args.forEach(arg => {
         req.checkBody(arg).notEmpty();
     });
@@ -40,3 +51,22 @@ module.exports.validator = (args) => async (req, res, next) => {
         next();
     }
 };
+
+module.exports.permissions = (args = []) => (req, res, next) => {
+    if (!(req.user && req.user.permissions)) {
+        console.log("caught it");
+        return res.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "You do not have the required permissions"
+        });
+    }
+    if (args.some(arg => req.user.permissions[arg] != true)) {
+        return res.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "You do not have the required permissions"
+        });
+    }
+    next();
+}

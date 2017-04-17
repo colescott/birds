@@ -3,7 +3,7 @@ const router = express.Router();
 
 const util = require("./util.js");
 const { error } = require("./util.js");
-const { authenticate, errorWrapper } = require("./middleware.js");
+const { authenticate, errorWrapper, validator, permissions } = require("./middleware.js");
 const Lesson = require("./models/lesson");
 const User = require("./models/user");
 
@@ -12,35 +12,7 @@ const _ = require("lodash");
 const aws = require("aws-sdk");
 const s3params = { Bucket: process.env.AWS_BUCKET };
 const s3bucket = new aws.S3({ params: s3params });
-
-const uploadLessonData = async (lesson, data) => {
-    return new Promise((resolve, reject) => {
-        let params = {
-            Key: `lessons/${lesson.id}`,
-            Body: data
-        };
-        s3bucket.upload(params, (err) => {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
-    });
-};
-
-const getLessonData = async (lesson) => {
-    return new Promise((resolve, reject) => {
-        let params = {
-            Key: `lessons/${lesson.id}`
-        };
-        s3bucket.getObject(params, function(err, data) {
-            if (err)
-                reject(err);
-            else
-                resolve(data.Body.toString());
-        });
-    });
-};
+const { uploadLessonData, getLessonData } = require("./stores/lessons.js");
 
 /**
  * @api {post} /lessons Create lesson
@@ -60,7 +32,7 @@ const getLessonData = async (lesson) => {
  * @apiSuccess {String} data.branch Lesson branch
  * @apiSuccess {String} data.prerequisites Lesson prerequisites
  *
- * @apiSuccessExample {json} Success-Response:
+ * @apiSuccessExample {json} Success-Response
  *     HTTP/1.1 200 OK
  *     {
  *       "data": {
@@ -72,19 +44,15 @@ const getLessonData = async (lesson) => {
  *     }
  *
  */
-router.post("/", authenticate, errorWrapper(async (req, res) => {
-    const user = await User.findById(req.user.id);
+router.post("/", authenticate, validator(["title", "branch", "prerequisites", "data"]), permissions(["editLessons"]), errorWrapper(async (req, res) => {
+    const user = req.user;
 
-    // TODO: change this stuff to middleware
-    if (!user.permissions.editLessons)
-        return res.status(401).send(error(401, "You do not have permissions.editLessons permission."));
+    const data = await Lesson.findOne({ title: req.body.title, branch: req.body.branch });
 
-    // TODO: require all stuff with middleware
-
-    const data = Lesson.findOne({ title: req.body.title, branch: req.body.branch });
-
-    if (data)
-    return res.status(400).send(error(400, "That lesson already exists"));
+    if (data) {
+        console.warn(data);
+        return res.status(400).send(error(400, "That lesson already exists"));
+    }
 
     const lesson = new Lesson({
         title: req.body.title,
@@ -96,10 +64,10 @@ router.post("/", authenticate, errorWrapper(async (req, res) => {
     const sterilizedLesson = util.sterilizeLesson(lessonModel);
 
     try {
-        await uploadLessonData({ id: sterilizedLesson.id }, req.body.data || "This is a default lesson");
+        await uploadLessonData({ id: sterilizedLesson.id }, req.body.data);
     } catch (e) {
         await Lesson.findByIdAndRemove(sterilizedLesson.id);
-        return res.status(500).send(error(500, e));
+        return res.status(500).send(error(500, "Unable to create lesson"));
     }
 
     return res.status(200).send({ lesson: sterilizedLesson });
@@ -130,7 +98,7 @@ router.post("/", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.get("/:id", errorWrapper(async (req, res) => {
+router.get("/:id", authenticate, errorWrapper(async (req, res) => {
     if (!util.validId(req.params.id))
         return res.status(400).send(error(400, "That lesson does not exist."));
 
@@ -224,10 +192,13 @@ router.put("/:id", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.get("/", errorWrapper(async (req, res) => {
+router.get("/", authenticate, errorWrapper(async (req, res) => {
     const lessons = await Lesson.find({});
 
     return res.status(200).send({ lessons: lessons.map((lesson) => util.sterilizeLesson(lesson)) });
+        return res.send({
+            lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
+        });
 }));
 
 module.exports = router;
