@@ -36,7 +36,7 @@ exports.register = (req, res) => {
             const response = {
                 user: util.sterilizeUser(user)
             };
-            return util.data(res, response);
+            return res.send(response);
         });
     });
 };
@@ -45,16 +45,20 @@ exports.getUsers = (req, res) => {
     User.find({}, (err, users) => {
         const usrs = users.map(user => (util.sterilizeUser(user)));
         const val = { users: usrs };
-        return util.data(res, val);
+        return res.send(val);
     });
 };
 
 exports.getUserById = (req, res) => {
     User.findById(req.params.id, (err, user) => {
         if (err)
-            return util.error(res, err);
+            return res.status(400).send({
+                code: 400,
+                error: "Bad Request",
+                message: "Unable to find a user with that id"
+            });
         const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
-        return util.data(res, response);
+        return res.send(response);
     });
 };
 

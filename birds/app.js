@@ -13,6 +13,7 @@ app.use(bodyParser.json());
 const mongoose = require("mongoose");
 const dbConfig = require("./db.js");
 mongoose.connect(dbConfig.url);
+mongoose.Promise = Promise;
 
 const api = require("./api");
 
@@ -47,3 +48,4 @@ app.use("/api", api);
 app.use("*", express.static(path.join(__dirname, "static")));
 
 module.exports = app;
+module.exports.mongoose = mongoose;

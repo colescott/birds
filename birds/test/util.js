@@ -18,3 +18,7 @@ exports.randomInRange = (min, max) => {
   const nMax = Math.floor(max);
   return Math.floor(Math.random() * (nMax - nMin)) + nMin;
 };
+
+exports.clearDB = async db => {
+    await db.dropDatabase();
+}
