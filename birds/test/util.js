@@ -21,4 +21,4 @@ exports.randomInRange = (min, max) => {
 
 exports.clearDB = async db => {
     await db.dropDatabase();
-}
+};

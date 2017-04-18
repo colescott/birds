@@ -5,89 +5,19 @@
   "main": "app.js",
   "readme": "README.md",
   "scripts": {
-    "start": "better-npm-run start:prod",
-    "start:dev": "better-npm-run start:dev",
-    "serve": "better-npm-run serve",
-    "build:dev": "better-npm-run build:dev",
-    "build:prod": "better-npm-run build:prod",
-    "test": "better-npm-run test",
-    "test:api": "better-npm-run test:api",
-    "test:api-watch": "better-npm-run test:api --watch",
-    "test:fe": "better-npm-run test:fe",
-    "test:fe-watch": "better-npm-run test:fe --watch --reporter min",
-    "lint": "better-npm-run lint",
-    "lint:fix": "better-npm-run lint --fix",
-    "docs": "better-npm-run docs",
-    "cover": "better-npm-run cover",
-    "db": "better-npm-run db",
-    "analyze": "better-npm-run build:prod --json | webpack-bundle-size-analyzer",
-    "heroku-postbuild": "better-npm-run build:prod"
-  },
-  "jest": {
-    "coverageDirectory": "./coverage"
-  },
-  "betterScripts": {
-    "start:prod": {
-      "command": "node start.js",
-      "env": {
-        "NODE_ENV": "PROD"
-      }
-    },
-    "start:dev": {
-      "command": "nodemon start.js",
-      "env": {
-        "NODE_ENV": "DEV",
-        "JWT_SECRET": "correcthorsebatterystaple",
-        "MONGODB_URI": "mongodb://localhost/birds"
-      }
-    },
-    "serve": {
-      "command": "webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --watch",
-      "env": {
-        "URL_PREFIX": "http://localhost:8000"
-      }
-    },
-    "test": {
-      "command": "better-npm-run test:fe && better-npm-run test:api"
-    },
-    "test:api": {
-      "command": "jest birds/test",
-      "env": {
-        "NODE_ENV": "TEST",
-        "JWT_SECRET": "TEST",
-        "MONGODB_URI": "mongodb://localhost/test"
-      }
-    },
-    "test:fe": {
-      "command": "find ./birds -name '*.test.js' | xargs mocha --opts unit.mocha.opts --timeout 5000",
-      "env": {
-        "NODE_ENV": "TEST",
-        "URL_PREFIX": ""
-      }
-    },
-    "build:dev": {
-      "command": "webpack --progress --config birds/webpack-dev.config.js"
-    },
-    "build:prod": {
-      "command": "webpack --progress --config birds/webpack-prod.config.js"
-    },
-    "lint": {
-      "command": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint"
-    },
-    "docs": {
-      "command": "apidoc -i birds/api -o docs"
-    },
-    "cover": {
-      "command": "better-npm-run test:api --coverage",
-      "env": {
-        "NODE_ENV": "TEST",
-        "JWT_SECRET": "meh",
-        "MONGODB_URI": "mongodb://localhost/test"
-      }
-    },
-    "db": {
-      "command": "mongod --dbpath ./data"
-    }
+    "start": "NODE_ENV=PROD node start.js",
+    "start:dev": "NODE_ENV=DEV JWT_SECRET=correcthorsebatterystaple MONGODB_URI=mongodb://localhost/birds nodemon start.js",
+    "serve": "URL_PREFIX=http://localhost:8000 webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --watch",
+    "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
+    "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint",
+    "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix",
+    "docs": "apidoc -i birds/api -o docs",
+    "cover": "jest --cover",
+    "db": "mongod --dbpath ./data",
+    "heroku-postbuild": "npm run build:prod"
   },
   "repository": {
     "type": "git",
@@ -112,9 +42,7 @@
     "babel-preset-react": "6.16.0",
     "babel-preset-stage-0": "6.16.0",
     "babel-preset-stage-2": "6.18.0",
-    "better-npm-run": "^0.0.13",
     "body-parser": "1.15.2",
-    "chai": "3.5.0",
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.1",
     "cors": "2.8.1",
@@ -134,13 +62,11 @@
     "express-validator": "^3.1.3",
     "html-webpack-plugin": "2.24.1",
     "http-status": "^1.0.1",
-    "istanbul": "1.0.0-alpha.2",
     "jest": "^19.0.2",
     "json-loader": "0.5.4",
     "jsonwebtoken": "7.1.9",
     "lodash": "4.16.6",
     "material-ui": "0.16.1",
-    "mocha": "3.1.2",
     "moment": "2.15.2",
     "mongoose": "4.6.6",
     "morgan": "1.7.0",

@@ -1,5 +1,4 @@
 const request = require("supertest");
-const mongodb = require("mongodb");
 const testUtil = require("./util.js");
 const mongoose = require("mongoose");
 const _ = require("lodash");
@@ -14,7 +13,7 @@ describe("Users", () => {
         password: "pass",
         firstname: "first",
         lastname: "last"
-    }
+    };
     const signedTestUser = jwt.sign(testUser, "TEST");
     const token = `Bearer ${signedTestUser}`;
 
@@ -64,7 +63,7 @@ describe("Users", () => {
                     expect(res.body).toEqual({
                         users: []
                     });
-                })
+                });
         });
     });
 
@@ -85,13 +84,13 @@ describe("Users", () => {
                 .get("/api/v1/users")
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.users[0].id).toBeDefined();
-                    res.body.users[0].id = "id";
+                    expect(res.body.users[ 0 ].id).toBeDefined();
+                    res.body.users[ 0 ].id = "id";
                     expect(res.body).toEqual({
                         users: [
                             Object.assign({ id: "id" }, _.omit(testUser, ["password"]))
                         ]
-                    })
+                    });
                 });
         });
         it("Should require paramaters", async () => {
@@ -177,7 +176,7 @@ describe("Users", () => {
                 .send(_.omit(JamesBond, ["id"]))
                 .expect(200)
                 .then(res => {
-                    return res.body.user.id
+                    return res.body.user.id;
                 });
             await request(app)
                 .get(`/api/v1/users/${id}`)
@@ -185,7 +184,7 @@ describe("Users", () => {
                 .expect(200)
                 .expect(res => {
                     expect(res.body.user).toEqual(Object.assign({ id }, _.omit(JamesBond, ["password"])));
-                })
+                });
         });
         it("Should return the correct user", async () => {
             // Create the first user
@@ -224,12 +223,12 @@ describe("Users", () => {
 
             // Make a new token with the created users id
             const tempSignedUser = jwt.sign(Object.assign({ id }, testUser), "TEST");
-            const tempToken = `Bearer ${tempSignedUser}`
+            const tempToken = `Bearer ${tempSignedUser}`;
 
             await request(app)
                 .put(`/api/v1/users/${id}`)
                 .set("authorization", tempToken)
-                .send({ email: "new email"})
+                .send({ email: "new email" })
                 .expect(200);
         });
         it("Should not allow updating another user", async () => {
@@ -255,7 +254,7 @@ describe("Users", () => {
             await request(app)
                 .put(`/api/v1/users/${firstId}`)
                 .set("authorization", tempToken)
-                .send({ email: "iam@a.spy "})
+                .send({ email: "iam@a.spy" })
                 .expect(401);
         });
     });

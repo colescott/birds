@@ -1,9 +1,6 @@
 const request = require("supertest");
-const mongodb = require("mongodb");
 const testUtil = require("./util.js");
 const mongoose = require("mongoose");
-const _ = require("lodash");
-const jwt = require("jsonwebtoken");
 
 describe("Users", () => {
     let app;
