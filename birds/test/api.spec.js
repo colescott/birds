@@ -41,7 +41,7 @@ describe("Users", () => {
         });
     });
     describe("Ping api vX should return 404", () => {
-        it("Should return pong v1", async () => {
+        it("Should return 404", async () => {
             await request(app)
                 .get("/api/vX/ping")
                 .expect(404);
