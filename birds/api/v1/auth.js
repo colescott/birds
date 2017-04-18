@@ -1,8 +1,27 @@
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
+const jwt = require("jsonwebtoken");
 const express = require("express");
 const router = express.Router();
 
 const util = require("./util.js");
-const { authenticate, errorWrapper } = require("./middleware.js");
+const { error } = require("./util.js");
+const { authenticate, errorWrapper, jwtSecret } = require("./middleware.js");
+
+const User = require("./models/user");
+
+passport.use(new LocalStrategy({
+        usernameField: "email"
+    }, (username, password, done) => {
+    User.authenticate()(username, password, (err, user, passErr) => {
+        if (err)
+            return done(err);
+        if (passErr)
+            return done(null, false, passErr);
+        if (user)
+            done(null, user);
+    });
+}));
 
 /**
  * @api {post} /auth/login Login
@@ -43,15 +62,16 @@ router.post("/login", errorWrapper((req, res, next) => {
     passport.authenticate("local", {
         session: false
     }, function(err, user) {
-        if (err) return util.error(res, err);
+        if (err)
+        return res.status(500).send(error(500, err));
         if (!user) {
-            return util.error(res, "Incorrect username or password.", 401);
+            return res.status(401).send(error(401, "Incorrect username or password"));
         } else {
             const response = {
                 token: jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 }),
                 user: util.sterilizeUserAsUser(user)
             };
-            return util.data(res, response);
+            return res.status(200).send(response);
         }
     })(req, res, next);
 }));
@@ -75,7 +95,7 @@ router.post("/login", errorWrapper((req, res, next) => {
  */
 router.post("/logout", authenticate, errorWrapper((req, res) => {
     req.logout();
-    return util.message(res, "Logged out successfully");
+    return res.status(200).send({ message: { text: "Logged out successfully" } });
 }));
 
 module.exports = router;

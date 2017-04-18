@@ -1,8 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const jwt = require("jsonwebtoken");
 const router = express.Router();
 const expressValidator = require("express-validator");
 
@@ -10,28 +8,12 @@ const auth = require("./auth.js");
 const users = require("./users.js");
 const teams = require("./teams.js");
 const lessons = require("./lessons.js");
-const util = require("./util.js");
-const { authenticate, errorHandler, jwtSecret, validator } = require("./middleware.js");
-
-const User = require("./models/user");
+const { errorHandler } = require("./middleware.js");
 
 mongoose.Promise = global.Promise;
 
 router.use(passport.initialize());
-router.use(expressValidator())
-
-passport.use(new LocalStrategy({
-        usernameField: "email"
-    }, (username, password, done) => {
-    User.authenticate()(username, password, (err, user, passErr) => {
-        if (err)
-            return done(err);
-        if (passErr)
-            return done(null, false, passErr);
-        if (user)
-            done(null, user);
-    });
-}));
+router.use(expressValidator());
 
 router.get("/ping", (req, res) => {
     return res.send("Pong v1!");

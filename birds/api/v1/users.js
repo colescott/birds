@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const util = require("./util.js");
+const { error } = require("./util.js");
 const { authenticate, errorWrapper, validator } = require("./middleware.js");
 const User = require("./models/user");
 const Team = require("./models/team");
@@ -46,15 +47,11 @@ options.new = true;
  *     }
  *
  */
-router.post("/", validator(["email", "password", "firstname", "lastname"]), errorWrapper( async (req, res) => {
+router.post("/", validator(["email", "password", "firstname", "lastname"]), errorWrapper(async (req, res) => {
     const userQuery = await User.findOne({ email: req.body.email });
 
     if (userQuery)
-        return res.status(400).send({
-            code: 400,
-            error: "Bad Request",
-            message: "A user with that email already exists"
-        });
+        return res.status(400).send(error(400, "A user with that email already exists"));
 
     const user = new User({
         email: req.body.email,
@@ -69,10 +66,7 @@ router.post("/", validator(["email", "password", "firstname", "lastname"]), erro
         if (passwordErr)
             throw passwordErr;
 
-        const response = {
-            user: util.sterilizeUser(model)
-        };
-        return res.send(response);
+        return res.status(200).send({ user: util.sterilizeUser(model) });
     });
 }));
 
@@ -111,10 +105,10 @@ router.post("/", validator(["email", "password", "firstname", "lastname"]), erro
  *     }
  *
  */
-router.get("/", errorWrapper( async (req, res) => {
+router.get("/", errorWrapper(async (req, res) => {
     const userList = await User.find({});
     const users = userList.map(user => util.sterilizeUser(user));
-    return res.send({ users });
+    return res.status(200).send({ users: users });
 }));
 
 /**
@@ -156,19 +150,15 @@ router.get("/", errorWrapper( async (req, res) => {
  *     }
  *
  */
-router.get("/:id", authenticate, errorWrapper( async (req, res) => {
+router.get("/:id", authenticate, errorWrapper(async (req, res) => {
     let user;
     try {
         user = await User.findById(req.params.id);
     } catch (e) {
-        return res.status(400).send({
-            code: 400,
-            error: "Bad Request",
-            message: "Unable to find a user with that id"
-        });
+        return res.status(400).send(error(400, "Unable to find a user with that id"));
     }
     const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
-    return res.send(response);
+    return res.status(200).send(response);
 }));
 
 /**
@@ -216,9 +206,9 @@ router.get("/:id", authenticate, errorWrapper( async (req, res) => {
  *     }
  *
  */
-router.put("/:id", authenticate, errorWrapper( async (req, res) => {
+router.put("/:id", authenticate, errorWrapper(async (req, res) => {
     if (req.user.id != req.params.id)
-        return util.unauthorized(res);
+        return res.status(401).send(error(401, "You can only perform this action as the user"));
 
     const changes = _.pick(req.body, ["email", "firstname", "lastname", "teamnumber"]);
 
@@ -243,7 +233,7 @@ router.put("/:id", authenticate, errorWrapper( async (req, res) => {
         user = await User.findById(req.params.id);
 
     const response = { user: util.sterilizeUserAsUser(user) };
-    return res.send(response);
+    return res.status(200).send(response);
 }));
 
 /**
@@ -264,12 +254,12 @@ router.put("/:id", authenticate, errorWrapper( async (req, res) => {
  *     }
  *
  */
-router.delete("/:id", authenticate, errorWrapper( async (req, res) => {
+router.delete("/:id", authenticate, errorWrapper(async (req, res) => {
     if (req.user.id != req.params.id)
-        return util.unauthorized(res);
+        return res.status(401).send(error(401, "You can only perform this action as the user"));
 
     await User.findByIdAndRemove(req.params.id);
-    return util.message(res, "successfully deleted user.");
+    return res.status(200).send({ message: { text: "Successfully deleted user." } });
 }));
 
 /**
@@ -293,20 +283,21 @@ router.delete("/:id", authenticate, errorWrapper( async (req, res) => {
  *     }
  *
  */
-router.put("/:id/setprogress", authenticate, errorWrapper( async (req, res) => {
+router.put("/:id/setprogress", authenticate, errorWrapper(async (req, res) => {
     if (req.user.id != req.params.id)
-        return util.unauthorized(res);
+        return res.status(401).send(error(401, "You can only perform this action as the user"));
 
-    const user = await User.findById(req.params.id);
-
+    // TODO: move to middleware
     if (!req.body.id)
-        return util.error(res, "Id not set!", 400);
+        return res.status(400).send(error(400, "Id not set!"));
     if (!req.body.state)
-        return util.error(res, "State not set!", 400);
+        return res.status(400).send(error(400, "State not set!"));
 
-    await User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options);
-    return util.message(res, "Successfully set progress");
+    const user = await User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options);
+    return res.status(200).send({ user: user });
 }));
+
+
 
 /**
  * @api {put} /users/:id/jointeam Join team
@@ -329,21 +320,23 @@ router.put("/:id/setprogress", authenticate, errorWrapper( async (req, res) => {
  *     }
  *
  */
-router.put("/:id/jointeam", authenticate, errorWrapper( async (req, res) => {
+router.put("/:id/jointeam", authenticate, errorWrapper(async (req, res) => {
     if (req.user.id != req.params.id)
-        return util.unauthorized(res);
+        return res.status(401).send(error(401, "You can only perform this action as the user"));
 
     const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
 
     if (data.length <= 0)
-        return util.error(res, "That team does not exist.", 400);
+        return res.status(400).send(error(400, "That team does not exist."));
 
     if (req.body.password != data[ 0 ].password)
-        return util.error(res, "Incorrect password.", 401);
+        return res.status(401).send(error(401, "Incorrect password"));
+
+    const user = await User.findById(req.params.id);
 
     await Team.addUser(req.body.teamnumber, user);
 
-    return util.message(res, "Successfully joined team");
+    return res.status(200).send({ team: data });
 }));
 
 module.exports = router;

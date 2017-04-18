@@ -101,7 +101,8 @@ describe("Users", () => {
                 .expect(res => {
                     expect(res.body).toEqual({
                         code: 400,
-                        error: "Bad Request"
+                        error: "Bad Request",
+                        "message": "Missing parameters."
                     });
                 });
         });
@@ -113,7 +114,8 @@ describe("Users", () => {
                 .expect(res => {
                     expect(res.body).toEqual({
                         code: 400,
-                        error: "Bad Request"
+                        error: "Bad Request",
+                        "message": "Missing parameters."
                     });
                 });
         });
@@ -151,7 +153,7 @@ describe("Users", () => {
                 .expect(res => {
                     expect(res.body).toEqual({
                        code: 401,
-                       error: "Not Authorized",
+                       error: "Unauthorized",
                        message: "No authorization token was found"
                     });
                 });
