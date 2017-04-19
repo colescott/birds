@@ -99,17 +99,25 @@ router.post("/", authenticate, validator(["title", "branch", "prerequisites", "d
  *
  */
 router.get("/:id", authenticate, errorWrapper(async (req, res) => {
+    // Mongoose strongly dislikes invalid id
     if (!util.validId(req.params.id))
-        return res.status(400).send(error(400, "That lesson does not exist."));
+        return res.status(400).send(error(400, "Invalid ID"));
 
     const lesson = await Lesson.findById(req.params.id);
 
     if (!lesson)
-        return res.status(400).send(error(400, "That lesson does not exist."));
+        return res.status(404).send(error(404, "That lesson does not exist."));
 
-    const data = await getLessonData({ id: lesson.id });
-
-    return res.status(200).send({ lesson: util.sterilizeLessonWithData(lesson, data) });
+        try {
+            const data = await getLessonData({ id: lesson.id });
+            return res.status(200).send({ lesson: util.sterilizeLessonWithData(lesson, data) });
+        } catch (e) {
+            return res.status(500).send({
+                code: 500,
+                error: "Internal Server Error",
+                message: "Unable to load lesson data"
+            });
+        }
 }));
 
 /**
@@ -142,22 +150,41 @@ router.get("/:id", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:id", authenticate, errorWrapper(async (req, res) => {
-    const user = await User.findById(req.user.id);
+router.patch("/:id", authenticate, permissions(["editLessons"]), errorWrapper(async (req, res) => {
+    // Mongoose strongly dislikes invalid ids
+    if (!util.validId(req.params.id))
+        return res.status(400).send(error(400, "Invalid ID"));
 
-    if (!user.permissions.editLessons)
-        return res.status(401).send(error(401, "You do not have permissions.editLessons permission."));
-
+    const user = req.user;
+    const id = req.params.id;
     const lesson = await Lesson.findOne({ _id: req.params.id });
-
+    
     if (!lesson)
-        return res.status(400).send(error(400, "That lesson does not exist!"));
+        return res.status(400).send(error(400, "That lesson does not exist!"));    
+
+    // Update S3
+    const data = req.body.data;
+    if (data) {
+        try {
+            await uploadLessonData({ id }, data);
+        } catch (e) {
+            return res.status(500).send({
+                code: 500,
+                error: "Internal Server Error",
+                message: "Unable to update lesson"
+            });
+        }
+    }
 
     let set = _.pick(req.body, ["title", "branch", "prerequisites"]);
+    Object.assign(lesson, set);
+    await lesson.save();
 
-    const lessonUpdated = await Lesson.findOneAndUpdate({ _id: req.params.id }, { $set: set });
+    if (data) {
+        return res.status(200).send({ lesson: util.sterilizeLessonWithData(lesson, data) });
+    }
 
-    return res.status(200).send({ lesson: lessonUpdated });
+    return res.status(200).send({ lesson: util.sterilizeLesson(lesson) });
 }));
 
 /**

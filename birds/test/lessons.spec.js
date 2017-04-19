@@ -173,7 +173,62 @@ describe("Lessons", () => {
                 });
         });
     });
-    describe("Get Lessons", () => {
+    describe("Get Lesson", () => {
+        it("Should allow getting lessons", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            const id = await request(app)
+                .post("/api/v1/lessons")
+                .send(testLesson)
+                .set("authorization", token)
+                .expect(200)
+                .then(data => data.res.body.lesson.id);
+
+            lessonStore.getLessonData
+                .mockReturnValueOnce(testLesson.data);
+
+            await request(app)
+                .get(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .expect(200)
+                .expect(res => {
+                    expect(_.omit(res.body.lesson, ["id"]))
+                        .toEqual(testLesson);
+                });
+
+            expect(lessonStore.getLessonData).toBeCalledWith({ id });
+        });
+        it("Should recover from an aws failure", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            const id = await request(app)
+                .post("/api/v1/lessons")
+                .send(testLesson)
+                .set("authorization", token)
+                .expect(200)
+                .then(data => data.res.body.lesson.id);
+
+            lessonStore.getLessonData
+                .mockImplementationOnce(() => Promise.reject("LOL"));
+
+            await request(app)
+                .get(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .expect(500)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 500,
+                        error: "Internal Server Error",
+                        message: "Unable to load lesson data"
+                    });
+                });
+        });
         it("Should require auth", async () => {
             await request(app)
                 .get("/api/v1/lessons/1")
@@ -183,6 +238,183 @@ describe("Lessons", () => {
                         code: 401,
                         error: "Unauthorized",
                         message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should 400 on an invalid id", async () => {
+            await request(app)
+                .get("/api/v1/lessons/420")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "Invalid ID"
+                    });
+                });
+        });
+        it("Should 404 on a non-existant lesson", async () => {
+            await request(app)
+                .get("/api/v1/lessons/41224d776a326fb40f000001")
+                .set("authorization", token)
+                .expect(404)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 404,
+                        error: "Not Found",
+                        message: "That lesson does not exist."
+                    });
+                });
+        });
+    });
+    describe("Patch Lesson", () => {
+        it("Should allow updates", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            const id = await request(app)
+                .post("/api/v1/lessons")
+                .set("authorization", token)
+                .send(testLesson)
+                .expect(200)
+                .then(data => data.res.body.lesson.id);
+            
+            await request(app)
+                .patch(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .send({
+                    branch: "Oak Tree"
+                })
+                .expect(200)
+                .expect(res => {
+                    expect(_.omit(res.body.lesson, ["id"]))
+                        .toEqual(Object.assign({}, testLesson, { branch: "Oak Tree", data: undefined }));
+                });
+            
+            // Make sure the lesson was actually updated
+            await request(app)
+                .get(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .expect(200)
+                .expect(res => {
+                    expect(_.omit(res.body.lesson, "id"))
+                        .toEqual(Object.assign({}, testLesson, { branch: "Oak Tree", data: undefined }));
+                });
+        });
+        it("Should allow updating the data", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            const id = await request(app)
+                .post("/api/v1/lessons")
+                .set("authorization", token)
+                .send(testLesson)
+                .expect(200)
+                .then(data => data.res.body.lesson.id);
+
+            await request(app)
+                .patch(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .send({
+                    data: "DATA"
+                })
+                .expect(200)
+                .expect(res => {
+                    expect(_.omit(res.body.lesson, ["id"]))
+                        .toEqual(Object.assign({}, testLesson, { data: "DATA" }));
+                });
+
+            expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, "DATA");
+        });
+        it("Should survive aws errors", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            const id = await request(app)
+                .post("/api/v1/lessons")
+                .set("authorization", token)
+                .send(testLesson)
+                .expect(200)
+                .then(data => data.res.body.lesson.id);
+
+            lessonStore.uploadLessonData
+                .mockImplementationOnce(() => Promise.reject("LOL"));
+
+            await request(app)
+                .patch(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .send({
+                    data: "DATA",
+                    branch: "Oak"
+                })
+                .expect(500)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 500,
+                        error: "Internal Server Error",
+                        message: "Unable to update lesson"
+                    });
+                });
+
+            // Updates should be atomic
+            await request(app)
+                .get(`/api/v1/lessons/${id}`)
+                .set("authorization", token)
+                .expect(200)
+                .expect(res => {
+                    expect(_.omit(res.body.lesson, "id")).toEqual(_.omit(testLesson, "data"))
+                });
+
+            expect(lessonStore.uploadLessonData)
+                .toBeCalledWith({ id }, "DATA");
+        });
+        it("Should require authentication", async () => {
+            await request(app)
+                .patch("/api/v1/lessons/1")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should require the correct permissions", async () => {
+            await request(app)
+                .patch("/api/v1/lessons/1")
+                .set("authorization", token)
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "You do not have the required permissions"
+                    });
+                });
+        });
+        it("Should 400 on an invalid id", async () => {
+            user.permissions = {
+                editLessons: true
+            };
+            await user.save();
+
+            await request(app)
+                .patch("/api/v1/lessons/420")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "Invalid ID"
                     });
                 });
         });

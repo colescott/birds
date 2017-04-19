@@ -19,6 +19,9 @@
     "db": "mongod --dbpath ./data",
     "heroku-postbuild": "npm run build:prod"
   },
+  "jest": {
+    "notify": true
+  }, 
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Team4159/BIRDS.git"

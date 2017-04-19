@@ -29,7 +29,7 @@ module.exports.errorWrapper = f => async (req, res, next) => {
     try {
         await f(req, res, next);
     } catch (e) {
-        console.log(e);
+        console.error(e);
         next(e);
     }
 };
@@ -54,7 +54,6 @@ module.exports.validator = (args = []) => async (req, res, next) => {
 
 module.exports.permissions = (args = []) => (req, res, next) => {
     if (!(req.user && req.user.permissions)) {
-        console.log("caught it");
         return res.status(401).send({
             code: 401,
             error: "Unauthorized",
