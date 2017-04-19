@@ -21,7 +21,7 @@ Team.query.byNumber = function(teamnumber) {
 
  // cb is (err, bool)
 Team.statics.containsUser = function(teamnumber, user) {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.findOne().byNumber(teamnumber).exec((err, data) => {
             if (err)
                 return reject(err);
@@ -39,7 +39,7 @@ Team.statics.containsUser = function(teamnumber, user) {
 };
 
 Team.statics.userIsAdmin = function(teamnumber, user) {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.findOne().byNumber(teamnumber).exec((err, data) => {
             if (err)
                 return reject(err);
@@ -59,7 +59,7 @@ Team.statics.userIsAdmin = function(teamnumber, user) {
 };
 
 Team.statics.numberOfAdmins = function(teamnumber) {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.findOne().byNumber(teamnumber).exec((err, data) => {
             if (err)
                 return reject(err);
@@ -77,11 +77,11 @@ Team.statics.numberOfAdmins = function(teamnumber) {
 
 // cb is (err)
 Team.statics.setAdmin = function(teamnumber, user, isAdmin) {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.findOne().byNumber(teamnumber).update({ "users.id": user.id }, { "$set": {
             "users.$.isAdmin": isAdmin
         } }, (err) => {
-            if(err)
+            if (err)
                 return reject(err);
             return resolve();
         });
@@ -89,7 +89,7 @@ Team.statics.setAdmin = function(teamnumber, user, isAdmin) {
 };
 
 Team.statics.exists = function(teamnumber) {
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         this.findOne().byNumber(teamnumber).exec((err, data) => {
             if (err)
                 return reject(err);
@@ -101,12 +101,12 @@ Team.statics.exists = function(teamnumber) {
 };
 
 Team.statics.addUser = function(teamnumber, user) {
-    return new Promise( async (resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         const exists = await this.containsUser(teamnumber, user);
         if (exists)
             return resolve();
         this.findOne({ teamnumber: teamnumber }).update({ $push: { "users": { id: user.id, isAdmin: false } } }, (err) => {
-            if(err)
+            if (err)
                 return reject(err);
             return resolve();
         });
