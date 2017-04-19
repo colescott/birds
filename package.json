@@ -15,7 +15,7 @@
     "lint": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint",
     "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix",
     "docs": "apidoc -i birds/api -o docs",
-    "cover": "jest --cover",
+    "cover": "jest --coverage",
     "db": "mongod --dbpath ./data",
     "heroku-postbuild": "npm run build:prod"
   },
@@ -43,6 +43,7 @@
     "babel-preset-stage-0": "6.16.0",
     "babel-preset-stage-2": "6.18.0",
     "body-parser": "1.15.2",
+    "chai": "^3.5.0",
     "cookie-parser": "1.4.3",
     "cookie-session": "2.0.0-alpha.1",
     "cors": "2.8.1",
