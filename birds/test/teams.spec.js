@@ -13,6 +13,9 @@ describe("Teams", () => {
     let token;
     let user;
 
+    let bond;
+    let bondToken;
+
     const testUser = {
         email: "email",
         password: "pass",
@@ -49,9 +52,16 @@ describe("Teams", () => {
         const newUser = new User(testUser);
         user = await testUtil.addUser(newUser, "testpass");
 
+        const bondUser = new User(JamesBond);
+        bond = await testUtil.addUser(bondUser, JamesBond.password);
+
         // generate a token
         const signedUser = jwt.sign(user, "TEST");
         token = `Bearer ${signedUser}`;
+
+        // generate a token
+        const signedBond = jwt.sign(bond, "TEST");
+        bondToken = `Bearer ${signedBond}`;
     });
     afterEach(async () => {
         // nuke the db
@@ -172,6 +182,11 @@ describe("Teams", () => {
     describe("Get team by number", () => {
         it("Should return 401 on no auth", async () => {
             await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
                 .get("/api/v1/teams/4159")
                 .expect(401)
                 .expect(res => {
@@ -195,7 +210,7 @@ describe("Teams", () => {
                     });
                 });
         });
-        it("Should return team", async () => {
+        it("Should return team from admin", async () => {
             await request(app)
                 .post("/api/v1/teams")
                 .set("authorization", token)
@@ -211,10 +226,31 @@ describe("Teams", () => {
                     expect(res.body.team.password).toBeDefined();
                 });
         });
+        it("Should return team with external user", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeUndefined();
+                });
+        });
     });
 
     describe("Delete team", () => {
         it("Should return 401 on no auth", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
             await request(app)
                 .delete("/api/v1/teams/4159")
                 .expect(401)
@@ -236,6 +272,24 @@ describe("Teams", () => {
                         code: 400,
                         error: "Bad Request",
                         message: "That team does not exist."
+                    });
+                });
+        });
+        it("Should return 400 on external user", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .delete("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "You are not an admin of this team."
                     });
                 });
         });
@@ -271,6 +325,217 @@ describe("Teams", () => {
                     expect(res.body).toEqual({
                         teams: []
                     });
+                });
+        });
+    });
+
+    describe("Add admin to team", () => {
+        it("Should return 401 on no auth", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put("/api/v1/teams/4159/addadmin")
+                .send({ user: bond })
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should return 400 on unknown team", async () => {
+            await request(app)
+                .put("/api/v1/teams/4159/addadmin")
+                .set("authorization", token)
+                .send({ user: bond })
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "That team does not exist."
+                    });
+                });
+        });
+        it("Should require user", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put("/api/v1/teams/4159/addadmin")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "Missing parameters."
+                    });
+                });
+        });
+        it("Should add admin", async () => {
+            const team = await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put(`/api/v1/users/${bond._id}/jointeam`)
+                .set("authorization", bondToken)
+                .send({ teamnumber: team.res.body.team.teamnumber, password: team.res.body.team.password })
+                .expect(200);
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeUndefined();
+                });
+            await request(app)
+                .put("/api/v1/teams/4159/addadmin")
+                .set("authorization", token)
+                .send({ user: { id: bond._id } })
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        message: {
+                            text: "Successfully added admin."
+                        }
+                    });
+                });
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeDefined();
+                });
+        });
+    });
+
+    describe("Remove admin from team", () => {
+        it("Should return 401 on no auth", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put("/api/v1/teams/4159/removeadmin")
+                .send({ user: bond })
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should return 400 on unknown team", async () => {
+            await request(app)
+                .put("/api/v1/teams/4159/removeadmin")
+                .set("authorization", token)
+                .send({ user: bond })
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "That team does not exist."
+                    });
+                });
+        });
+        it("Should require user", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put("/api/v1/teams/4159/removeadmin")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "Missing parameters."
+                    });
+                });
+        });
+        it("Should remove admin", async () => {
+            const team = await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .put(`/api/v1/users/${bond._id}/jointeam`)
+                .set("authorization", bondToken)
+                .send({ teamnumber: team.res.body.team.teamnumber, password: team.res.body.team.password })
+                .expect(200);
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeUndefined();
+                });
+            await request(app)
+                .put("/api/v1/teams/4159/addadmin")
+                .set("authorization", token)
+                .send({ user: { id: bond._id } })
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        message: {
+                            text: "Successfully added admin."
+                        }
+                    });
+                });
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeDefined();
+                });
+            await request(app)
+                .put("/api/v1/teams/4159/removeadmin")
+                .set("authorization", token)
+                .send({ user: { id: bond._id } })
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        message: {
+                            text: "Successfully removed admin."
+                        }
+                    });
+                });
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", bondToken)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeUndefined();
                 });
         });
     });

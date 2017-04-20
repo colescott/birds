@@ -187,7 +187,12 @@ router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:num/addadmin", authenticate, errorWrapper(async (req, res) => {
+router.put("/:num/addadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)
@@ -217,7 +222,12 @@ router.put("/:num/addadmin", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:num/removeadmin", authenticate, errorWrapper(async (req, res) => {
+router.put("/:num/removeadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)
