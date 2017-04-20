@@ -38,6 +38,7 @@ module.exports.errorWrapper = f => async (req, res, next) => {
     try {
         await f(req, res, next);
     } catch (e) {
+        console.error(e);
         next(e);
     }
 };
