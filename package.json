@@ -167,7 +167,7 @@
     "redux-actions": "0.13.0",
     "redux-logger": "2.7.4",
     "redux-saga": "0.12.1",
-    "regenerator-runtime": "0.9.5",
+    "regenerator-runtime": "0.9.6",
     "reselect": "2.5.4",
     "sass-loader": "4.0.2",
     "sass-material-colors": "0.0.5",
