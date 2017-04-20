@@ -37,10 +37,10 @@ const User = require("./models/user");
  *
  */
 router.post("/", authenticate, errorWrapper(async (req, res) => {
+    const user = req.user;
+
     if (await Team.exists(req.body.teamnumber))
         return res.status(400).send(error(400, "A team with that number already exists!"));
-
-    const user = await User.findById(req.user.id);
 
     const team = new Team({
         name: req.body.name,
