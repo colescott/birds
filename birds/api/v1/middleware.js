@@ -19,7 +19,9 @@ module.exports.authenticate = (req, res, next) => {
                     next();
                 });
         } catch (e) {
-            next();
+            console.warn(e);
+            console.warn(req.user);
+            next(e);
         }
         
     });

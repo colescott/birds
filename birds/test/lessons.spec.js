@@ -38,8 +38,6 @@ describe("Lessons", () => {
         app.use("/api/v1/lessons", lessonsRouter);
     });
     beforeEach(async () => {
-        process.env.JWT_SECRET = "TEST";
-
         // add a new user
         const newUser = new User(testUser);
         user = await testUtil.addUser(newUser, "testpass");
