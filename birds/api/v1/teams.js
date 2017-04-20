@@ -5,7 +5,7 @@ const randomstring = require("randomstring");
 
 const util = require("./util.js");
 const { error } = require("./util.js");
-const { authenticate, errorWrapper } = require("./middleware.js");
+const { authenticate, errorWrapper, validator } = require("./middleware.js");
 const Team = require("./models/team");
 const User = require("./models/user");
 
@@ -36,9 +36,11 @@ const User = require("./models/user");
  *     }
  *
  */
-router.post("/", authenticate, errorWrapper(async (req, res) => {
-    const user = req.user;
 
+    
+router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(async (req, res) => {
+    const user = req.user;
+    
     if (await Team.exists(req.body.teamnumber))
         return res.status(400).send(error(400, "A team with that number already exists!"));
 
@@ -51,7 +53,7 @@ router.post("/", authenticate, errorWrapper(async (req, res) => {
 
     await team.save();
     await Team.addUser(team.teamnumber, user, true);
-    await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
+    //await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
 
     return res.status(200).send({ team: util.sterilizeTeam(team) });
 }));

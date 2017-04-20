@@ -67,25 +67,8 @@ describe("Teams", () => {
         await mongoose.disconnect();
     });
 
-    describe("Get Teams", () => {
-        it("Should list all teams", async () => {
-            await request(app)
-                .get("/api/v1/teams")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        teams: []
-                    });
-                });
-        });
-    });
-
     describe("Create team", () => {
-        xit("Should allow create team", async () => {
-            await request(app)
-                .post("/api/v1/users")
-                .send(testUser)
-                .expect(200);
+        it("Should allow create team", async () => {
             await request(app)
                 .post("/api/v1/teams")
                 .set("authorization", token)
@@ -93,7 +76,7 @@ describe("Teams", () => {
                 .expect(200)
                 .expect(res => {
                     expect(res.body).toEqual({
-                        teams: []
+                        team: testTeam
                     });
                 });
         });
@@ -107,45 +90,85 @@ describe("Teams", () => {
                     expect(res.body).toEqual({
                         code: 400,
                         error: "Bad Request",
-                        "message": "Missing parameters."
+                        message: "Missing parameters."
                     });
                 });
         });
-        xit("Should require teamnumber", async () => {
+        it("Should require teamnumber", async () => {
             await request(app)
                 .post("/api/v1/teams")
-                .set("authorizatin", token)
-                .send({ name: "CardinalBotics" })
+                .set("authorization", token)
+                .send({ name: testTeam.name })
                 .expect(400)
                 .expect(res => {
                     expect(res.body).toEqual({
                         code: 400,
                         error: "Bad Request",
-                        "message": "Missing parameters."
+                        message: "Missing parameters."
                     });
                 });
         });
-        xit("Should not allow duplicate account", async () => {
+        it("Should require auth", async () => {
             await request(app)
-                .post("/api/v1/users")
-                .send(testUser)
+                .post("/api/v1/teams")
+                .send({ testUser })
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should not allow create duplicate team", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.user.id).toBeDefined();
-                    res.body.user.id = "id";
                     expect(res.body).toEqual({
-                        user: Object.assign({ id: "id" }, _.omit(testUser, ["password"]))
+                        team: testTeam
                     });
                 });
             await request(app)
-                .post("/api/v1/users")
-                .send(testUser)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
                 .expect(400)
                 .expect(res => {
                     expect(res.body).toEqual({
                         code: 400,
                         error: "Bad Request",
-                        message: "A user with that email already exists"
+                        message: "A team with that number already exists!"
+                    });
+                });
+        });
+    });
+
+    describe("Get Teams", () => {
+        it("Should list no teams", async () => {
+            await request(app)
+                .get("/api/v1/teams")
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        teams: []
+                    });
+                });
+        });
+        it("Should list all teams", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam);
+            await request(app)
+                .get("/api/v1/teams")
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        teams: [testTeam]
                     });
                 });
         });

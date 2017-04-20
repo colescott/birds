@@ -157,6 +157,9 @@ router.get("/:id", authenticate, errorWrapper(async (req, res) => {
     } catch (e) {
         return res.status(400).send(error(400, "Unable to find a user with that id"));
     }
+    if (!user)
+        return res.status(400).send(error(400, "Unable to find a user with that id"));
+
     const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
     return res.status(200).send(response);
 }));
