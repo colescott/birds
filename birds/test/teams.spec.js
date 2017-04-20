@@ -82,7 +82,7 @@ describe("Teams", () => {
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
-        });
+        }, 10000);
         it("Should require name", async () => {
             await request(app)
                 .post("/api/v1/teams")
@@ -142,7 +142,7 @@ describe("Teams", () => {
                         message: "A team with that number already exists!"
                     });
                 });
-        });
+        }, 10000);
     });
 
     describe("Get teams", () => {
