@@ -14,7 +14,6 @@ const api = require("./api");
 app.use(favicon(path.join(__dirname, "favicon.ico")));
 app.use(bodyParser.json());
 
-/*
 if (process.env.NODE_ENV == "PROD") {
     app.use(forceSSL);
 }
@@ -23,7 +22,7 @@ app.use(cors());
 
 if (process.env.NODE_ENV !== "TEST") {
     app.use(morgan("dev"));
-}*/
+}
 
 app.use("/", express.static(path.join(__dirname, "static")));
 
