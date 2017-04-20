@@ -6,9 +6,9 @@ const _ = require("lodash");
 const jwt = require("jsonwebtoken");
 const express = require("express");
 const User = require("../api/v1/models/user");
+const app = require("../app");
 
 describe("Teams", () => {
-    let app;
     let db;
     let token;
     let user;
@@ -33,18 +33,11 @@ describe("Teams", () => {
         firstname: "James",
         lastname: "Bond"
     };
-    const BuggsBunny = {
-        email: "buggs@rabbits.co.uk",
-        password: "what's_up_doc?",
-        firstname: "Buggs",
-        lastname: "Bunny"
-    };
 
     beforeAll(async () => {
-        process.env.JWT_SECRET = "TEST";
-        process.env.NODE_ENV = "TEST";
-        process.env.MONGODB_URI = "mongodb://localhost/test-teams";
-        app = require("../app");
+        app.set("JWT_SECRET", "TEST");
+        mongoose.Promise = Promise;
+        await mongoose.connect("mongodb://localhost/test-lessons");
         db = mongoose.connection.db;
     });
     beforeEach(async () => {
