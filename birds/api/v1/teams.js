@@ -53,7 +53,7 @@ router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(a
 
     await team.save();
     await Team.addUser(team.teamnumber, user, true);
-    //await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
+    await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
 
     return res.status(200).send({ team: util.sterilizeTeam(team) });
 }));
