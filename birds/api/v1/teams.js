@@ -52,10 +52,14 @@ router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(a
     });
 
     await team.save();
-    await Team.addUser(team.teamnumber, user, true);
+    await Team.addUser(team.teamnumber, user);
+    await Team.setAdmin(team.teamnumber, user, true);
     await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
 
-    return res.status(200).send({ team: util.sterilizeTeam(team) });
+    const tem = util.sterilizeTeam(team);
+    tem.password = team.password;
+
+    return res.status(200).send({ team: tem });
 }));
 
 
@@ -149,6 +153,11 @@ router.get("/:num", authenticate, errorWrapper(async (req, res) => {
  *
  */
 router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)

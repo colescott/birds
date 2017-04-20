@@ -75,9 +75,9 @@ describe("Teams", () => {
                 .send(testTeam)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body).toEqual({
-                        team: testTeam
-                    });
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeDefined();
                 });
         });
         it("Should require name", async () => {
@@ -126,12 +126,7 @@ describe("Teams", () => {
                 .post("/api/v1/teams")
                 .set("authorization", token)
                 .send(testTeam)
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        team: testTeam
-                    });
-                });
+                .expect(200);
             await request(app)
                 .post("/api/v1/teams")
                 .set("authorization", token)
@@ -147,7 +142,7 @@ describe("Teams", () => {
         });
     });
 
-    describe("Get Teams", () => {
+    describe("Get teams", () => {
         it("Should list no teams", async () => {
             await request(app)
                 .get("/api/v1/teams")
@@ -169,6 +164,112 @@ describe("Teams", () => {
                 .expect(res => {
                     expect(res.body).toEqual({
                         teams: [testTeam]
+                    });
+                });
+        });
+    });
+
+    describe("Get team by number", () => {
+        it("Should return 401 on no auth", async () => {
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should return 400 on unknown team", async () => {
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "That team does not exist."
+                    });
+                });
+        });
+        it("Should return team", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .set("authorization", token)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.name).toEqual(testTeam.name);
+                    expect(res.body.team.password).toBeDefined();
+                });
+        });
+    });
+
+    describe("Delete team", () => {
+        it("Should return 401 on no auth", async () => {
+            await request(app)
+                .delete("/api/v1/teams/4159")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
+                });
+        });
+        it("Should return 400 on unknown team", async () => {
+            await request(app)
+                .delete("/api/v1/teams/4159")
+                .set("authorization", token)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "That team does not exist."
+                    });
+                });
+        });
+        it("Should delete team", async () => {
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam)
+                .expect(200);
+            await request(app)
+                .get("/api/v1/teams")
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        teams: [testTeam]
+                    });
+                });
+            await request(app)
+                .delete("/api/v1/teams/4159")
+                .set("authorization", token)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        message: {
+                            text: "Successfully deleted team."
+                        }
+                    });
+                });
+            await request(app)
+                .get("/api/v1/teams")
+                .expect(200)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        teams: []
                     });
                 });
         });
