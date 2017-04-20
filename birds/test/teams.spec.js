@@ -82,7 +82,7 @@ describe("Teams", () => {
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
-        }, 10000);
+        }, 15000);
         it("Should require name", async () => {
             await request(app)
                 .post("/api/v1/teams")
