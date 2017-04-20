@@ -10,8 +10,8 @@
     "serve": "URL_PREFIX=http://localhost:8000 webpack-dev-server --progress --config birds/webpack-dev.config.js --inline --watch",
     "build:dev": "webpack --progress --config birds/webpack-dev.config.js",
     "build:prod": "webpack --progress --config birds/webpack-prod.config.js",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "NODE_ENV=TEST jest",
+    "test:watch": "NODE_ENV=TEST jest --watch",
     "lint": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint",
     "lint:fix": "find ./birds -name '*.js' -not -path '*/static/*' -not -path '*/public/*' | xargs eslint --fix",
     "docs": "apidoc -i birds/api -o docs",
@@ -21,7 +21,7 @@
   },
   "jest": {
     "notify": true
-  }, 
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Team4159/BIRDS.git"

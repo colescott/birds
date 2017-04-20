@@ -1,30 +1,37 @@
 const expressJwt = require("express-jwt");
+const jwt = require("jsonwebtoken");
 
 const User = require("./models/user.js");
 const { error } = require("./util.js");
 
-module.exports.jwtSecret = process.env.JWT_SECRET;
-
-const ejwt = expressJwt({ secret: module.exports.jwtSecret });
-
 module.exports.authenticate = (req, res, next) => {
-    ejwt(req, res, (err) => {
-        if (err)
-            return res.status(401).send(error(401, err.message));
-        try {
-            const userId = req.user._doc._id;
+    const bearer = req.headers.authorization;
+    if (!bearer) {
+        return res.status(401).send({
+            code: 401,
+            error: "Unauthorized",
+            message: "No authorization token was found"
+        });
+    }
+    const token = bearer.match(/Bearer (.*)/)[1];
+    const jwtSecret = req.app.get("JWT_SECRET");
+    jwt.verify(token, jwtSecret, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({
+                code: 401,
+                error: "Unauthorized",
+                message: "Token is not valid"
+            });
+        } else {
+            const userId = decoded._doc._id;
             User.findById(userId)
                 .then(user => {
                     req.user = user;
                     next();
                 });
-        } catch (e) {
-            console.warn(e);
-            console.warn(req.user);
-            next(e);
-        }
-        
+       }
     });
+
 };
 
 module.exports.errorWrapper = f => async (req, res, next) => {

@@ -4,12 +4,12 @@ const User = require("../api/v1/models/user");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
+const app = require("../app");
 
 jest.mock("../api/v1/stores/lessons.js");
 const lessonStore = require("../api/v1/stores/lessons.js");
 
 describe("Lessons", () => {
-    let app;
     let db;
     let user;
     let token;
@@ -28,14 +28,11 @@ describe("Lessons", () => {
         }],
         data: "?"
     }
-    beforeAll(() => {
-        process.env.JWT_SECRET = "TEST";
-        process.env.NODE_ENV = "TEST";
-        process.env.MONGODB_URI = "mongodb://localhost/test-lessons";
-        app = require("../app")
+    beforeAll(async () => {
+        app.set("JWT_SECRET", "TEST");
+        mongoose.Promise = Promise;
+        await mongoose.connect("mongodb://localhost/test-lessons");
         db = mongoose.connection.db;
-        const lessonsRouter = require("../api/v1/lessons");
-        app.use("/api/v1/lessons", lessonsRouter);
     });
     beforeEach(async () => {
         // add a new user
