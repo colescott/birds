@@ -25,7 +25,7 @@ module.exports = (mode = "dev") => {
     router.use(expressValidator());
     router.use(passport.initialize());
 
-    if (mode == "PROD") {
+    if (mode == "production") {
         router.use(forceSSL);
     }
     if (mode != "TEST") {
