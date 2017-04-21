@@ -5,7 +5,7 @@ const randomstring = require("randomstring");
 
 const util = require("./util.js");
 const { error } = require("./util.js");
-const { authenticate, errorWrapper } = require("./middleware.js");
+const { authenticate, errorWrapper, validator } = require("./middleware.js");
 const Team = require("./models/team");
 const User = require("./models/user");
 
@@ -36,11 +36,13 @@ const User = require("./models/user");
  *     }
  *
  */
-router.post("/", authenticate, errorWrapper(async (req, res) => {
+
+    
+router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(async (req, res) => {
+    const user = req.user;
+    
     if (await Team.exists(req.body.teamnumber))
         return res.status(400).send(error(400, "A team with that number already exists!"));
-
-    const user = await User.findById(req.user.id);
 
     const team = new Team({
         name: req.body.name,
@@ -50,10 +52,14 @@ router.post("/", authenticate, errorWrapper(async (req, res) => {
     });
 
     await team.save();
-    await Team.addUser(team.teamnumber, user, true);
+    await Team.addUser(team.teamnumber, user);
+    await Team.setAdmin(team.teamnumber, user, true);
     await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
 
-    return res.status(200).send({ team: util.sterilizeTeam(team) });
+    const tem = util.sterilizeTeam(team);
+    tem.password = team.password;
+
+    return res.status(200).send({ team: tem });
 }));
 
 
@@ -147,6 +153,11 @@ router.get("/:num", authenticate, errorWrapper(async (req, res) => {
  *
  */
 router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)
@@ -176,7 +187,12 @@ router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:num/addadmin", authenticate, errorWrapper(async (req, res) => {
+router.put("/:num/addadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)
@@ -206,7 +222,12 @@ router.put("/:num/addadmin", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:num/removeadmin", authenticate, errorWrapper(async (req, res) => {
+router.put("/:num/removeadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
+    const teams = await Team.find({ teamnumber: req.params.num });
+
+    if (teams.length < 1)
+        return res.status(400).send(error(400, "That team does not exist."));
+
     const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
     if (!userIsAdmin)
