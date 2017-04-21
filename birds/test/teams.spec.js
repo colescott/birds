@@ -37,7 +37,7 @@ describe("Teams", () => {
     beforeAll(async () => {
         app.set("JWT_SECRET", "TEST");
         mongoose.Promise = Promise;
-        await mongoose.connect("mongodb://localhost/test-lessons");
+        await mongoose.connect("mongodb://localhost/test-teams");
         db = mongoose.connection.db;
     });
     beforeEach(async () => {
