@@ -4,9 +4,14 @@ const testUtil = require("./util.js");
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
-const express = require("express");
 const User = require("../api/v1/models/user");
-const app = require("../app");
+
+const express = require("express");
+const app = express();
+
+const middleware = require("../middleware");
+const teamsRouter = require("../api/v1/teams");
+const usersRouter = require("../api/v1/users");
 
 describe("Teams", () => {
     let db;
@@ -35,9 +40,12 @@ describe("Teams", () => {
     };
 
     beforeAll(async () => {
-        app.set("JWT_SECRET", "TEST");
         mongoose.Promise = Promise;
         await mongoose.connect("mongodb://localhost/test-teams");
+        app.set("JWT_SECRET", "TEST");
+        app.use(middleware("TEST"));
+        app.use("/api/v1/teams", teamsRouter);
+        app.use("/api/v1/users", usersRouter);
         db = mongoose.connection.db;
     });
     beforeEach(async () => {

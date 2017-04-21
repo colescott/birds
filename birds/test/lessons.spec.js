@@ -4,7 +4,12 @@ const User = require("../api/v1/models/user");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const _ = require("lodash");
-const app = require("../app");
+
+const express = require("express");
+const app = express();
+
+const middleware = require("../middleware"); 
+const lessonsRouter = require("../api/v1/lessons");
 
 jest.mock("../api/v1/stores/lessons.js");
 const lessonStore = require("../api/v1/stores/lessons.js");
@@ -29,9 +34,11 @@ describe("Lessons", () => {
         data: "?"
     }
     beforeAll(async () => {
-        app.set("JWT_SECRET", "TEST");
         mongoose.Promise = Promise;
         await mongoose.connect("mongodb://localhost/test-lessons");
+        app.set("JWT_SECRET", "TEST");
+        app.use(middleware("TEST"));
+        app.use("/api/v1/lessons", lessonsRouter);
         db = mongoose.connection.db;
     });
     beforeEach(async () => {
