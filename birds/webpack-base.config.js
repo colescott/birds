@@ -16,7 +16,7 @@ const config = {
             URL_PREFIX: JSON.stringify(process.env.URL_PREFIX || "")
         }),
         new webpack.optimize.CommonsChunkPlugin({
-            name: "common",
+            name: "common"
         })
     ],
     module: {
@@ -25,9 +25,13 @@ const config = {
                 loader: "babel",
                 test: /\.js$/,
                 query: {
-                    presets: [["es2015", { modules: false }], "react", "stage-2"],
+                    presets: [
+                        ["es2015", { modules: false }],
+                        "react",
+                        "stage-2"
+                    ],
                     babelrc: false
-                },
+                }
             },
             {
                 test: /\.css$/,
@@ -37,7 +41,7 @@ const config = {
                 test: /\.json$/,
                 loader: "json"
             }
-        ],
+        ]
     }
 };
 

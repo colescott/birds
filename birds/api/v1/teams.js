@@ -37,31 +37,39 @@ const User = require("./models/user");
  *
  */
 
-    
-router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(async (req, res) => {
-    const user = req.user;
-    
-    if (await Team.exists(req.body.teamnumber))
-        return res.status(400).send(error(400, "A team with that number already exists!"));
+router.post(
+    "/",
+    authenticate,
+    validator(["name", "teamnumber"]),
+    errorWrapper(async (req, res) => {
+        const user = req.user;
 
-    const team = new Team({
-        name: req.body.name,
-        teamnumber: req.body.teamnumber,
-        password: randomstring.generate(6),
-        users: []
-    });
+        if (await Team.exists(req.body.teamnumber))
+            return res
+                .status(400)
+                .send(error(400, "A team with that number already exists!"));
 
-    await team.save();
-    await Team.addUser(team.teamnumber, user);
-    await Team.setAdmin(team.teamnumber, user, true);
-    await User.findByIdAndUpdate(user.id, { teamnumber: team.teamnumber, isAdmin: true });
+        const team = new Team({
+            name: req.body.name,
+            teamnumber: req.body.teamnumber,
+            password: randomstring.generate(6),
+            users: []
+        });
 
-    const tem = util.sterilizeTeam(team);
-    tem.password = team.password;
+        await team.save();
+        await Team.addUser(team.teamnumber, user);
+        await Team.setAdmin(team.teamnumber, user, true);
+        await User.findByIdAndUpdate(user.id, {
+            teamnumber: team.teamnumber,
+            isAdmin: true
+        });
 
-    return res.status(200).send({ team: tem });
-}));
+        const tem = util.sterilizeTeam(team);
+        tem.password = team.password;
 
+        return res.status(200).send({ team: tem });
+    })
+);
 
 /**
  * @api {get} /teams Get list of teams
@@ -89,11 +97,16 @@ router.post("/", authenticate, validator(["name", "teamnumber"]), errorWrapper(a
  *     }
  *
  */
-router.get("/", errorWrapper(async (req, res) => {
-    const teams = await Team.find({});
+router.get(
+    "/",
+    errorWrapper(async (req, res) => {
+        const teams = await Team.find({});
 
-    return res.status(200).send({ teams: teams.map(team => (util.sterilizeTeam(team))) });
-}));
+        return res
+            .status(200)
+            .send({ teams: teams.map(team => util.sterilizeTeam(team)) });
+    })
+);
 
 /**
  * @api {get} /teams/:num Get team by number
@@ -118,21 +131,26 @@ router.get("/", errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.get("/:num", authenticate, errorWrapper(async (req, res) => {
-    const teams = await Team.find({ teamnumber: req.params.num });
+router.get(
+    "/:num",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        const teams = await Team.find({ teamnumber: req.params.num });
 
-    if (teams.length < 1)
-        return res.status(400).send(error(400, "That team does not exist."));
+        if (teams.length < 1)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
-    const team = util.sterilizeTeam(teams[ 0 ]);
+        const team = util.sterilizeTeam(teams[0]);
 
-    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+        const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
-    if (userIsAdmin)
-        team.password = teams[ 0 ].password;
+        if (userIsAdmin) team.password = teams[0].password;
 
-    return res.status(200).send({ team: team });
-}));
+        return res.status(200).send({ team: team });
+    })
+);
 
 /**
  * @api {delete} /teams/:id Delete team
@@ -152,20 +170,30 @@ router.get("/:num", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
-    const teams = await Team.find({ teamnumber: req.params.num });
+router.delete(
+    "/:num",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        const teams = await Team.find({ teamnumber: req.params.num });
 
-    if (teams.length < 1)
-        return res.status(400).send(error(400, "That team does not exist."));
+        if (teams.length < 1)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
-    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+        const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
-    if (!userIsAdmin)
-        return res.status(401).send(error(401, "You are not an admin of this team."));
+        if (!userIsAdmin)
+            return res
+                .status(401)
+                .send(error(401, "You are not an admin of this team."));
 
-    await Team.findOneAndRemove({ teamnumber: req.params.num });
-    return res.status(200).send({ message: { text: "Successfully deleted team." } });
-}));
+        await Team.findOneAndRemove({ teamnumber: req.params.num });
+        return res
+            .status(200)
+            .send({ message: { text: "Successfully deleted team." } });
+    })
+);
 
 /**
  * @api {put} /teams/:num/addadmin Add admin
@@ -187,20 +215,31 @@ router.delete("/:num", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:num/addadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
-    const teams = await Team.find({ teamnumber: req.params.num });
+router.put(
+    "/:num/addadmin",
+    authenticate,
+    validator(["user"]),
+    errorWrapper(async (req, res) => {
+        const teams = await Team.find({ teamnumber: req.params.num });
 
-    if (teams.length < 1)
-        return res.status(400).send(error(400, "That team does not exist."));
+        if (teams.length < 1)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
-    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+        const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
-    if (!userIsAdmin)
-        return res.status(401).send(error(401, "You are not an admin of this team."));
+        if (!userIsAdmin)
+            return res
+                .status(401)
+                .send(error(401, "You are not an admin of this team."));
 
-    await Team.setAdmin(req.params.num, req.body.user, true);
-    return res.status(200).send({ message: { text: "Successfully added admin." } });
-}));
+        await Team.setAdmin(req.params.num, req.body.user, true);
+        return res
+            .status(200)
+            .send({ message: { text: "Successfully added admin." } });
+    })
+);
 
 /**
  * @api {put} /teams/:num/removeadmin Remove admin
@@ -222,23 +261,36 @@ router.put("/:num/addadmin", authenticate, validator(["user"]), errorWrapper(asy
  *     }
  *
  */
-router.put("/:num/removeadmin", authenticate, validator(["user"]), errorWrapper(async (req, res) => {
-    const teams = await Team.find({ teamnumber: req.params.num });
+router.put(
+    "/:num/removeadmin",
+    authenticate,
+    validator(["user"]),
+    errorWrapper(async (req, res) => {
+        const teams = await Team.find({ teamnumber: req.params.num });
 
-    if (teams.length < 1)
-        return res.status(400).send(error(400, "That team does not exist."));
+        if (teams.length < 1)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
-    const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
+        const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
-    if (!userIsAdmin)
-        return res.status(401).send(error(401, "You are not an admin of this team."));
+        if (!userIsAdmin)
+            return res
+                .status(401)
+                .send(error(401, "You are not an admin of this team."));
 
-    const adminNum = Team.numberOfAdmins(req.params.num);
-    if (adminNum <= 1)
-        return res.status(400).send(error(400, "You cannot remove the only admin."));
+        const adminNum = Team.numberOfAdmins(req.params.num);
+        if (adminNum <= 1)
+            return res
+                .status(400)
+                .send(error(400, "You cannot remove the only admin."));
 
-    await Team.setAdmin(req.params.num, req.body.user, false);
-    return res.status(200).send({ message: { text: "Successfully removed admin." } });
-}));
+        await Team.setAdmin(req.params.num, req.body.user, false);
+        return res
+            .status(200)
+            .send({ message: { text: "Successfully removed admin." } });
+    })
+);
 
 module.exports = router;

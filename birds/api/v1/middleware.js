@@ -24,14 +24,12 @@ module.exports.authenticate = (req, res, next) => {
             });
         } else {
             const userId = decoded._doc._id;
-            User.findById(userId)
-                .then(user => {
-                    req.user = user;
-                    next();
-                });
-       }
+            User.findById(userId).then(user => {
+                req.user = user;
+                next();
+            });
+        }
     });
-
 };
 
 module.exports.errorWrapper = f => async (req, res, next) => {
@@ -44,8 +42,7 @@ module.exports.errorWrapper = f => async (req, res, next) => {
 };
 
 module.exports.errorHandler = (err, req, res, next) => {
-    if (err)
-        return res.status(500).send(error(500, err.message));
+    if (err) return res.status(500).send(error(500, err.message));
     return next();
 };
 
@@ -77,4 +74,4 @@ module.exports.permissions = (args = []) => (req, res, next) => {
         });
     }
     next();
-}
+};

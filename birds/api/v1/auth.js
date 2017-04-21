@@ -10,18 +10,20 @@ const { authenticate, errorWrapper, jwtSecret } = require("./middleware.js");
 
 const User = require("./models/user");
 
-passport.use(new LocalStrategy({
-        usernameField: "email"
-    }, (username, password, done) => {
-    User.authenticate()(username, password, (err, user, passErr) => {
-        if (err)
-            return done(err);
-        if (passErr)
-            return done(null, false, passErr);
-        if (user)
-            done(null, user);
-    });
-}));
+passport.use(
+    new LocalStrategy(
+        {
+            usernameField: "email"
+        },
+        (username, password, done) => {
+            User.authenticate()(username, password, (err, user, passErr) => {
+                if (err) return done(err);
+                if (passErr) return done(null, false, passErr);
+                if (user) done(null, user);
+            });
+        }
+    )
+);
 
 /**
  * @api {post} /auth/login Login
@@ -58,23 +60,33 @@ passport.use(new LocalStrategy({
  *     }
  *
  */
-router.post("/login", errorWrapper((req, res, next) => {
-    passport.authenticate("local", {
-        session: false
-    }, function(err, user) {
-        if (err)
-        return res.status(500).send(error(500, err));
-        if (!user) {
-            return res.status(401).send(error(401, "Incorrect username or password"));
-        } else {
-            const response = {
-                token: jwt.sign({ id: user.id }, jwtSecret, { expiresIn: 2 * 60 * 60 }),
-                user: util.sterilizeUserAsUser(user)
-            };
-            return res.status(200).send(response);
-        }
-    })(req, res, next);
-}));
+router.post(
+    "/login",
+    errorWrapper((req, res, next) => {
+        passport.authenticate(
+            "local",
+            {
+                session: false
+            },
+            function(err, user) {
+                if (err) return res.status(500).send(error(500, err));
+                if (!user) {
+                    return res
+                        .status(401)
+                        .send(error(401, "Incorrect username or password"));
+                } else {
+                    const response = {
+                        token: jwt.sign({ id: user.id }, jwtSecret, {
+                            expiresIn: 2 * 60 * 60
+                        }),
+                        user: util.sterilizeUserAsUser(user)
+                    };
+                    return res.status(200).send(response);
+                }
+            }
+        )(req, res, next);
+    })
+);
 
 /**
  * @api {post} /auth/logout Logout
@@ -93,9 +105,15 @@ router.post("/login", errorWrapper((req, res, next) => {
  *     }
  *
  */
-router.post("/logout", authenticate, errorWrapper((req, res) => {
-    req.logout();
-    return res.status(200).send({ message: { text: "Logged out successfully" } });
-}));
+router.post(
+    "/logout",
+    authenticate,
+    errorWrapper((req, res) => {
+        req.logout();
+        return res
+            .status(200)
+            .send({ message: { text: "Logged out successfully" } });
+    })
+);
 
 module.exports = router;

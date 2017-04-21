@@ -11,10 +11,12 @@ const User = new Schema({
     permissions: {
         editLessons: Boolean
     },
-    progress: [{
-        id: String,
-        state: String
-    }]
+    progress: [
+        {
+            id: String,
+            state: String
+        }
+    ]
 });
 
 User.plugin(passportLocalMongoose, {

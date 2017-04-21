@@ -8,7 +8,7 @@ const middleware = require("../api/v1/middleware");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
-module.exports = (dbUrl) => {
+module.exports = dbUrl => {
     app.use(cors());
     mongoose.Promise = Promise;
     mongoose.connect(dbUrl);
@@ -16,18 +16,24 @@ module.exports = (dbUrl) => {
     app.use(expressValidator());
     app.use(passport.initialize());
 
-    passport.use(new LocalStrategy({
-        usernameField: "email"
-    }, (username, password, done) => {
-        User.authenticate()(username, password, (err, user, passErr) => {
-            if (err)
-                return done(err);
-            if (passErr)
-                return done(null, false, passErr);
-            if (user)
-                done(null, user);
-        });
-    }))
+    passport.use(
+        new LocalStrategy(
+            {
+                usernameField: "email"
+            },
+            (username, password, done) => {
+                User.authenticate()(
+                    username,
+                    password,
+                    (err, user, passErr) => {
+                        if (err) return done(err);
+                        if (passErr) return done(null, false, passErr);
+                        if (user) done(null, user);
+                    }
+                );
+            }
+        )
+    );
 
     return app;
-}
+};
