@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const router = express.Router();
-const expressValidator = require("express-validator");
 
 const auth = require("./auth.js");
 const users = require("./users.js");
@@ -11,9 +10,6 @@ const lessons = require("./lessons.js");
 const { errorHandler } = require("./middleware.js");
 
 mongoose.Promise = global.Promise;
-
-router.use(passport.initialize());
-router.use(expressValidator());
 
 router.get("/ping", (req, res) => {
     return res.send("Pong v1!");
