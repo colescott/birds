@@ -22,7 +22,6 @@ describe("Users", () => {
         firstname: "first",
         lastname: "last",
         progress: [],
-        password: "pass"
     };
 
     const JamesBond = {
@@ -89,7 +88,6 @@ describe("Users", () => {
         it("Should allow registration", async () => {
             const newUser = {
                 email: "mailme",
-                password: "pass",
                 firstname: "firstname",
                 lastname: "lastname",
                 password: "I_have_surpassed_you"

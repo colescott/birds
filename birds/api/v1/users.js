@@ -175,7 +175,7 @@ router.get(
                 .send(error(400, "Unable to find a user with that id"));
 
         const response = {
-            user: req.params.id == req.user.id
+            user: req.params.id === req.user.id
                 ? util.sterilizeUserAsUser(user)
                 : util.sterilizeUser(user)
         };
@@ -232,7 +232,7 @@ router.put(
     "/:id",
     authenticate,
     errorWrapper(async (req, res) => {
-        if (req.user.id != req.params.id)
+        if (req.user.id !== req.params.id)
             return res
                 .status(401)
                 .send(
@@ -259,15 +259,11 @@ router.put(
             });
         }
 
-        let user;
-
-        if (changes != {})
-            user = await User.findByIdAndUpdate(
-                req.params.id,
-                changes,
-                options
-            );
-        else user = await User.findById(req.params.id);
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            changes,
+            options
+        );
 
         const response = { user: util.sterilizeUserAsUser(user) };
         return res.status(200).send(response);
@@ -296,7 +292,7 @@ router.delete(
     "/:id",
     authenticate,
     errorWrapper(async (req, res) => {
-        if (req.user.id != req.params.id)
+        if (req.user.id !== req.params.id)
             return res
                 .status(401)
                 .send(
@@ -335,7 +331,7 @@ router.put(
     "/:id/setprogress",
     authenticate,
     errorWrapper(async (req, res) => {
-        if (req.user.id != req.params.id)
+        if (req.user.id !== req.params.id)
             return res
                 .status(401)
                 .send(
@@ -382,7 +378,7 @@ router.put(
     "/:id/jointeam",
     authenticate,
     errorWrapper(async (req, res) => {
-        if (req.user.id != req.params.id)
+        if (req.user.id !== req.params.id)
             return res
                 .status(401)
                 .send(
@@ -396,7 +392,7 @@ router.put(
                 .status(400)
                 .send(error(400, "That team does not exist."));
 
-        if (req.body.password != data[0].password)
+        if (req.body.password !== data[0].password)
             return res.status(401).send(error(401, "Incorrect password"));
 
         const user = await User.findById(req.params.id);

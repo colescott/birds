@@ -10,13 +10,8 @@ const {
     permissions
 } = require("./middleware.js");
 const Lesson = require("./models/lesson");
-const User = require("./models/user");
-
 const _ = require("lodash");
 
-const aws = require("aws-sdk");
-const s3params = { Bucket: process.env.AWS_BUCKET };
-const s3bucket = new aws.S3({ params: s3params });
 const { uploadLessonData, getLessonData } = require("./stores/lessons.js");
 
 /**
@@ -55,8 +50,6 @@ router.post(
     validator(["title", "branch", "prerequisites", "data"]),
     permissions(["editLessons"]),
     errorWrapper(async (req, res) => {
-        const user = req.user;
-
         const data = await Lesson.findOne({
             title: req.body.title,
             branch: req.body.branch
@@ -183,7 +176,6 @@ router.patch(
         if (!util.validId(req.params.id))
             return res.status(400).send(error(400, "Invalid ID"));
 
-        const user = req.user;
         const id = req.params.id;
         const lesson = await Lesson.findOne({ _id: req.params.id });
 
@@ -259,9 +251,6 @@ router.get(
         const lessons = await Lesson.find({});
 
         return res.status(200).send({
-            lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
-        });
-        return res.send({
             lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
         });
     })

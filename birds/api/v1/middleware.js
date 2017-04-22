@@ -1,4 +1,3 @@
-const expressJwt = require("express-jwt");
 const jwt = require("jsonwebtoken");
 
 const User = require("./models/user.js");
@@ -66,7 +65,7 @@ module.exports.permissions = (args = []) => (req, res, next) => {
             message: "You do not have the required permissions"
         });
     }
-    if (args.some(arg => req.user.permissions[arg] != true)) {
+    if (args.some(arg => req.user.permissions[arg] !== true)) {
         return res.status(401).send({
             code: 401,
             error: "Unauthorized",

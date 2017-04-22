@@ -1,3 +1,7 @@
+const aws = require("aws-sdk");
+const s3params = { Bucket: process.env.AWS_BUCKET };
+const s3bucket = new aws.S3({ params: s3params });
+
 module.exports.uploadLessonData = async (lesson, data) => {
     return new Promise((resolve, reject) => {
         let params = {
