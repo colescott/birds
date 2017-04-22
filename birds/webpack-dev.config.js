@@ -19,9 +19,7 @@ const config = merge.smart(baseConfig, {
     },
     plugins: [
         new WebpackOnBuildPlugin(stats => {
-            const seconds = Math.ceil(
-                (Number(stats.endTime) - Number(stats.startTime)) / 1000
-            );
+            const seconds = Math.ceil((Number(stats.endTime) - Number(stats.startTime)) / 1000);
             notifier.notify({
                 title: "Webpack",
                 message: `Build took ${seconds} seconds.`

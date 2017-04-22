@@ -17,7 +17,8 @@
     "docs": "apidoc -i birds/api -o docs",
     "cover": "jest --coverage",
     "db": "mongod --dbpath ./data",
-    "heroku-postbuild": "npm run build:prod"
+    "heroku-postbuild": "npm run build:prod",
+    "pretify": "prettier --write 'api/*/*.js' 'api/*.js' 'api/*/*/*.js' 'test/*.js' '*.js' --tab-width 4 --print-width 100"
   },
   "jest": {
     "notify": true

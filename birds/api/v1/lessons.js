@@ -3,12 +3,7 @@ const router = express.Router();
 
 const util = require("./util.js");
 const { error } = require("./util.js");
-const {
-    authenticate,
-    errorWrapper,
-    validator,
-    permissions
-} = require("./middleware.js");
+const { authenticate, errorWrapper, validator, permissions } = require("./middleware.js");
 const Lesson = require("./models/lesson");
 const User = require("./models/user");
 
@@ -64,9 +59,7 @@ router.post(
 
         if (data) {
             console.warn(data);
-            return res
-                .status(400)
-                .send(error(400, "That lesson already exists"));
+            return res.status(400).send(error(400, "That lesson already exists"));
         }
 
         const lesson = new Lesson({
@@ -119,21 +112,15 @@ router.get(
     authenticate,
     errorWrapper(async (req, res) => {
         // Mongoose strongly dislikes invalid id
-        if (!util.validId(req.params.id))
-            return res.status(400).send(error(400, "Invalid ID"));
+        if (!util.validId(req.params.id)) return res.status(400).send(error(400, "Invalid ID"));
 
         const lesson = await Lesson.findById(req.params.id);
 
-        if (!lesson)
-            return res
-                .status(404)
-                .send(error(404, "That lesson does not exist."));
+        if (!lesson) return res.status(404).send(error(404, "That lesson does not exist."));
 
         try {
             const data = await getLessonData({ id: lesson.id });
-            return res
-                .status(200)
-                .send({ lesson: util.sterilizeLessonWithData(lesson, data) });
+            return res.status(200).send({ lesson: util.sterilizeLessonWithData(lesson, data) });
         } catch (e) {
             return res.status(500).send({
                 code: 500,
@@ -180,17 +167,13 @@ router.patch(
     permissions(["editLessons"]),
     errorWrapper(async (req, res) => {
         // Mongoose strongly dislikes invalid ids
-        if (!util.validId(req.params.id))
-            return res.status(400).send(error(400, "Invalid ID"));
+        if (!util.validId(req.params.id)) return res.status(400).send(error(400, "Invalid ID"));
 
         const user = req.user;
         const id = req.params.id;
         const lesson = await Lesson.findOne({ _id: req.params.id });
 
-        if (!lesson)
-            return res
-                .status(400)
-                .send(error(400, "That lesson does not exist!"));
+        if (!lesson) return res.status(400).send(error(400, "That lesson does not exist!"));
 
         // Update S3
         const data = req.body.data;
@@ -211,9 +194,7 @@ router.patch(
         await lesson.save();
 
         if (data) {
-            return res
-                .status(200)
-                .send({ lesson: util.sterilizeLessonWithData(lesson, data) });
+            return res.status(200).send({ lesson: util.sterilizeLessonWithData(lesson, data) });
         }
 
         return res.status(200).send({ lesson: util.sterilizeLesson(lesson) });
@@ -258,11 +239,9 @@ router.get(
     errorWrapper(async (req, res) => {
         const lessons = await Lesson.find({});
 
-        return res
-            .status(200)
-            .send({
-                lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
-            });
+        return res.status(200).send({
+            lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
+        });
         return res.send({
             lessons: lessons.map(lesson => util.sterilizeLesson(lesson))
         });

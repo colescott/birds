@@ -25,11 +25,7 @@ const config = {
                 loader: "babel",
                 test: /\.js$/,
                 query: {
-                    presets: [
-                        ["es2015", { modules: false }],
-                        "react",
-                        "stage-2"
-                    ],
+                    presets: [["es2015", { modules: false }], "react", "stage-2"],
                     babelrc: false
                 }
             },

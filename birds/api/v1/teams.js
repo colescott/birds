@@ -45,9 +45,7 @@ router.post(
         const user = req.user;
 
         if (await Team.exists(req.body.teamnumber))
-            return res
-                .status(400)
-                .send(error(400, "A team with that number already exists!"));
+            return res.status(400).send(error(400, "A team with that number already exists!"));
 
         const team = new Team({
             name: req.body.name,
@@ -102,9 +100,7 @@ router.get(
     errorWrapper(async (req, res) => {
         const teams = await Team.find({});
 
-        return res
-            .status(200)
-            .send({ teams: teams.map(team => util.sterilizeTeam(team)) });
+        return res.status(200).send({ teams: teams.map(team => util.sterilizeTeam(team)) });
     })
 );
 
@@ -137,10 +133,7 @@ router.get(
     errorWrapper(async (req, res) => {
         const teams = await Team.find({ teamnumber: req.params.num });
 
-        if (teams.length < 1)
-            return res
-                .status(400)
-                .send(error(400, "That team does not exist."));
+        if (teams.length < 1) return res.status(400).send(error(400, "That team does not exist."));
 
         const team = util.sterilizeTeam(teams[0]);
 
@@ -176,22 +169,15 @@ router.delete(
     errorWrapper(async (req, res) => {
         const teams = await Team.find({ teamnumber: req.params.num });
 
-        if (teams.length < 1)
-            return res
-                .status(400)
-                .send(error(400, "That team does not exist."));
+        if (teams.length < 1) return res.status(400).send(error(400, "That team does not exist."));
 
         const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
         if (!userIsAdmin)
-            return res
-                .status(401)
-                .send(error(401, "You are not an admin of this team."));
+            return res.status(401).send(error(401, "You are not an admin of this team."));
 
         await Team.findOneAndRemove({ teamnumber: req.params.num });
-        return res
-            .status(200)
-            .send({ message: { text: "Successfully deleted team." } });
+        return res.status(200).send({ message: { text: "Successfully deleted team." } });
     })
 );
 
@@ -222,22 +208,15 @@ router.put(
     errorWrapper(async (req, res) => {
         const teams = await Team.find({ teamnumber: req.params.num });
 
-        if (teams.length < 1)
-            return res
-                .status(400)
-                .send(error(400, "That team does not exist."));
+        if (teams.length < 1) return res.status(400).send(error(400, "That team does not exist."));
 
         const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
         if (!userIsAdmin)
-            return res
-                .status(401)
-                .send(error(401, "You are not an admin of this team."));
+            return res.status(401).send(error(401, "You are not an admin of this team."));
 
         await Team.setAdmin(req.params.num, req.body.user, true);
-        return res
-            .status(200)
-            .send({ message: { text: "Successfully added admin." } });
+        return res.status(200).send({ message: { text: "Successfully added admin." } });
     })
 );
 
@@ -268,28 +247,19 @@ router.put(
     errorWrapper(async (req, res) => {
         const teams = await Team.find({ teamnumber: req.params.num });
 
-        if (teams.length < 1)
-            return res
-                .status(400)
-                .send(error(400, "That team does not exist."));
+        if (teams.length < 1) return res.status(400).send(error(400, "That team does not exist."));
 
         const userIsAdmin = await Team.userIsAdmin(req.params.num, req.user);
 
         if (!userIsAdmin)
-            return res
-                .status(401)
-                .send(error(401, "You are not an admin of this team."));
+            return res.status(401).send(error(401, "You are not an admin of this team."));
 
         const adminNum = Team.numberOfAdmins(req.params.num);
         if (adminNum <= 1)
-            return res
-                .status(400)
-                .send(error(400, "You cannot remove the only admin."));
+            return res.status(400).send(error(400, "You cannot remove the only admin."));
 
         await Team.setAdmin(req.params.num, req.body.user, false);
-        return res
-            .status(200)
-            .send({ message: { text: "Successfully removed admin." } });
+        return res.status(200).send({ message: { text: "Successfully removed admin." } });
     })
 );
 

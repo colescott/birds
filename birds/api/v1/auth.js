@@ -71,9 +71,7 @@ router.post(
             function(err, user) {
                 if (err) return res.status(500).send(error(500, err));
                 if (!user) {
-                    return res
-                        .status(401)
-                        .send(error(401, "Incorrect username or password"));
+                    return res.status(401).send(error(401, "Incorrect username or password"));
                 } else {
                     const response = {
                         token: jwt.sign({ id: user.id }, jwtSecret, {
@@ -110,9 +108,7 @@ router.post(
     authenticate,
     errorWrapper((req, res) => {
         req.logout();
-        return res
-            .status(200)
-            .send({ message: { text: "Logged out successfully" } });
+        return res.status(200).send({ message: { text: "Logged out successfully" } });
     })
 );
 
