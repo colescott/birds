@@ -1,1 +1,2 @@
-module.exports = jest.genMockFromModule("../lessons.js");
+module.exports.getLessonData = jest.fn();
+module.exports.uploadLessonData = jest.fn();
