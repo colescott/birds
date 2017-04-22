@@ -6,9 +6,6 @@ services:
     - mongodb
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
-install:
-    - npm install -g yarn
-    - yarn
 script:
     - yarn run cover
     - yarn run lint
