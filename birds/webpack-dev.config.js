@@ -18,19 +18,21 @@ const config = merge.smart(baseConfig, {
         publicPath: "/"
     },
     plugins: [
-        new WebpackOnBuildPlugin((stats) => {
-            const seconds = Math.ceil((Number(stats.endTime) - Number(stats.startTime)) / 1000);
+        new WebpackOnBuildPlugin(stats => {
+            const seconds = Math.ceil(
+                (Number(stats.endTime) - Number(stats.startTime)) / 1000
+            );
             notifier.notify({
-                "title": "Webpack",
-                "message": `Build took ${seconds} seconds.`
+                title: "Webpack",
+                message: `Build took ${seconds} seconds.`
             });
         }),
         new webpack.DefinePlugin({
             "process.env": {
-                "NODE_ENV": JSON.stringify("development")
+                NODE_ENV: JSON.stringify("development")
             }
         })
-    ],
+    ]
 });
 
 module.exports = validator(config);

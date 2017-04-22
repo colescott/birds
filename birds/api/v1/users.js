@@ -47,28 +47,32 @@ options.new = true;
  *     }
  *
  */
-router.post("/", validator(["email", "password", "firstname", "lastname"]), errorWrapper(async (req, res) => {
-    const userQuery = await User.findOne({ email: req.body.email });
+router.post(
+    "/",
+    validator(["email", "password", "firstname", "lastname"]),
+    errorWrapper(async (req, res) => {
+        const userQuery = await User.findOne({ email: req.body.email });
 
-    if (userQuery)
-        return res.status(400).send(error(400, "A user with that email already exists"));
+        if (userQuery)
+            return res
+                .status(400)
+                .send(error(400, "A user with that email already exists"));
 
-    const user = new User({
-        email: req.body.email,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        progress: []
-    });
+        const user = new User({
+            email: req.body.email,
+            firstname: req.body.firstname,
+            lastname: req.body.lastname,
+            progress: []
+        });
 
-    User.register(user, req.body.password, (err, model, passwordErr) => {
-        if (err)
-            throw err;
-        if (passwordErr)
-            throw passwordErr;
+        User.register(user, req.body.password, (err, model, passwordErr) => {
+            if (err) throw err;
+            if (passwordErr) throw passwordErr;
 
-        return res.status(200).send({ user: util.sterilizeUser(model) });
-    });
-}));
+            return res.status(200).send({ user: util.sterilizeUser(model) });
+        });
+    })
+);
 
 /**
  * @api {get} /users Get list of users
@@ -105,11 +109,14 @@ router.post("/", validator(["email", "password", "firstname", "lastname"]), erro
  *     }
  *
  */
-router.get("/", errorWrapper(async (req, res) => {
-    const userList = await User.find({});
-    const users = userList.map(user => util.sterilizeUser(user));
-    return res.status(200).send({ users: users });
-}));
+router.get(
+    "/",
+    errorWrapper(async (req, res) => {
+        const userList = await User.find({});
+        const users = userList.map(user => util.sterilizeUser(user));
+        return res.status(200).send({ users: users });
+    })
+);
 
 /**
  * @api {get} /users/:id Get user by id
@@ -150,19 +157,31 @@ router.get("/", errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.get("/:id", authenticate, errorWrapper(async (req, res) => {
-    let user;
-    try {
-        user = await User.findById(req.params.id);
-    } catch (e) {
-        return res.status(400).send(error(400, "Unable to find a user with that id"));
-    }
-    if (!user)
-        return res.status(400).send(error(400, "Unable to find a user with that id"));
+router.get(
+    "/:id",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        let user;
+        try {
+            user = await User.findById(req.params.id);
+        } catch (e) {
+            return res
+                .status(400)
+                .send(error(400, "Unable to find a user with that id"));
+        }
+        if (!user)
+            return res
+                .status(400)
+                .send(error(400, "Unable to find a user with that id"));
 
-    const response = { user: req.params.id == req.user.id ? util.sterilizeUserAsUser(user) : util.sterilizeUser(user) };
-    return res.status(200).send(response);
-}));
+        const response = {
+            user: req.params.id === req.user.id
+                ? util.sterilizeUserAsUser(user)
+                : util.sterilizeUser(user)
+        };
+        return res.status(200).send(response);
+    })
+);
 
 /**
  * @api {put} /users/:id Set user values
@@ -209,35 +228,47 @@ router.get("/:id", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:id", authenticate, errorWrapper(async (req, res) => {
-    if (req.user.id != req.params.id)
-        return res.status(401).send(error(401, "You can only perform this action as the user"));
+router.put(
+    "/:id",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        if (req.user.id !== req.params.id)
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
-    const changes = _.pick(req.body, ["email", "firstname", "lastname", "teamnumber"]);
+        const changes = _.pick(req.body, [
+            "email",
+            "firstname",
+            "lastname",
+            "teamnumber"
+        ]);
 
-    if (req.body.password) {
-        User.findById(req.params.id, (err, user) => {
-            if (err)
-                throw err;
-            user.setPassword(req.body.password, (err, thisModel, passwordErr) => {
-                if (err)
-                    throw err;
-                if (passwordErr)
-                    throw passwordErr;
+        if (req.body.password) {
+            User.findById(req.params.id, (err, user) => {
+                if (err) throw err;
+                user.setPassword(
+                    req.body.password,
+                    (err, thisModel, passwordErr) => {
+                        if (err) throw err;
+                        if (passwordErr) throw passwordErr;
+                    }
+                );
             });
-        });
-    }
+        }
 
-    let user;
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            changes,
+            options
+        );
 
-    if (changes != {})
-        user = await User.findByIdAndUpdate(req.params.id, changes, options);
-    else
-        user = await User.findById(req.params.id);
-
-    const response = { user: util.sterilizeUserAsUser(user) };
-    return res.status(200).send(response);
-}));
+        const response = { user: util.sterilizeUserAsUser(user) };
+        return res.status(200).send(response);
+    })
+);
 
 /**
  * @api {delete} /users/:id Delete user
@@ -257,13 +288,23 @@ router.put("/:id", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.delete("/:id", authenticate, errorWrapper(async (req, res) => {
-    if (req.user.id != req.params.id)
-        return res.status(401).send(error(401, "You can only perform this action as the user"));
+router.delete(
+    "/:id",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        if (req.user.id !== req.params.id)
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
-    await User.findByIdAndRemove(req.params.id);
-    return res.status(200).send({ message: { text: "Successfully deleted user." } });
-}));
+        await User.findByIdAndRemove(req.params.id);
+        return res
+            .status(200)
+            .send({ message: { text: "Successfully deleted user." } });
+    })
+);
 
 /**
  * @api {put} /users/:id/setprogress Set lesson progress
@@ -286,21 +327,31 @@ router.delete("/:id", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:id/setprogress", authenticate, errorWrapper(async (req, res) => {
-    if (req.user.id != req.params.id)
-        return res.status(401).send(error(401, "You can only perform this action as the user"));
+router.put(
+    "/:id/setprogress",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        if (req.user.id !== req.params.id)
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
-    // TODO: move to middleware
-    if (!req.body.id)
-        return res.status(400).send(error(400, "Id not set!"));
-    if (!req.body.state)
-        return res.status(400).send(error(400, "State not set!"));
+        // TODO: move to middleware
+        if (!req.body.id)
+            return res.status(400).send(error(400, "Id not set!"));
+        if (!req.body.state)
+            return res.status(400).send(error(400, "State not set!"));
 
-    const user = await User.findByIdAndUpdate(req.user.id, { $push: { "progress": { id: req.body.id, state: req.body.state } } }, options);
-    return res.status(200).send({ user: user });
-}));
-
-
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $push: { progress: { id: req.body.id, state: req.body.state } } },
+            options
+        );
+        return res.status(200).send({ user: user });
+    })
+);
 
 /**
  * @api {put} /users/:id/jointeam Join team
@@ -323,23 +374,33 @@ router.put("/:id/setprogress", authenticate, errorWrapper(async (req, res) => {
  *     }
  *
  */
-router.put("/:id/jointeam", authenticate, errorWrapper(async (req, res) => {
-    if (req.user.id != req.params.id)
-        return res.status(401).send(error(401, "You can only perform this action as the user"));
+router.put(
+    "/:id/jointeam",
+    authenticate,
+    errorWrapper(async (req, res) => {
+        if (req.user.id !== req.params.id)
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
-    const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
+        const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
 
-    if (data.length <= 0)
-        return res.status(400).send(error(400, "That team does not exist."));
+        if (data.length <= 0)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
-    if (req.body.password != data[ 0 ].password)
-        return res.status(401).send(error(401, "Incorrect password"));
+        if (req.body.password !== data[0].password)
+            return res.status(401).send(error(401, "Incorrect password"));
 
-    const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id);
 
-    await Team.addUser(req.body.teamnumber, user);
+        await Team.addUser(req.body.teamnumber, user);
 
-    return res.status(200).send({ team: data });
-}));
+        return res.status(200).send({ team: data });
+    })
+);
 
 module.exports = router;

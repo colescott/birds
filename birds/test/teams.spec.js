@@ -1,5 +1,4 @@
 const request = require("supertest");
-const mongodb = require("mongodb");
 const testUtil = require("./util.js");
 const mongoose = require("mongoose");
 const _ = require("lodash");
@@ -79,18 +78,24 @@ describe("Teams", () => {
     });
 
     describe("Create team", () => {
-        it("Should allow create team", async () => {
-            await request(app)
-                .post("/api/v1/teams")
-                .set("authorization", token)
-                .send(testTeam)
-                .expect(200)
-                .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
-                    expect(res.body.team.name).toEqual(testTeam.name);
-                    expect(res.body.team.password).toBeDefined();
-                });
-        }, 15000);
+        it(
+            "Should allow create team",
+            async () => {
+                await request(app)
+                    .post("/api/v1/teams")
+                    .set("authorization", token)
+                    .send(testTeam)
+                    .expect(200)
+                    .expect(res => {
+                        expect(res.body.team.teamnumber).toEqual(
+                            testTeam.teamnumber
+                        );
+                        expect(res.body.team.name).toEqual(testTeam.name);
+                        expect(res.body.team.password).toBeDefined();
+                    });
+            },
+            15000
+        );
         it("Should require name", async () => {
             await request(app)
                 .post("/api/v1/teams")
@@ -132,51 +137,49 @@ describe("Teams", () => {
                     });
                 });
         });
-        it("Should not allow create duplicate team", async () => {
-            await request(app)
-                .post("/api/v1/teams")
-                .set("authorization", token)
-                .send(testTeam)
-                .expect(200);
-            await request(app)
-                .post("/api/v1/teams")
-                .set("authorization", token)
-                .send(testTeam)
-                .expect(400)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        code: 400,
-                        error: "Bad Request",
-                        message: "A team with that number already exists!"
+        it(
+            "Should not allow create duplicate team",
+            async () => {
+                await request(app)
+                    .post("/api/v1/teams")
+                    .set("authorization", token)
+                    .send(testTeam)
+                    .expect(200);
+                await request(app)
+                    .post("/api/v1/teams")
+                    .set("authorization", token)
+                    .send(testTeam)
+                    .expect(400)
+                    .expect(res => {
+                        expect(res.body).toEqual({
+                            code: 400,
+                            error: "Bad Request",
+                            message: "A team with that number already exists!"
+                        });
                     });
-                });
-        }, 10000);
+            },
+            10000
+        );
     });
 
     describe("Get teams", () => {
         it("Should list no teams", async () => {
-            await request(app)
-                .get("/api/v1/teams")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        teams: []
-                    });
+            await request(app).get("/api/v1/teams").expect(200).expect(res => {
+                expect(res.body).toEqual({
+                    teams: []
                 });
+            });
         });
         it("Should list all teams", async () => {
             await request(app)
                 .post("/api/v1/teams")
                 .set("authorization", token)
                 .send(testTeam);
-            await request(app)
-                .get("/api/v1/teams")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        teams: [testTeam]
-                    });
+            await request(app).get("/api/v1/teams").expect(200).expect(res => {
+                expect(res.body).toEqual({
+                    teams: [testTeam]
                 });
+            });
         });
     });
 
@@ -222,7 +225,9 @@ describe("Teams", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -238,7 +243,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -300,14 +307,11 @@ describe("Teams", () => {
                 .set("authorization", token)
                 .send(testTeam)
                 .expect(200);
-            await request(app)
-                .get("/api/v1/teams")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        teams: [testTeam]
-                    });
+            await request(app).get("/api/v1/teams").expect(200).expect(res => {
+                expect(res.body).toEqual({
+                    teams: [testTeam]
                 });
+            });
             await request(app)
                 .delete("/api/v1/teams/4159")
                 .set("authorization", token)
@@ -319,14 +323,11 @@ describe("Teams", () => {
                         }
                     });
                 });
-            await request(app)
-                .get("/api/v1/teams")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        teams: []
-                    });
+            await request(app).get("/api/v1/teams").expect(200).expect(res => {
+                expect(res.body).toEqual({
+                    teams: []
                 });
+            });
         });
     });
 
@@ -390,14 +391,19 @@ describe("Teams", () => {
             await request(app)
                 .put(`/api/v1/users/${bond._id}/jointeam`)
                 .set("authorization", bondToken)
-                .send({ teamnumber: team.res.body.team.teamnumber, password: team.res.body.team.password })
+                .send({
+                    teamnumber: team.res.body.team.teamnumber,
+                    password: team.res.body.team.password
+                })
                 .expect(200);
             await request(app)
                 .get("/api/v1/teams/4159")
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -418,7 +424,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -485,14 +493,19 @@ describe("Teams", () => {
             await request(app)
                 .put(`/api/v1/users/${bond._id}/jointeam`)
                 .set("authorization", bondToken)
-                .send({ teamnumber: team.res.body.team.teamnumber, password: team.res.body.team.password })
+                .send({
+                    teamnumber: team.res.body.team.teamnumber,
+                    password: team.res.body.team.password
+                })
                 .expect(200);
             await request(app)
                 .get("/api/v1/teams/4159")
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -513,7 +526,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -534,7 +549,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });

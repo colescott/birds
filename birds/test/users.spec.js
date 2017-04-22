@@ -22,7 +22,6 @@ describe("Users", () => {
         firstname: "first",
         lastname: "last",
         progress: [],
-        password: "pass"
     };
 
     const JamesBond = {
@@ -71,27 +70,28 @@ describe("Users", () => {
 
     describe("Get Users", () => {
         it("Should list all users", async () => {
-            await request(app)
-                .get("/api/v1/users")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        users: [
-                            _.omit(Object.assign({}, testUser, { id: res.body.users[0].id }), ["password", "progress"])
-                        ]
-                    });
+            await request(app).get("/api/v1/users").expect(200).expect(res => {
+                expect(res.body).toEqual({
+                    users: [
+                        _.omit(
+                            Object.assign({}, testUser, {
+                                id: res.body.users[0].id
+                            }),
+                            ["password", "progress"]
+                        )
+                    ]
                 });
+            });
         });
     });
     describe("Register", () => {
         it("Should allow registration", async () => {
             const newUser = {
                 email: "mailme",
-                password: "pass",
                 firstname: "firstname",
                 lastname: "lastname",
                 password: "I_have_surpassed_you"
-            }
+            };
             await request(app)
                 .post("/api/v1/users")
                 .send(newUser)
@@ -100,35 +100,32 @@ describe("Users", () => {
                     expect(res.body.user.id).toBeDefined();
                     res.body.user.id = "id";
                     expect(res.body).toEqual({
-                        user: Object.assign({ id: "id" }, _.omit(newUser, ["password"]))
-                    });
-                });
-            await request(app)
-                .get("/api/v1/users")
-                .expect(200)
-                .expect(res => {
-                    expect(res.body.users[ 0 ].id).toBeDefined();
-                    delete res.body.users[ 0 ].id;
-                    delete res.body.users[ 1 ].id;
-                    expect(res.body).toEqual({
-                        users: [
-                            _.omit(testUser, ["password", "progress"]),
+                        user: Object.assign(
+                            { id: "id" },
                             _.omit(newUser, ["password"])
-                        ]
+                        )
                     });
                 });
+            await request(app).get("/api/v1/users").expect(200).expect(res => {
+                expect(res.body.users[0].id).toBeDefined();
+                delete res.body.users[0].id;
+                delete res.body.users[1].id;
+                expect(res.body).toEqual({
+                    users: [
+                        _.omit(testUser, ["password", "progress"]),
+                        _.omit(newUser, ["password"])
+                    ]
+                });
+            });
         });
         it("Should require paramaters", async () => {
-            await request(app)
-                .post("/api/v1/users")
-                .expect(400)
-                .expect(res => {
-                    expect(res.body).toEqual({
-                        code: 400,
-                        error: "Bad Request",
-                        "message": "Missing parameters."
-                    });
+            await request(app).post("/api/v1/users").expect(400).expect(res => {
+                expect(res.body).toEqual({
+                    code: 400,
+                    error: "Bad Request",
+                    message: "Missing parameters."
                 });
+            });
         });
         it("Should require all paramaters", async () => {
             await request(app)
@@ -139,7 +136,7 @@ describe("Users", () => {
                     expect(res.body).toEqual({
                         code: 400,
                         error: "Bad Request",
-                        "message": "Missing parameters."
+                        message: "Missing parameters."
                     });
                 });
         });
@@ -165,9 +162,9 @@ describe("Users", () => {
                 .expect(401)
                 .expect(res => {
                     expect(res.body).toEqual({
-                       code: 401,
-                       error: "Unauthorized",
-                       message: "No authorization token was found"
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
                     });
                 });
         });
@@ -197,7 +194,9 @@ describe("Users", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.user).toEqual(Object.assign({ id }, _.omit(JamesBond, ["password"])));
+                    expect(res.body.user).toEqual(
+                        Object.assign({ id }, _.omit(JamesBond, ["password"]))
+                    );
                 });
         });
         it("Should return the correct user", async () => {
@@ -219,7 +218,9 @@ describe("Users", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.user).toEqual(Object.assign({ id }, _.omit(BuggsBunny, ["password"])));
+                    expect(res.body.user).toEqual(
+                        Object.assign({ id }, _.omit(BuggsBunny, ["password"]))
+                    );
                 });
         });
     });
@@ -232,8 +233,12 @@ describe("Users", () => {
                 .send({ email: "new email" })
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.user, "id"))
-                        .toEqual(_.omit(Object.assign({}, testUser, { email: "new email" }), "password"));
+                    expect(_.omit(res.body.user, "id")).toEqual(
+                        _.omit(
+                            Object.assign({}, testUser, { email: "new email" }),
+                            "password"
+                        )
+                    );
                 });
         });
         it("Should not allow updating another user", async () => {

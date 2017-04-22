@@ -8,7 +8,7 @@ const _ = require("lodash");
 const express = require("express");
 const app = express();
 
-const middleware = require("../middleware"); 
+const middleware = require("../middleware");
 const lessonsRouter = require("../api/v1/lessons");
 
 jest.mock("../api/v1/stores/lessons.js");
@@ -24,15 +24,17 @@ describe("Lessons", () => {
         firstname: "first",
         lastname: "last",
         progress: []
-    }
+    };
     const testLesson = {
         title: "TITLE",
         branch: "tree",
-        prerequisites: [{
-            id: "speling" 
-        }],
+        prerequisites: [
+            {
+                id: "speling"
+            }
+        ],
         data: "?"
-    }
+    };
     beforeAll(async () => {
         mongoose.Promise = Promise;
         await mongoose.connect("mongodb://localhost/test-lessons");
@@ -48,8 +50,7 @@ describe("Lessons", () => {
 
         // generate a token
         const signedUser = jwt.sign(user, "TEST");
-        token = `Bearer ${signedUser}`; 
-
+        token = `Bearer ${signedUser}`;
     });
     afterEach(async () => {
         // nuke the db
@@ -86,13 +87,17 @@ describe("Lessons", () => {
                 .expect(200)
                 .expect(res => {
                     expect(res.body.lesson).toBeDefined();
-                    expect(_.omit(res.body.lesson, ["id"]))
-                        .toEqual(_.omit(testLesson, ["data"]))
+                    expect(_.omit(res.body.lesson, ["id"])).toEqual(
+                        _.omit(testLesson, ["data"])
+                    );
                 })
                 // I hate this
                 .then(data => data.res.body.lesson.id);
 
-            expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, testLesson.data);
+            expect(lessonStore.uploadLessonData).toBeCalledWith(
+                { id },
+                testLesson.data
+            );
         });
         it("Should recover from an aws failure", async () => {
             user.permissions = {
@@ -101,8 +106,9 @@ describe("Lessons", () => {
             await user.save();
 
             // This currently works, but should it?
-            lessonStore.uploadLessonData
-                .mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.uploadLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .post("/api/v1/lessons")
@@ -153,7 +159,7 @@ describe("Lessons", () => {
                         error: "Bad Request",
                         message: "Missing parameters."
                     });
-                })
+                });
         });
         it("Should require correct permissions", async () => {
             await request(app)
@@ -189,16 +195,14 @@ describe("Lessons", () => {
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
 
-            lessonStore.getLessonData
-                .mockReturnValueOnce(testLesson.data);
+            lessonStore.getLessonData.mockReturnValueOnce(testLesson.data);
 
             await request(app)
                 .get(`/api/v1/lessons/${id}`)
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, ["id"]))
-                        .toEqual(testLesson);
+                    expect(_.omit(res.body.lesson, ["id"])).toEqual(testLesson);
                 });
 
             expect(lessonStore.getLessonData).toBeCalledWith({ id });
@@ -216,8 +220,9 @@ describe("Lessons", () => {
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
 
-            lessonStore.getLessonData
-                .mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.getLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .get(`/api/v1/lessons/${id}`)
@@ -283,7 +288,7 @@ describe("Lessons", () => {
                 .send(testLesson)
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
-            
+
             await request(app)
                 .patch(`/api/v1/lessons/${id}`)
                 .set("authorization", token)
@@ -292,18 +297,26 @@ describe("Lessons", () => {
                 })
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, ["id"]))
-                        .toEqual(Object.assign({}, testLesson, { branch: "Oak Tree", data: undefined }));
+                    expect(_.omit(res.body.lesson, ["id"])).toEqual(
+                        Object.assign({}, testLesson, {
+                            branch: "Oak Tree",
+                            data: undefined
+                        })
+                    );
                 });
-            
+
             // Make sure the lesson was actually updated
             await request(app)
                 .get(`/api/v1/lessons/${id}`)
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, "id"))
-                        .toEqual(Object.assign({}, testLesson, { branch: "Oak Tree", data: undefined }));
+                    expect(_.omit(res.body.lesson, "id")).toEqual(
+                        Object.assign({}, testLesson, {
+                            branch: "Oak Tree",
+                            data: undefined
+                        })
+                    );
                 });
         });
         it("Should allow updating the data", async () => {
@@ -327,8 +340,9 @@ describe("Lessons", () => {
                 })
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, ["id"]))
-                        .toEqual(Object.assign({}, testLesson, { data: "DATA" }));
+                    expect(_.omit(res.body.lesson, ["id"])).toEqual(
+                        Object.assign({}, testLesson, { data: "DATA" })
+                    );
                 });
 
             expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, "DATA");
@@ -346,8 +360,9 @@ describe("Lessons", () => {
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
 
-            lessonStore.uploadLessonData
-                .mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.uploadLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .patch(`/api/v1/lessons/${id}`)
@@ -371,11 +386,12 @@ describe("Lessons", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, "id")).toEqual(_.omit(testLesson, "data"))
+                    expect(_.omit(res.body.lesson, "id")).toEqual(
+                        _.omit(testLesson, "data")
+                    );
                 });
 
-            expect(lessonStore.uploadLessonData)
-                .toBeCalledWith({ id }, "DATA");
+            expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, "DATA");
         });
         it("Should require authentication", async () => {
             await request(app)

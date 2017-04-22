@@ -1,17 +1,13 @@
 language: node_js
 node_js:
     - "7.6.0"
+cache: yarn
 services:
     - mongodb
-env:
-    - MONGODB_URI=mongodb://localhost/test
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
-install:
-    - npm install -g yarn
-    - yarn config set cache ~/.yarn-cache
-    - yarn
 script:
-    - npm run cover
+    - yarn run cover
+    - yarn run lint
 after_success:
     - bash <(curl -s https://codecov.io/bash)
