@@ -1,5 +1,4 @@
 const User = require("../api/v1/models/user.js");
-const exports = (module.exports = {});
 
 exports.randomInRange = (min, max) => {
     const nMin = Math.ceil(min);
