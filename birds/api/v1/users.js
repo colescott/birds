@@ -54,7 +54,9 @@ router.post(
         const userQuery = await User.findOne({ email: req.body.email });
 
         if (userQuery)
-            return res.status(400).send(error(400, "A user with that email already exists"));
+            return res
+                .status(400)
+                .send(error(400, "A user with that email already exists"));
 
         const user = new User({
             email: req.body.email,
@@ -163,9 +165,14 @@ router.get(
         try {
             user = await User.findById(req.params.id);
         } catch (e) {
-            return res.status(400).send(error(400, "Unable to find a user with that id"));
+            return res
+                .status(400)
+                .send(error(400, "Unable to find a user with that id"));
         }
-        if (!user) return res.status(400).send(error(400, "Unable to find a user with that id"));
+        if (!user)
+            return res
+                .status(400)
+                .send(error(400, "Unable to find a user with that id"));
 
         const response = {
             user: req.params.id == req.user.id
@@ -226,23 +233,40 @@ router.put(
     authenticate,
     errorWrapper(async (req, res) => {
         if (req.user.id != req.params.id)
-            return res.status(401).send(error(401, "You can only perform this action as the user"));
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
-        const changes = _.pick(req.body, ["email", "firstname", "lastname", "teamnumber"]);
+        const changes = _.pick(req.body, [
+            "email",
+            "firstname",
+            "lastname",
+            "teamnumber"
+        ]);
 
         if (req.body.password) {
             User.findById(req.params.id, (err, user) => {
                 if (err) throw err;
-                user.setPassword(req.body.password, (err, thisModel, passwordErr) => {
-                    if (err) throw err;
-                    if (passwordErr) throw passwordErr;
-                });
+                user.setPassword(
+                    req.body.password,
+                    (err, thisModel, passwordErr) => {
+                        if (err) throw err;
+                        if (passwordErr) throw passwordErr;
+                    }
+                );
             });
         }
 
         let user;
 
-        if (changes != {}) user = await User.findByIdAndUpdate(req.params.id, changes, options);
+        if (changes != {})
+            user = await User.findByIdAndUpdate(
+                req.params.id,
+                changes,
+                options
+            );
         else user = await User.findById(req.params.id);
 
         const response = { user: util.sterilizeUserAsUser(user) };
@@ -273,10 +297,16 @@ router.delete(
     authenticate,
     errorWrapper(async (req, res) => {
         if (req.user.id != req.params.id)
-            return res.status(401).send(error(401, "You can only perform this action as the user"));
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
         await User.findByIdAndRemove(req.params.id);
-        return res.status(200).send({ message: { text: "Successfully deleted user." } });
+        return res
+            .status(200)
+            .send({ message: { text: "Successfully deleted user." } });
     })
 );
 
@@ -306,11 +336,17 @@ router.put(
     authenticate,
     errorWrapper(async (req, res) => {
         if (req.user.id != req.params.id)
-            return res.status(401).send(error(401, "You can only perform this action as the user"));
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
         // TODO: move to middleware
-        if (!req.body.id) return res.status(400).send(error(400, "Id not set!"));
-        if (!req.body.state) return res.status(400).send(error(400, "State not set!"));
+        if (!req.body.id)
+            return res.status(400).send(error(400, "Id not set!"));
+        if (!req.body.state)
+            return res.status(400).send(error(400, "State not set!"));
 
         const user = await User.findByIdAndUpdate(
             req.user.id,
@@ -347,11 +383,18 @@ router.put(
     authenticate,
     errorWrapper(async (req, res) => {
         if (req.user.id != req.params.id)
-            return res.status(401).send(error(401, "You can only perform this action as the user"));
+            return res
+                .status(401)
+                .send(
+                    error(401, "You can only perform this action as the user")
+                );
 
         const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
 
-        if (data.length <= 0) return res.status(400).send(error(400, "That team does not exist."));
+        if (data.length <= 0)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
 
         if (req.body.password != data[0].password)
             return res.status(401).send(error(401, "Incorrect password"));

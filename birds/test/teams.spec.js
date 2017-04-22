@@ -88,7 +88,9 @@ describe("Teams", () => {
                     .send(testTeam)
                     .expect(200)
                     .expect(res => {
-                        expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                        expect(res.body.team.teamnumber).toEqual(
+                            testTeam.teamnumber
+                        );
                         expect(res.body.team.name).toEqual(testTeam.name);
                         expect(res.body.team.password).toBeDefined();
                     });
@@ -124,13 +126,17 @@ describe("Teams", () => {
                 });
         });
         it("Should require auth", async () => {
-            await request(app).post("/api/v1/teams").send({ testUser }).expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .post("/api/v1/teams")
+                .send({ testUser })
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it(
             "Should not allow create duplicate team",
@@ -166,7 +172,10 @@ describe("Teams", () => {
             });
         });
         it("Should list all teams", async () => {
-            await request(app).post("/api/v1/teams").set("authorization", token).send(testTeam);
+            await request(app)
+                .post("/api/v1/teams")
+                .set("authorization", token)
+                .send(testTeam);
             await request(app).get("/api/v1/teams").expect(200).expect(res => {
                 expect(res.body).toEqual({
                     teams: [testTeam]
@@ -182,13 +191,16 @@ describe("Teams", () => {
                 .set("authorization", token)
                 .send(testTeam)
                 .expect(200);
-            await request(app).get("/api/v1/teams/4159").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .get("/api/v1/teams/4159")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should return 400 on unknown team", async () => {
             await request(app)
@@ -214,7 +226,9 @@ describe("Teams", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -230,7 +244,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -244,13 +260,16 @@ describe("Teams", () => {
                 .set("authorization", token)
                 .send(testTeam)
                 .expect(200);
-            await request(app).delete("/api/v1/teams/4159").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .delete("/api/v1/teams/4159")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should return 400 on unknown team", async () => {
             await request(app)
@@ -383,7 +402,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -404,7 +425,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -481,7 +504,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });
@@ -502,7 +527,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeDefined();
                 });
@@ -523,7 +550,9 @@ describe("Teams", () => {
                 .set("authorization", bondToken)
                 .expect(200)
                 .expect(res => {
-                    expect(res.body.team.teamnumber).toEqual(testTeam.teamnumber);
+                    expect(res.body.team.teamnumber).toEqual(
+                        testTeam.teamnumber
+                    );
                     expect(res.body.team.name).toEqual(testTeam.name);
                     expect(res.body.team.password).toBeUndefined();
                 });

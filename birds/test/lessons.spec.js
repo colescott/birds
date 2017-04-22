@@ -87,12 +87,17 @@ describe("Lessons", () => {
                 .expect(200)
                 .expect(res => {
                     expect(res.body.lesson).toBeDefined();
-                    expect(_.omit(res.body.lesson, ["id"])).toEqual(_.omit(testLesson, ["data"]));
+                    expect(_.omit(res.body.lesson, ["id"])).toEqual(
+                        _.omit(testLesson, ["data"])
+                    );
                 })
                 // I hate this
                 .then(data => data.res.body.lesson.id);
 
-            expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, testLesson.data);
+            expect(lessonStore.uploadLessonData).toBeCalledWith(
+                { id },
+                testLesson.data
+            );
         });
         it("Should recover from an aws failure", async () => {
             user.permissions = {
@@ -101,7 +106,9 @@ describe("Lessons", () => {
             await user.save();
 
             // This currently works, but should it?
-            lessonStore.uploadLessonData.mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.uploadLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .post("/api/v1/lessons")
@@ -130,13 +137,16 @@ describe("Lessons", () => {
                 });
         });
         it("Should require authencticaion", async () => {
-            await request(app).post("/api/v1/lessons").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .post("/api/v1/lessons")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should require the correct paramaters", async () => {
             await request(app)
@@ -210,7 +220,9 @@ describe("Lessons", () => {
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
 
-            lessonStore.getLessonData.mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.getLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .get(`/api/v1/lessons/${id}`)
@@ -225,13 +237,16 @@ describe("Lessons", () => {
                 });
         });
         it("Should require auth", async () => {
-            await request(app).get("/api/v1/lessons/1").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .get("/api/v1/lessons/1")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should 400 on an invalid id", async () => {
             await request(app)
@@ -345,7 +360,9 @@ describe("Lessons", () => {
                 .expect(200)
                 .then(data => data.res.body.lesson.id);
 
-            lessonStore.uploadLessonData.mockImplementationOnce(() => Promise.reject("LOL"));
+            lessonStore.uploadLessonData.mockImplementationOnce(() =>
+                Promise.reject("LOL")
+            );
 
             await request(app)
                 .patch(`/api/v1/lessons/${id}`)
@@ -369,19 +386,24 @@ describe("Lessons", () => {
                 .set("authorization", token)
                 .expect(200)
                 .expect(res => {
-                    expect(_.omit(res.body.lesson, "id")).toEqual(_.omit(testLesson, "data"));
+                    expect(_.omit(res.body.lesson, "id")).toEqual(
+                        _.omit(testLesson, "data")
+                    );
                 });
 
             expect(lessonStore.uploadLessonData).toBeCalledWith({ id }, "DATA");
         });
         it("Should require authentication", async () => {
-            await request(app).patch("/api/v1/lessons/1").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .patch("/api/v1/lessons/1")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should require the correct permissions", async () => {
             await request(app)

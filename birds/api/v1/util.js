@@ -37,7 +37,9 @@ module.exports.sterilizeLesson = lesson => {
         id: lesson.id,
         title: lesson.title,
         branch: lesson.branch,
-        prerequisites: lesson.prerequisites.map(prereq => module.exports.sterilizePrereq(prereq))
+        prerequisites: lesson.prerequisites.map(prereq =>
+            module.exports.sterilizePrereq(prereq)
+        )
     };
 };
 

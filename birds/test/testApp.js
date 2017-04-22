@@ -22,11 +22,15 @@ module.exports = dbUrl => {
                 usernameField: "email"
             },
             (username, password, done) => {
-                User.authenticate()(username, password, (err, user, passErr) => {
-                    if (err) return done(err);
-                    if (passErr) return done(null, false, passErr);
-                    if (user) done(null, user);
-                });
+                User.authenticate()(
+                    username,
+                    password,
+                    (err, user, passErr) => {
+                        if (err) return done(err);
+                        if (passErr) return done(null, false, passErr);
+                        if (user) done(null, user);
+                    }
+                );
             }
         )
     );

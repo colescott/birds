@@ -18,7 +18,7 @@
     "cover": "jest --coverage",
     "db": "mongod --dbpath ./data",
     "heroku-postbuild": "npm run build:prod",
-    "pretify": "prettier --write 'api/*/*.js' 'api/*.js' 'api/*/*/*.js' 'test/*.js' '*.js' --tab-width 4 --print-width 100"
+    "prettify": "prettier --write 'birds/api/*/*.js' 'birds/api/*.js' 'birds/api/*/*/*.js' 'birds/test/*.js' 'birds/*.js' --tab-width 4"
   },
   "jest": {
     "notify": true

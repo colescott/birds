@@ -94,13 +94,20 @@ describe("Users", () => {
                 lastname: "lastname",
                 password: "I_have_surpassed_you"
             };
-            await request(app).post("/api/v1/users").send(newUser).expect(200).expect(res => {
-                expect(res.body.user.id).toBeDefined();
-                res.body.user.id = "id";
-                expect(res.body).toEqual({
-                    user: Object.assign({ id: "id" }, _.omit(newUser, ["password"]))
+            await request(app)
+                .post("/api/v1/users")
+                .send(newUser)
+                .expect(200)
+                .expect(res => {
+                    expect(res.body.user.id).toBeDefined();
+                    res.body.user.id = "id";
+                    expect(res.body).toEqual({
+                        user: Object.assign(
+                            { id: "id" },
+                            _.omit(newUser, ["password"])
+                        )
+                    });
                 });
-            });
             await request(app).get("/api/v1/users").expect(200).expect(res => {
                 expect(res.body.users[0].id).toBeDefined();
                 delete res.body.users[0].id;
@@ -136,25 +143,32 @@ describe("Users", () => {
                 });
         });
         it("Should not allow duplicate account", async () => {
-            await request(app).post("/api/v1/users").send(testUser).expect(400).expect(res => {
-                expect(res.body).toEqual({
-                    code: 400,
-                    error: "Bad Request",
-                    message: "A user with that email already exists"
+            await request(app)
+                .post("/api/v1/users")
+                .send(testUser)
+                .expect(400)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 400,
+                        error: "Bad Request",
+                        message: "A user with that email already exists"
+                    });
                 });
-            });
         });
     });
 
     describe("Get a User", () => {
         it("Should require being logged in", async () => {
-            await request(app).get("/api/v1/users/cookie").expect(401).expect(res => {
-                expect(res.body).toEqual({
-                    code: 401,
-                    error: "Unauthorized",
-                    message: "No authorization token was found"
+            await request(app)
+                .get("/api/v1/users/cookie")
+                .expect(401)
+                .expect(res => {
+                    expect(res.body).toEqual({
+                        code: 401,
+                        error: "Unauthorized",
+                        message: "No authorization token was found"
+                    });
                 });
-            });
         });
         it("Should send 400 on an invalid id", async () => {
             await request(app)
@@ -189,7 +203,10 @@ describe("Users", () => {
         });
         it("Should return the correct user", async () => {
             // Create the first user
-            await request(app).post("/api/v1/users").send(_.omit(JamesBond, ["id"])).expect(200);
+            await request(app)
+                .post("/api/v1/users")
+                .send(_.omit(JamesBond, ["id"]))
+                .expect(200);
 
             // Create the second user
             const id = await request(app)
@@ -219,7 +236,10 @@ describe("Users", () => {
                 .expect(200)
                 .expect(res => {
                     expect(_.omit(res.body.user, "id")).toEqual(
-                        _.omit(Object.assign({}, testUser, { email: "new email" }), "password")
+                        _.omit(
+                            Object.assign({}, testUser, { email: "new email" }),
+                            "password"
+                        )
                     );
                 });
         });
