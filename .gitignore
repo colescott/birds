@@ -1,14 +1,2 @@
-# Node build artifacts
-node_modules
-npm-debug.log
-
-# Useless Stuff
+node_modules/
 .DS_Store
-
-# Webpack build artifacts
-birds/static
-birds/public
-
-# Other Generated Files
-coverage/
-data/
