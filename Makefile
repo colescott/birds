@@ -29,5 +29,8 @@ db:
 test:
 	./node_modules/.bin/jest --env=jsdom
 
+cover:
+	./node_modules/.bin/jest --env=jsdom --coverage
+
 test-watch:
 	./node_modules/.bin/jest --env=jsdom --watch

@@ -7,7 +7,7 @@ services:
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
 script:
-    - yarn run cover
-    - yarn run lint
+    - make lint
+    - make test
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+   - bash <(curl -s https://codecov.io/bash)
