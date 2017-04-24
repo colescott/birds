@@ -56,11 +56,11 @@ describe("Teams", () => {
         bond = await testUtil.addUser(bondUser, JamesBond.password);
 
         // generate a token
-        const signedUser = jwt.sign(user, "TEST");
+        const signedUser = jwt.sign({ id: user._id }, "TEST");
         token = `Bearer ${signedUser}`;
 
         // generate a token
-        const signedBond = jwt.sign(bond, "TEST");
+        const signedBond = jwt.sign({ id: bond._id }, "TEST");
         bondToken = `Bearer ${signedBond}`;
     });
     afterEach(async () => {

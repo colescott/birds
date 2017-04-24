@@ -49,7 +49,7 @@ describe("Lessons", () => {
         user = await testUtil.addUser(newUser, "testpass");
 
         // generate a token
-        const signedUser = jwt.sign(user, "TEST");
+        const signedUser = jwt.sign({ id: user.id }, "TEST");
         token = `Bearer ${signedUser}`;
     });
     afterEach(async () => {

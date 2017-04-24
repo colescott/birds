@@ -22,7 +22,7 @@ module.exports.authenticate = (req, res, next) => {
                 message: "Token is not valid"
             });
         } else {
-            const userId = decoded._doc._id;
+            const userId = decoded.id;
             User.findById(userId).then(user => {
                 req.user = user;
                 next();

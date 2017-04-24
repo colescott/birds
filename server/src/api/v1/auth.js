@@ -6,7 +6,7 @@ const router = express.Router();
 
 const util = require("./util.js");
 const { error } = require("./util.js");
-const { authenticate, errorWrapper, jwtSecret } = require("./middleware.js");
+const { authenticate, errorWrapper } = require("./middleware.js");
 
 const User = require("./models/user");
 
@@ -76,9 +76,13 @@ router.post(
                         .send(error(401, "Incorrect username or password"));
                 } else {
                     const response = {
-                        token: jwt.sign({ id: user.id }, jwtSecret, {
-                            expiresIn: 2 * 60 * 60
-                        }),
+                        token: jwt.sign(
+                            { id: user.id },
+                            req.app.get("JWT_SECRET"),
+                            {
+                                expiresIn: 2 * 60 * 60
+                            }
+                        ),
                         user: util.sterilizeUserAsUser(user)
                     };
                     return res.status(200).send(response);

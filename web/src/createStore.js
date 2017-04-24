@@ -1,18 +1,24 @@
+// @flow
+
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { routerReducer, routerMiddleware } from "react-router-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
 
-const reducer = (state = {}, action) => state;
+import api from "./api";
+import reducers from "./store/reducers";
 
-export default history => {
+export default (history: History) => {
     const middleware = routerMiddleware(history);
 
     const store = createStore(
         combineReducers({
-            reducer,
+            ...reducers,
             router: routerReducer
         }),
-        composeWithDevTools(applyMiddleware(middleware))
+        composeWithDevTools(
+            applyMiddleware(middleware, thunk.withExtraArgument({ api }))
+        )
     );
     return store;
 };

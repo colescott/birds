@@ -52,19 +52,16 @@ router.post(
     validator(["email", "password", "firstname", "lastname"]),
     errorWrapper(async (req, res) => {
         const userQuery = await User.findOne({ email: req.body.email });
-
         if (userQuery)
             return res
                 .status(400)
                 .send(error(400, "A user with that email already exists"));
-
         const user = new User({
             email: req.body.email,
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             progress: []
         });
-
         User.register(user, req.body.password, (err, model, passwordErr) => {
             if (err) throw err;
             if (passwordErr) throw passwordErr;
