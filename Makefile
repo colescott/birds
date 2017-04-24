@@ -32,5 +32,10 @@ test:
 cover:
 	./node_modules/.bin/jest --env=jsdom --coverage
 
+clean:
+	rm -rf node_modules
+	rm -rf web/node_modules
+	rm -rf server/node_modules
+
 test-watch:
 	./node_modules/.bin/jest --env=jsdom --watch
