@@ -31,6 +31,7 @@ const status = (
                 error: undefined,
                 loading: true
             };
+        case "@@router/LOCATION_CHANGE":
         case "REGISTER_SUCCESS":
         case "LOGIN_SUCCESS":
             return {
