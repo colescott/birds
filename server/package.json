@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "readme": "README.md",
   "scripts": {
+    "docs": "apidoc -i src -o ../docs",
     "start": "NODE_ENV=production node src/app.js",
     "start:dev": "JWT_SECRET=correcthorsebatterystaple MONGODB_URI=mongodb://localhost/birds nodemon src/app.js",
     "test": "jest",
@@ -24,6 +25,7 @@
   },
   "homepage": "https://github.com/Team4159/BIRDS#readme",
   "dependencies": {
+    "apidoc": "0.17.5",
     "aws-sdk": "2.6.14",
     "body-parser": "1.15.2",
     "cors": "2.8.1",
