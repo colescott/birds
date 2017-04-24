@@ -1,5 +1,9 @@
 FIND_JS = find server/src web/src -name "*.js" ! -name "*node_modules*"
 
+all: deps build
+
+heroku: all
+
 deps:
 	yarn
 	cd server && yarn

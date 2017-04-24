@@ -6,6 +6,9 @@
   "repository": "https://github.com/team4159/birds",
   "author": "Elias Lawson-Fox <eliaslfox@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "heroku-postbuild": "make heroku"
+  },
   "jest": {
     "notify": true,
     "moduleNameMapper": {
