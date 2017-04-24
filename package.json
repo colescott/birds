@@ -6,6 +6,12 @@
   "repository": "https://github.com/team4159/birds",
   "author": "Elias Lawson-Fox <eliaslfox@gmail.com>",
   "license": "MIT",
+  "jest": {
+    "notify": true,
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/mocks/style.js"
+    }
+  },
   "dependencies": {
     "babel-eslint": "^7.2.3",
     "babel-preset-react-app": "^2.2.0",

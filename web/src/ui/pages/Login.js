@@ -78,9 +78,9 @@ class Login extends Form {
     }
 }
 
-const login = (email: string, password: string) => async (
+const login = (email: string, password: string) => async function(
     dispatch: Dispatch
-) => {
+) {
     try {
         await dispatch(a.login(email, password));
         dispatch(push("/"));
