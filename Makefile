@@ -39,3 +39,9 @@ clean:
 
 test-watch:
 	./node_modules/.bin/jest --env=jsdom --watch
+
+docs:
+	cd server && npm run docs
+
+shell:
+	nix-shell --command zsh
