@@ -102,7 +102,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/auth.js",
     "groupTitle": "Auth"
   },
   {
@@ -139,7 +139,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/auth.js",
     "groupTitle": "Auth"
   },
   {
@@ -148,6 +148,19 @@ define({ "api": [
     "title": "Create lesson",
     "name": "Create_lesson",
     "group": "Lessons",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -224,14 +237,14 @@ define({ "api": [
       },
       "examples": [
         {
-          "title": "Success-Response:",
+          "title": "Success-Response",
           "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"id\": \"4159<3u\",\n    \"title\": \"CAD Basics\",\n    \"branch\": \"design\",\n    \"prerequisites\": []\n  }\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/lessons.js",
     "groupTitle": "Lessons"
   },
   {
@@ -296,7 +309,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/lessons.js",
     "groupTitle": "Lessons"
   },
   {
@@ -361,7 +374,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/lessons.js",
     "groupTitle": "Lessons"
   },
   {
@@ -370,6 +383,19 @@ define({ "api": [
     "title": "Update lesson",
     "name": "Upload_lesson_data",
     "group": "Lessons",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
     "parameter": {
       "fields": {
         "Parameter": [
@@ -453,7 +479,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/lessons.js",
     "groupTitle": "Lessons"
   },
   {
@@ -470,7 +496,7 @@ define({ "api": [
             "type": "String",
             "optional": false,
             "field": "authorization",
-            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot; teams</p>"
           }
         ]
       }
@@ -516,7 +542,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
@@ -594,12 +620,12 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
-    "type": "put",
-    "url": "/teams/:id/delete",
+    "type": "delete",
+    "url": "/teams/:id",
     "title": "Delete team",
     "name": "Delete_team",
     "group": "Teams",
@@ -644,7 +670,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
@@ -702,7 +728,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
@@ -753,7 +779,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
@@ -816,12 +842,12 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/teams.js",
     "groupTitle": "Teams"
   },
   {
-    "type": "put",
-    "url": "/users/:id/delete",
+    "type": "delete",
+    "url": "/users/:id",
     "title": "Delete user",
     "name": "Delete_user",
     "group": "Users",
@@ -866,7 +892,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -966,7 +992,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -1038,7 +1064,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -1108,7 +1134,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -1221,57 +1247,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
-    "groupTitle": "Users"
-  },
-  {
-    "type": "put",
-    "url": "/users/:id/resetprogress",
-    "title": "Reset all lesson progress",
-    "name": "Reset_all_lesson_progress",
-    "group": "Users",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "authorization",
-            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Data object containing info</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.message",
-            "description": "<p>Message</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully joined team\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -1341,7 +1317,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   },
   {
@@ -1488,7 +1464,7 @@ define({ "api": [
       ]
     },
     "version": "0.0.0",
-    "filename": "birds/api/v1/index.js",
+    "filename": "src/api/v1/users.js",
     "groupTitle": "Users"
   }
 ] });

@@ -5,11 +5,12 @@ define({
   "title": "Birds api v1",
   "url": "/api/v1",
   "sampleUrl": false,
-  "apidoc": "0.2.0",
+  "defaultVersion": "0.0.0",
+  "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2016-10-20T03:39:00.992Z",
+    "time": "2017-04-24T23:13:01.550Z",
     "url": "http://apidocjs.com",
-    "version": "0.16.1"
+    "version": "0.17.5"
   }
 });

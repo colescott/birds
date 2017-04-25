@@ -1,3 +1,11 @@
 module.exports = {
-    extends: "react-app"
+    extends: "react-app",
+    globals: {
+        Action: true,
+        ServerError: true,
+        User: true,
+        RegisterData: true,
+        State: true,
+        process: true
+    }
 }
