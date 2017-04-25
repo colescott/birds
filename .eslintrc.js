@@ -5,6 +5,7 @@ module.exports = {
         ServerError: true,
         User: true,
         RegisterData: true,
-        State: true
+        State: true,
+        process: true
     }
 }

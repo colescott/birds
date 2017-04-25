@@ -22,7 +22,7 @@
     "react-scripts": "0.9.5"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_URL_PREFIX='http://localhost:8000' react-scripts start",
     "build": "react-scripts build",
     "test": "CI=true react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom",

@@ -7,7 +7,7 @@ const favicon = require("serve-favicon");
 const api = require("./api");
 const mongoose = require("mongoose");
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://localhost/birds-local");
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/birds-local");
 
 app.use(middleware(process.env.NODE_ENV));
 
