@@ -5,17 +5,20 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { logout } from "../store/actions";
+import * as s from "../store/selectors";
 
 class Header extends Component {
     state: {
         expandNav: boolean
     };
     props: {
-        logout: () => void
+        logout: () => void, // pls
+        name: string
     };
     constructor() {
         super();
         this.state = {
+            ...this.state,
             expandNav: false
         };
     }
@@ -30,12 +33,15 @@ class Header extends Component {
         const { expandNav } = this.state;
         const { logout } = this.props;
 
+        console.log(this.props);
+
         return (
             <Navbar
-                items={[
-                    { link: "/register", text: "Register" },
-                    { link: "/login", text: "Login" },
+                items={ this.props.user ? [
                     { link: "/", text: "Logout", onClick: logout }
+                ] : [
+                    { link: "/register", text: "Register" },
+                    { link: "/login", text: "Login" }
                 ]}
                 toggleNav={toggleNav}
                 expandNav={expandNav}
@@ -44,7 +50,12 @@ class Header extends Component {
     }
 }
 
-export default connect(() => ({}), { logout })(Header);
+const mapStateToProps = (state: State) => {
+    const data = s.getAuthData(state);
+    return { user: data.user };
+};
+
+export default connect(mapStateToProps, { logout })(Header);
 
 const Navbar = ({ items, toggleNav, expandNav }) => {
     const navbarClass = expandNav
@@ -94,3 +105,4 @@ const Navbar = ({ items, toggleNav, expandNav }) => {
         </nav>
     );
 };
+
