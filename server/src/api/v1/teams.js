@@ -195,6 +195,7 @@ router.delete(
     })
 );
 
+// TODO: Make this return the team
 /**
  * @api {put} /teams/:num/addadmin Add admin
  * @apiName Add admin
@@ -309,7 +310,11 @@ router.put(
  *     HTTP/1.1 200 OK
  *     {
  *       "data": {
- *         "message": "Successfully reset progress"
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         }
+ *       }
  *     }
  *
  */
