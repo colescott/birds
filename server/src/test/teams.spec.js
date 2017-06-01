@@ -389,10 +389,9 @@ describe("Teams", () => {
                 .send(testTeam)
                 .expect(200);
             await request(app)
-                .put(`/api/v1/users/${bond._id}/jointeam`)
+                .put(`/api/v1/teams/4159/join`)
                 .set("authorization", bondToken)
                 .send({
-                    teamnumber: team.res.body.team.teamnumber,
                     password: team.res.body.team.password
                 })
                 .expect(200);
@@ -491,10 +490,9 @@ describe("Teams", () => {
                 .send(testTeam)
                 .expect(200);
             await request(app)
-                .put(`/api/v1/users/${bond._id}/jointeam`)
+                .put(`/api/v1/teams/4159/join`)
                 .set("authorization", bondToken)
                 .send({
-                    teamnumber: team.res.body.team.teamnumber,
                     password: team.res.body.team.password
                 })
                 .expect(200);
