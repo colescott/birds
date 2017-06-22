@@ -16,6 +16,7 @@ cache:
     - web/elm-stuff/packages
     - web/tests/elm-stuff/build-artifacts
     - web/tests/elm-stuff/packages
+    - sysconfcpus
 
 services:
   - mongodb
@@ -29,13 +30,22 @@ before_install:
 install:
   - npm install -g elm@$ELM_VERSION elm-test
   - git clone https://github.com/NoRedInk/elm-ops-tooling
-  - elm-ops-tooling/with_retry.rb elm package install --yes 
+    # Use multiple cpus
+  - |
+      if [ ! -d sysconfcpus/bin ];
+      then
+      git clone https://github.com/obmarg/libsysconfcpus.git;
+      cd libsysconfcpus;
+      ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
+      make && make install;
+      cd ..;
+    fi
 
 script:
   - make deps
-  - make build
-  - make lint
-  - make test
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make build
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make lint
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make test
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
