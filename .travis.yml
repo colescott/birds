@@ -1,15 +1,41 @@
+sudo: false
+
 language: node_js
 node_js:
-    - "7.6.0"
-cache: yarn
+  - "7.6.0"
+
+os:
+  - linux
+
+env: ELM_VERSION=0.18.0
+
+cache:
+  - yarn
+  - directories:
+    - web/elm-stuff/build-artifacts
+    - web/elm-stuff/packages
+    - web/tests/elm-stuff/build-artifacts
+    - web/tests/elm-stuff/packages
+
 services:
-    - mongodb
+  - mongodb
+
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
+
+before_install:
+  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+
+install:
+  - npm install -g elm@$ELM_VERSION elm-test
+  - git clone https://github.com/NoRedInk/elm-ops-tooling
+  - elm-ops-tooling/with_retry.rb elm package install --yes 
+
 script:
-    - make deps
-    - make build
-    - make lint
-    - make test
+  - make deps
+  - make build
+  - make lint
+  - make test
+
 after_success:
-   - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
