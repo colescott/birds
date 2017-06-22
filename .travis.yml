@@ -10,8 +10,8 @@ os:
 env: ELM_VERSION=0.18.0
 
 cache:
-  - yarn
-  - directories:
+  yarn: true
+  directories:
     - web/elm-stuff/build-artifacts
     - web/elm-stuff/packages
     - web/tests/elm-stuff/build-artifacts
@@ -34,12 +34,12 @@ install:
   - |
       if [ ! -d sysconfcpus/bin ];
       then
-      git clone https://github.com/obmarg/libsysconfcpus.git;
-      cd libsysconfcpus;
-      ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
-      make && make install;
-      cd ..;
-    fi
+        git clone https://github.com/obmarg/libsysconfcpus.git;
+        cd libsysconfcpus;
+        ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
+        make && make install;
+        cd ..;
+      fi
 
 script:
   - make deps
