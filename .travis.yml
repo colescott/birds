@@ -24,12 +24,8 @@ services:
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
 
-before_install:
-  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-
 install:
   - npm install -g elm@$ELM_VERSION elm-test
-  - git clone https://github.com/NoRedInk/elm-ops-tooling
     # Use multiple cpus
   - |
       if [ ! -d sysconfcpus/bin ];
