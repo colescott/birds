@@ -1,6 +1,10 @@
-build
 elm-stuff
 tests/elm-stuff
+
 public/*
 !public/index.html
 !public/start.js
+
+build/*
+!build/index.html
+!build/start.js
