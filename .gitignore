@@ -1,7 +1,4 @@
 node_modules/
 data/
 coverage/
-web/elm-stuff
-web/tests/elm-stuff
-web/build
 .DS_Store

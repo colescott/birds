@@ -22,15 +22,15 @@ start-dev:
 
 .PHONY: serve
 serve:
-	cd web && elm-live src/Main.elm --pushstate --port=8080 --debug
+	cd web/build && elm-live ../src/Main.elm --pushstate --port=8080 --debug
 
 .PHONY: build
 build:
-	cd web && elm make src/Main.elm --output=build/index.html
+	cd web && elm make src/Main.elm --output=public/index.js
 
 .PHONY: build-dev
 build-dev:
-	cd web && elm make src/Main.elm --output=build/dev/index.html --debug
+	cd web && elm make src/Main.elm --output=public/index.js --debug
 
 .PHONY: lint
 lint:
