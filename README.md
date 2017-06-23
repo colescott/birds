@@ -1,7 +1,7 @@
 # Birds
-[![Build Status](https://travis-ci.org/Team4159/birds.svg?branch=master)](https://travis-ci.org/Team4159/birds) [![codecov](https://codecov.io/gh/Team4159/birds/branch/master/graph/badge.svg)](https://codecov.io/gh/Team4159/birds)
-[![Dependencies](https://david-dm.org/Team4159/birds.svg)](https://david-dm.org/Team4159/birds)
-[![devDependencies Status](https://david-dm.org/Team4159/birds/dev-status.svg)](https://david-dm.org/Team4159/birds?type=dev)
+[![Build Status](https://travis-ci.org/colescott/birds.svg?branch=master)](https://travis-ci.org/colescott/birds) [![codecov](https://codecov.io/gh/colescott/birds/branch/master/graph/badge.svg)](https://codecov.io/gh/colescott/birds)
+[![Dependencies](https://david-dm.org/colescott/birds.svg)](https://david-dm.org/colescott/birds)
+[![devDependencies Status](https://david-dm.org/colescott/birds/dev-status.svg)](https://david-dm.org/colescott/birds?type=dev)
 
 CardinalBotics Beginning and Intermediate Role Development System
 
