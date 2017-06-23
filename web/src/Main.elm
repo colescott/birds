@@ -129,9 +129,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     Grid.container []
-        [ CDN.stylesheet
-          -- creates an inline style node with the Bootstrap CSS
-        , Grid.row []
+        [ Grid.row []
             [ Grid.col []
                 [ Components.Menu.menu model.user model.navbarState
                 , Components.Notifications.notifications model.notifications

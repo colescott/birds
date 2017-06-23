@@ -12,7 +12,18 @@ module.exports.authenticate = (req, res, next) => {
             message: "No authorization token was found"
         });
     }
-    const token = bearer.match(/Bearer (.*)/)[1];
+    const match = bearer.match(/Bearer (.*)/);
+    
+    if(!match)
+    {
+        return res.status(401).send({
+                code: 401,
+                error: "Unauthorized",
+                message: "Token is not valid"
+            });
+    }
+    
+    const token = match[1];
     const jwtSecret = req.app.get("JWT_SECRET");
     jwt.verify(token, jwtSecret, (err, decoded) => {
         if (err) {

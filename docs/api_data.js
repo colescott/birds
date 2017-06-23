@@ -379,6 +379,69 @@ define({ "api": [
   },
   {
     "type": "put",
+    "url": "/lessons/:id/setprogress",
+    "title": "Set lesson progress",
+    "name": "Set_lesson_progress",
+    "group": "Lessons",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "state",
+            "description": "<p>State for lesson</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.user",
+            "description": "<p>User</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"ILUVULESSTHAN3\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159,\n      \"isAdmin\": true,\n      \"progress\": [\n         {\n           \"id\": \"thisisalessonid\",\n           \"state\": \"complete\"\n         }\n       ]\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/api/v1/lessons.js",
+    "groupTitle": "Lessons"
+  },
+  {
+    "type": "put",
     "url": "/lessons/:id",
     "title": "Update lesson",
     "name": "Upload_lesson_data",
@@ -784,6 +847,69 @@ define({ "api": [
   },
   {
     "type": "put",
+    "url": "/teams/:num/join",
+    "title": "Join team",
+    "name": "Join_team",
+    "group": "Teams",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "authorization",
+            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": true,
+            "field": "password",
+            "description": "<p>Password for team</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data object containing info</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Object",
+            "optional": false,
+            "field": "data.message",
+            "description": "<p>Message</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"team\": {\n      \"name\": \"CardinalBotics\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/api/v1/teams.js",
+    "groupTitle": "Teams"
+  },
+  {
+    "type": "put",
     "url": "/teams/:num/removeadmin",
     "title": "Remove admin",
     "name": "Remove_admin",
@@ -1068,76 +1194,6 @@ define({ "api": [
     "groupTitle": "Users"
   },
   {
-    "type": "put",
-    "url": "/users/:id/jointeam",
-    "title": "Join team",
-    "name": "Join_team",
-    "group": "Users",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "authorization",
-            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "teamnumber",
-            "description": "<p>Number of team</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": true,
-            "field": "password",
-            "description": "<p>Password for team</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Data object containing info</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.message",
-            "description": "<p>Message</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully reset progress\"\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/api/v1/users.js",
-    "groupTitle": "Users"
-  },
-  {
     "type": "post",
     "url": "/users",
     "title": "Register user",
@@ -1242,76 +1298,6 @@ define({ "api": [
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"user\": {\n      \"id\": \"ILUVULESSTHAN3\",\n      \"email\": \"cardinalbirdsdev@gmail.com\",\n      \"firstname\": \"CardinalBIRDS\",\n      \"lastname\": \"Dev Team\",\n      \"teamnumber\": 4159\n    }\n  }\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "src/api/v1/users.js",
-    "groupTitle": "Users"
-  },
-  {
-    "type": "put",
-    "url": "/users/:id/setprogress",
-    "title": "Set lesson progress",
-    "name": "Set_lesson_progress",
-    "group": "Users",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "String",
-            "optional": false,
-            "field": "authorization",
-            "description": "<p>Authorization token with format &quot;Bearer {token}&quot;</p>"
-          }
-        ]
-      }
-    },
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "id",
-            "description": "<p>Id for lesson</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "optional": false,
-            "field": "state",
-            "description": "<p>State for lesson</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data",
-            "description": "<p>Data object containing info</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "Object",
-            "optional": false,
-            "field": "data.message",
-            "description": "<p>Message</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"data\": {\n    \"message\": \"Successfully set progress\"\n}",
           "type": "json"
         }
       ]

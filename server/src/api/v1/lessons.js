@@ -213,6 +213,54 @@ router.patch(
 );
 
 /**
+ * @api {put} /lessons/:id/setprogress Set lesson progress
+ * @apiName Set lesson progress
+ * @apiGroup Lessons
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} state State for lesson
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.user User
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "user": {
+ *           "id": "ILUVULESSTHAN3",
+ *           "email": "cardinalbirdsdev@gmail.com",
+ *           "firstname": "CardinalBIRDS",
+ *           "lastname": "Dev Team",
+ *           "teamnumber": 4159,
+ *           "isAdmin": true,
+ *           "progress": [
+ *              {
+ *                "id": "thisisalessonid",
+ *                "state": "complete"
+ *              }
+ *            ]
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.put(
+    "/:id/setprogress",
+    authenticate,
+    validator(["state"]),
+    errorWrapper(async (req, res) => {
+        const user = await User.findByIdAndUpdate(
+            req.user.id,
+            { $push: { progress: { id: req.body.id, state: req.body.state } } },
+            { new: true } // Create new objects if not exist
+        );
+        return res.status(200).send({ user: user });
+    })
+);
+
+/**
  * @api {get} /lessons Get all lessons
  * @apiName Get all lessons
  * @apiGroup Lessons

@@ -13,12 +13,12 @@ app.use(middleware(process.env.NODE_ENV));
 
 app.use(favicon(path.join(__dirname, "favicon.ico")));
 
-app.use("/", express.static(path.join(__dirname, "../../web/build")));
+app.use("/", express.static(path.join(__dirname, "../../web/public")));
 
 app.use("/api", api);
 
 // Returns main page on all others... used when calling "/login" or others
-app.use("*", express.static(path.join(__dirname, "../../web/build")));
+app.use("*", express.static(path.join(__dirname, "../../web/public")));
 
 app.set("JWT_SECRET", process.env.JWT_SECRET);
 

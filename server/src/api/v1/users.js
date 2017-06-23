@@ -9,10 +9,6 @@ const Team = require("./models/team");
 
 const _ = require("lodash");
 
-//Options for mongoose
-const options = {};
-options.new = true;
-
 /**
  * @api {post} /users Register user
  * @apiName Register
@@ -259,7 +255,7 @@ router.put(
         const user = await User.findByIdAndUpdate(
             req.params.id,
             changes,
-            options
+            { new: true }
         );
 
         const response = { user: util.sterilizeUserAsUser(user) };
@@ -300,103 +296,6 @@ router.delete(
         return res
             .status(200)
             .send({ message: { text: "Successfully deleted user." } });
-    })
-);
-
-/**
- * @api {put} /users/:id/setprogress Set lesson progress
- * @apiName Set lesson progress
- * @apiGroup Users
- *
- * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {String} id Id for lesson
- * @apiParam {String} state State for lesson
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.message Message
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "message": "Successfully set progress"
- *     }
- *
- */
-router.put(
-    "/:id/setprogress",
-    authenticate,
-    errorWrapper(async (req, res) => {
-        if (req.user.id !== req.params.id)
-            return res
-                .status(401)
-                .send(
-                    error(401, "You can only perform this action as the user")
-                );
-
-        // TODO: move to middleware
-        if (!req.body.id)
-            return res.status(400).send(error(400, "Id not set!"));
-        if (!req.body.state)
-            return res.status(400).send(error(400, "State not set!"));
-
-        const user = await User.findByIdAndUpdate(
-            req.user.id,
-            { $push: { progress: { id: req.body.id, state: req.body.state } } },
-            options
-        );
-        return res.status(200).send({ user: user });
-    })
-);
-
-/**
- * @api {put} /users/:id/jointeam Join team
- * @apiName Join team
- * @apiGroup Users
- *
- * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
- *
- * @apiParam {String} [teamnumber] Number of team
- * @apiParam {String} [password] Password for team
- *
- * @apiSuccess {Object} data Data object containing info
- * @apiSuccess {Object} data.message Message
- *
- * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "data": {
- *         "message": "Successfully reset progress"
- *     }
- *
- */
-router.put(
-    "/:id/jointeam",
-    authenticate,
-    errorWrapper(async (req, res) => {
-        if (req.user.id !== req.params.id)
-            return res
-                .status(401)
-                .send(
-                    error(401, "You can only perform this action as the user")
-                );
-
-        const data = await Team.findOne().byNumber(req.body.teamnumber).exec();
-
-        if (data.length <= 0)
-            return res
-                .status(400)
-                .send(error(400, "That team does not exist."));
-
-        if (req.body.password !== data[0].password)
-            return res.status(401).send(error(401, "Incorrect password"));
-
-        const user = await User.findById(req.params.id);
-
-        await Team.addUser(req.body.teamnumber, user);
-
-        return res.status(200).send({ team: data });
     })
 );
 

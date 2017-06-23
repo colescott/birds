@@ -195,6 +195,7 @@ router.delete(
     })
 );
 
+// TODO: Make this return the team
 /**
  * @api {put} /teams/:num/addadmin Add admin
  * @apiName Add admin
@@ -292,5 +293,53 @@ router.put(
             .send({ message: { text: "Successfully removed admin." } });
     })
 );
+
+/**
+ * @api {put} /teams/:num/join Join team
+ * @apiName Join team
+ * @apiGroup Teams
+ *
+ * @apiHeader {String} authorization Authorization token with format "Bearer {token}"
+ *
+ * @apiParam {String} [password] Password for team
+ *
+ * @apiSuccess {Object} data Data object containing info
+ * @apiSuccess {Object} data.message Message
+ *
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "data": {
+ *         "team": {
+ *           "name": "CardinalBotics",
+ *           "teamnumber": 4159
+ *         }
+ *       }
+ *     }
+ *
+ */
+router.put(
+    "/:num/join",
+    authenticate,
+    errorWrapper(async (req, res) => {
+
+        const data = await Team.findOne().byNumber(req.params.num).exec();
+
+        if (data.length <= 0)
+            return res
+                .status(400)
+                .send(error(400, "That team does not exist."));
+
+        if (req.body.password !== data[0].password)
+            return res.status(401).send(error(401, "Incorrect password"));
+
+        const user = await User.findById(req.user.id);
+
+        await Team.addUser(req.params.num, user);
+
+        return res.status(200).send({ team: data });
+    })
+);
+
 
 module.exports = router;
