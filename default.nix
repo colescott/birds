@@ -7,6 +7,8 @@ stdenv.mkDerivation rec {
         flow
         nodejs-7_x
         yarn
+        elmPackages.elm
+        elmPackages.elm-format
         mongodb
     ];
     src = ./.;

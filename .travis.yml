@@ -1,15 +1,47 @@
+sudo: false
+
 language: node_js
 node_js:
-    - "7.6.0"
-cache: yarn
+  - "7.6.0"
+
+os:
+  - linux
+
+env: ELM_VERSION=0.18.0
+
+cache:
+  yarn: true
+  directories:
+    - web/elm-stuff/build-artifacts
+    - web/elm-stuff/packages
+    - web/tests/elm-stuff/build-artifacts
+    - web/tests/elm-stuff/packages
+    - sysconfcpus
+
 services:
-    - mongodb
+  - mongodb
+
 notifications:
   slack: team4159:wKcqUG4VCrh6yzknuOcvJaf9
+
+install:
+  - npm install -g elm@$ELM_VERSION elm-test
+    # Use multiple cpus
+  - |
+      if [ ! -d sysconfcpus/bin ];
+      then
+        git clone https://github.com/obmarg/libsysconfcpus.git;
+        cd libsysconfcpus;
+        ./configure --prefix=$TRAVIS_BUILD_DIR/sysconfcpus;
+        make && make install;
+        cd ..;
+      fi
+
 script:
-    - make deps
-    - make build
-    - make lint
-    - make test
+  - make deps
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make build
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make lint
+  - $TRAVIS_BUILD_DIR/sysconfcpus/bin/sysconfcpus -n 2 make test
+
 after_success:
-   - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)
